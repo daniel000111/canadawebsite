@@ -203,8 +203,14 @@ body {
   display: flex;
   text-align: center;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.showcase-head .cta-btn {
+  margin-top: 0;
+  line-height: 1;
 }
 
 /* Carousel */
@@ -249,6 +255,17 @@ body {
   margin: 0;
   font-size: 1.35rem;
   font-weight: 800;
+}
+
+.shot-caption .shot-meta {
+  margin-top: 0.5rem;
+  justify-content: flex-start;
+}
+
+.shot-caption .shot-pill {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
 }
 
 .shot-arrow {
@@ -346,6 +363,29 @@ body {
 .shot-card .shot-place {
   font-weight: 800;
   margin: 0;
+}
+
+.shot-meta {
+  margin-top: 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.shot-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  background: rgba(214, 40, 40, 0.12);
+  color: var(--text);
 }
 
 .shot-card .shot-path {

@@ -72,7 +72,7 @@ function toggleMapNav() {
 // -------------------------------
 // SHOWCASE PAGE: grid + fullscreen lightbox (works with your HTML)
 // Requires: <div id="shotGrid"></div> and your lightbox IDs
-// Data: screenshots.json [{ file: "...", place: "..." }, ...]
+// Data: screenshots.json [{ file: "...", place: "...", prov: "..." }, ...]
 // -------------------------------
 
 let SHOTS = [];
@@ -92,7 +92,11 @@ async function initShowcaseGrid() {
     const data = await res.json();
 
     SHOTS = (Array.isArray(data) ? data : [])
-      .map(s => ({ file: String(s.file || "").trim(), place: String(s.place || "").trim() }))
+      .map(s => ({
+        file: String(s.file || "").trim(),
+        place: String(s.place || "").trim(),
+        prov: String(s.prov || "").trim()
+      }))
       .filter(s => s.file);
 
     if (!SHOTS.length) {
@@ -106,10 +110,12 @@ async function initShowcaseGrid() {
       card.className = "shot-card";
       card.style.cursor = "zoom-in";
 
+      const prov = escapeHtml(s.prov || "");
       card.innerHTML = `
         <img src="${s.file}" alt="${escapeHtml(s.place || "Screenshot")}" loading="lazy" />
         <div class="shot-card-body">
           <p class="shot-place">${escapeHtml(s.place || "Unknown Location")}</p>
+          ${prov ? `<div class="shot-meta"><span class="shot-pill">${prov}</span></div>` : ""}
         </div>
       `;
 
@@ -210,10 +216,12 @@ async function initShotCarousel() {
     slide.className = "shot-slide";
     slide.style.backgroundImage = `url("${s.file}")`;
 
+    const prov = escapeHtml(s.prov || "");
     slide.innerHTML = `
       <div class="shot-overlay"></div>
       <div class="shot-caption">
         <h3>${escapeHtml(s.place || "Unknown Location")}</h3>
+        ${prov ? `<div class="shot-meta"><span class="shot-pill">${prov}</span></div>` : ""}
       </div>
     `;
 
@@ -283,4 +291,3 @@ function shuffleArray(arr) {
 document.addEventListener("DOMContentLoaded", () => {
   initShotCarousel();
 });
-
