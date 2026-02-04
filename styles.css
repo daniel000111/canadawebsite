@@ -545,6 +545,7 @@ section {
   max-width: 1200px;
   margin: auto;
   padding: 4rem 1.25rem;
+  text-align: center;
 }
 
 .section-title {
