@@ -206,3 +206,113 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
+// -------------------------------
+// HOME PAGE CAROUSEL (uses screenshots.json)
+// -------------------------------
+
+let carouselShots = [];
+let carouselIndex = 0;
+let carouselTimer = null;
+
+async function initShotCarousel() {
+  const track = document.getElementById("shotTrack");
+  const dotsWrap = document.getElementById("shotDots");
+  if (!track || !dotsWrap) return; // not on home page
+
+  // Reuse the same loader if it exists, otherwise fetch directly
+  const shots = (typeof loadShots === "function")
+    ? await loadShots("screenshots.json")
+    : await (await fetch("screenshots.json", { cache: "no-store" })).json();
+
+  if (!Array.isArray(shots) || shots.length === 0) {
+    track.innerHTML = `<div style="padding:2rem;color:var(--muted);">No screenshots found.</div>`;
+    return;
+  }
+
+  // pick random up to 6
+  carouselShots = shuffleArray(shots).slice(0, Math.min(6, shots.length));
+  carouselIndex = 0;
+
+  track.innerHTML = "";
+  dotsWrap.innerHTML = "";
+
+  carouselShots.forEach((s, i) => {
+    const slide = document.createElement("div");
+    slide.className = "shot-slide";
+    slide.style.backgroundImage = `url("${s.file}")`;
+
+    slide.innerHTML = `
+      <div class="shot-overlay"></div>
+      <div class="shot-caption">
+        <h3>${escapeHtml(s.place || "Unknown Location")}</h3>
+      </div>
+    `;
+
+    track.appendChild(slide);
+
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "shot-dot" + (i === 0 ? " active" : "");
+    dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
+    dot.addEventListener("click", () => goToShot(i));
+    dotsWrap.appendChild(dot);
+  });
+
+  updateCarouselUI();
+  startCarouselAuto();
+}
+
+function shotPrev() {
+  if (!carouselShots.length) return;
+  carouselIndex = (carouselIndex - 1 + carouselShots.length) % carouselShots.length;
+  updateCarouselUI();
+  startCarouselAuto();
+}
+
+function shotNext() {
+  if (!carouselShots.length) return;
+  carouselIndex = (carouselIndex + 1) % carouselShots.length;
+  updateCarouselUI();
+  startCarouselAuto();
+}
+
+function goToShot(i) {
+  carouselIndex = i;
+  updateCarouselUI();
+  startCarouselAuto();
+}
+
+function updateCarouselUI() {
+  const track = document.getElementById("shotTrack");
+  if (!track) return;
+
+  track.style.transform = `translateX(-${carouselIndex * 100}%)`;
+
+  const dots = document.querySelectorAll("#shotDots .shot-dot");
+  dots.forEach((d, idx) => d.classList.toggle("active", idx === carouselIndex));
+}
+
+function startCarouselAuto() {
+  if (carouselTimer) clearInterval(carouselTimer);
+  if (carouselShots.length <= 1) return;
+
+  carouselTimer = setInterval(() => {
+    shotNext();
+  }, 4500);
+}
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Init on page load (only runs if elements exist)
+document.addEventListener("DOMContentLoaded", () => {
+  initShotCarousel();
+});
+
+
