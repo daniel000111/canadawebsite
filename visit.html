@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BTE Canada</title>
+  <link rel="icon" href="assets/logo-square.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -26,7 +27,7 @@
       <a href="showcase.html">Showcase</a>
       <a href="visit.html" class="active">Visit</a>
       <a href="build.html">Build</a>
-      <a href="docs.html">Documentation</a>
+      <a href="docs.html">Docs</a>
       <a href="map.html">Map</a>
     </div>
 
@@ -67,22 +68,26 @@
   <section class="builder-hero visit-hero">
     <h1>Visit the Server</h1>
     <p class="section-text">
-      Connect to BTE Canada and start building across the country with our community.
+      Connect to our server and see what we've built so far!
     </p>
   </section>
 
   <section class="visit-info">
     <div class="visit-grid">
-      <div class="visit-media" aria-hidden="true">
-        <span>Screenshot coming soon</span>
+      <div class="visit-media">
+        <img src="assets/screenshots/toronto.jpg" alt="Toronto build screenshot" loading="lazy" />
       </div>
 
       <div class="visit-details">
         <div class="visit-card">
           <h2>Server Info</h2>
           <ul class="visit-list">
-            <li><strong>IP:</strong> <span class="server-ip">btecanada.net</span></li>
-            <li><strong>Version:</strong> 1.21.10 (Java)</li>
+            <li class="visit-ip">
+              <strong>IP:</strong>
+              <span class="server-ip">btecanada.net</span>
+              <button class="copy-ip-btn" type="button" onclick="copyIP()">Copy IP</button>
+            </li>
+            <li class="visit-version"><strong>Version:</strong> 1.21.10 (Java)</li>
           </ul>
         </div>
 
@@ -92,6 +97,16 @@
             <li><code>/map</code>: Teleports to a map full of locations.</li>
             <li><code>/trial</code>: Teleports to the trial area.</li>
             <li><code>/tpll [coordinates]</code>: Teleports to a specific location. Use Google Maps web version and right click on a location to copy coordinates.</li>
+          </ul>
+        </div>
+
+        <div class="visit-card">
+          <h2>Recommended Mods</h2>
+          <ul class="visit-list">
+            <li><strong>WorldEdit CUI:</strong> Allows you to see your WorldEdit selection.</li>
+            <li><strong>Xaero's World Map/Minimap:</strong> Shows a top down view of where you've been. These are two separate mods, but pair together.</li>
+            <li><strong>Iris/Sodium:</strong> Useful for optimization and shaders (if you can handle them). These are two separate mods, but pair together.</li>
+            <li><strong>Render distance mods:</strong> You can also add mods that increase your render distance client side, such as bobby, distant horizons or voxy.</li>
           </ul>
         </div>
       </div>
