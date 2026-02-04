@@ -179,7 +179,6 @@ async function initShotGrid() {
       <img src="${s.file}" alt="${s.place}">
       <div class="shot-card-body">
         <p class="shot-place">${s.place}</p>
-        <p class="shot-path">${s.file}</p>
       </div>
     `;
     grid.appendChild(card);

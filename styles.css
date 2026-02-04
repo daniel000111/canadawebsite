@@ -293,8 +293,25 @@ body {
 .shot-grid {
   margin-top: 1.5rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.25rem;
+}
+
+@media (min-width: 1000px) {
+  .shot-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .shot-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.shot-card .shot-card-body {
+  padding: 0.9rem 1rem;
+  text-align: center;
 }
 
 .shot-card {
