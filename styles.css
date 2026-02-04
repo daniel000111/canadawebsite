@@ -491,6 +491,12 @@ body {
   text-align: center;
 }
 
+.docs-card .section-text {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .docs-form {
   margin-top: 1rem;
   display: flex;
@@ -995,6 +1001,13 @@ section {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 1rem;
+}
+
+.flag-icon {
+  width: 1.1em;
+  height: 1.1em;
+  margin-left: 0.25em;
+  vertical-align: -0.12em;
 }
 
 .section-text {
