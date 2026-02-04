@@ -23,6 +23,10 @@ html, body {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 button {
   font-family: Avenir;
 }
