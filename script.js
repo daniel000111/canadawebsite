@@ -186,6 +186,8 @@ async function initShotGrid() {
   card.addEventListener("click", () => {
     openLightbox(s.file, s.place);
   });
+    grid.appendChild(card);
+  });
 }
 
 // Init when page loads
