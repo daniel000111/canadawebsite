@@ -114,8 +114,10 @@ async function initShowcaseGrid() {
       card.innerHTML = `
         <img src="${s.file}" alt="${escapeHtml(s.place || "Screenshot")}" loading="lazy" />
         <div class="shot-card-body">
-          <p class="shot-place">${escapeHtml(s.place || "Unknown Location")}</p>
-          ${prov ? `<div class="shot-meta"><span class="shot-pill">${prov}</span></div>` : ""}
+          <div class="shot-title">
+            <p class="shot-place">${escapeHtml(s.place || "Unknown Location")}</p>
+            ${prov ? `<span class="shot-pill">${prov}</span>` : ""}
+          </div>
         </div>
       `;
 
@@ -220,8 +222,10 @@ async function initShotCarousel() {
     slide.innerHTML = `
       <div class="shot-overlay"></div>
       <div class="shot-caption">
-        <h3>${escapeHtml(s.place || "Unknown Location")}</h3>
-        ${prov ? `<div class="shot-meta"><span class="shot-pill">${prov}</span></div>` : ""}
+        <div class="shot-title">
+          <h3>${escapeHtml(s.place || "Unknown Location")}</h3>
+          ${prov ? `<span class="shot-pill">${prov}</span>` : ""}
+        </div>
       </div>
     `;
 

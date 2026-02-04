@@ -257,11 +257,6 @@ body {
   font-weight: 800;
 }
 
-.shot-caption .shot-meta {
-  margin-top: 0.5rem;
-  justify-content: flex-start;
-}
-
 .shot-caption .shot-pill {
   border-color: rgba(255, 255, 255, 0.35);
   background: rgba(0, 0, 0, 0.35);
@@ -365,14 +360,6 @@ body {
   margin: 0;
 }
 
-.shot-meta {
-  margin-top: 0.45rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
 .shot-pill {
   display: inline-flex;
   align-items: center;
@@ -386,6 +373,18 @@ body {
   border: 1px solid var(--border);
   background: rgba(214, 40, 40, 0.12);
   color: var(--text);
+}
+
+.shot-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.shot-caption .shot-title {
+  justify-content: flex-start;
 }
 
 .shot-card .shot-path {
