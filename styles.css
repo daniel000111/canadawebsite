@@ -388,7 +388,6 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  text-align: center;
   padding: 1.5rem;
 }
 
