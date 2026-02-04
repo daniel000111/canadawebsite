@@ -55,7 +55,7 @@ body {
   padding: 1rem 1.25rem;
 
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
 }
 
@@ -89,6 +89,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 2rem;
+  justify-self: center;
 }
 
 .nav-center a {
@@ -153,23 +154,31 @@ body {
 }
 
 .theme-btn {
-  width: 34px;
   height: 34px;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  display: flex;
+  padding: 0 0.7rem;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.4rem;
   cursor: pointer;
   transition: transform 0.15s ease, background 0.2s ease;
 }
 
 .theme-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   fill: currentColor;
+}
+
+.theme-btn .theme-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .theme-btn:hover {
@@ -1031,9 +1040,12 @@ section {
 .staff-card img {
   width: 90px;
   height: 90px;
-  border-radius: 50%;
+  border-radius: 0;
   object-fit: cover;
   margin-bottom: 0.75rem;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  padding: 3px;
 }
 
 .staff-discord {
@@ -1097,9 +1109,12 @@ section {
 .staff-card img {
   width: 90px;
   height: 90px;
-  border-radius: 50%;
+  border-radius: 8px;
   object-fit: cover;
   margin-bottom: 0.75rem;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  padding: 3px;
 }
 
 /* Carousel arrows */
@@ -1147,26 +1162,33 @@ section {
   position: sticky;
   top: 0;
   overflow: visible;
+  padding-bottom: 0;
+}
+
+body.map-page.nav-hidden .nav-wrap {
   padding-bottom: var(--map-nav-handle-height);
 }
 
 .map-page .nav-clip {
   overflow: hidden;
   max-height: 140px;
-  transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.2s ease;
+  transition: max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity 0.3s ease,
+              transform 0.3s ease;
+  will-change: max-height, opacity, transform;
 }
 
 body.map-page.nav-hidden .nav-clip {
   max-height: 0;
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(-8px);
   pointer-events: none;
 }
 
 .map-page .map-nav-toggle {
   position: absolute;
   left: 50%;
-  bottom: -6px;
+  bottom: -10px;
   transform: translateX(-50%);
   width: 34px;
   height: 22px;

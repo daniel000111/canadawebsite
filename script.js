@@ -42,6 +42,7 @@ document.addEventListener("click", (e) => {
 (function initTheme() {
   const saved = localStorage.getItem("theme");
   if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  updateThemeToggleLabel();
 })();
 
 function toggleTheme() {
@@ -53,6 +54,20 @@ function toggleTheme() {
     document.documentElement.setAttribute("data-theme", "dark");
     localStorage.setItem("theme", "dark");
   }
+  updateThemeToggleLabel();
+}
+
+function updateThemeToggleLabel() {
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  const label = isDark ? "Dark" : "Light";
+  const aria = isDark ? "Switch to light mode" : "Switch to dark mode";
+
+  document.querySelectorAll(".theme-btn").forEach((btn) => {
+    const textEl = btn.querySelector(".theme-label");
+    if (textEl) textEl.textContent = label;
+    btn.setAttribute("aria-label", aria);
+    btn.setAttribute("title", aria);
+  });
 }
 
 function toggleMapNav() {
