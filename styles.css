@@ -1,5 +1,6 @@
 :root {
   --red: #d62828;
+  --map-note-bg: rgba(255, 255, 255, 0.85);
 
   /* THEME TOKENS */
   --bg: #ffffff;
@@ -16,6 +17,7 @@ html[data-theme="dark"] {
   --text: #f2f3f5;
   --muted: #b2b7c2;
   --border: #2a3040;
+  --map-note-bg: rgba(22, 26, 34, 0.85);
 }
 
 html, body {
@@ -560,7 +562,7 @@ html.lightbox-open .lightbox{ display:block; }
 section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 4rem 1.25rem;
+  padding: 3.25rem 1.25rem;
 }
 
 .section-title {
@@ -579,8 +581,36 @@ section {
 .cta-section {
   max-width: 700px;
   margin: 0 auto;
-  padding: 4rem 1.25rem;
+  padding: 3.25rem 1.25rem;
   text-align: center;
+}
+
+.cta-row {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.cta-row .cta-section {
+  max-width: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cta-row .server-card {
+  width: 100%;
+  max-width: 520px;
+}
+
+@media (max-width: 900px) {
+  .cta-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .server-card {
@@ -618,6 +648,15 @@ section {
   cursor: pointer;
 
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.server-card .cta-btn {
+  min-width: 140px;
+  height: 44px;
+  padding: 0 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cta-btn:hover {
@@ -925,6 +964,7 @@ body.map-page.nav-hidden .map-nav-toggle svg {
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
+  position: relative;
 }
 
 .map-full iframe {
@@ -932,6 +972,23 @@ body.map-page.nav-hidden .map-nav-toggle svg {
   height: 100%;
   border: 0;
   display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.map-note {
+  position: absolute;
+  inset: auto 1rem 1rem;
+  z-index: 0;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  background: var(--map-note-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  pointer-events: none;
 }
 
 html, body {
