@@ -18,6 +18,11 @@ html[data-theme="dark"] {
   --border: #2a3040;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 button {
   font-family: Avenir;
 }
