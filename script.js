@@ -173,15 +173,18 @@ async function initShotGrid() {
   grid.innerHTML = "";
 
   all.forEach((s) => {
-    const card = document.createElement("div");
-    card.className = "shot-card";
-    card.innerHTML = `
-      <img src="${s.file}" alt="${s.place}">
-      <div class="shot-card-body">
-        <p class="shot-place">${s.place}</p>
-      </div>
-    `;
-    grid.appendChild(card);
+  const card = document.createElement("div");
+  card.className = "shot-card";
+  card.style.cursor = "zoom-in";
+  card.innerHTML = `
+    <img src="${s.file}" alt="${s.place}">
+    <div class="shot-card-body">
+      <p class="shot-place">${s.place}</p>
+    </div>
+  `;
+
+  card.addEventListener("click", () => {
+    openLightbox(s.file, s.place);
   });
 }
 
@@ -190,3 +193,37 @@ document.addEventListener("DOMContentLoaded", () => {
   initShotCarousel();
   initShotGrid();
 });
+
+// ---------- Lightbox ----------
+function openLightbox(src, caption) {
+  const box = document.getElementById("lightbox");
+  const img = document.getElementById("lightboxImg");
+  const cap = document.getElementById("lightboxCaption");
+
+  if (!box || !img || !cap) return;
+
+  img.src = src;
+  img.alt = caption || "";
+  cap.textContent = caption || "";
+
+  box.classList.add("open");
+  box.setAttribute("aria-hidden", "false");
+
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  const box = document.getElementById("lightbox");
+  if (!box) return;
+
+  box.classList.remove("open");
+  box.setAttribute("aria-hidden", "true");
+
+  document.body.style.overflow = "";
+}
+
+// Close with ESC
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeLightbox();
+});
+

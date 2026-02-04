@@ -68,6 +68,17 @@
     </div>
   </main>
 
+  <!-- Lightbox -->
+<div id="lightbox" class="lightbox" aria-hidden="true">
+  <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+
+  <div class="lightbox-content">
+    <img id="lightboxImg" alt="" />
+    <p id="lightboxCaption"></p>
+    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+  </div>
+</div>
+
   <script src="script.js"></script>
 </body>
 </html>
