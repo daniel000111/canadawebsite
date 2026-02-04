@@ -695,7 +695,7 @@ html.lightbox-open .lightbox{ display:block; }
 section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 3.25rem 1.25rem;
+  padding: 2.25rem 1.25rem;
 }
 
 .section-title {
@@ -826,7 +826,9 @@ section {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background:
+    radial-gradient(900px 260px at 50% 0%, rgba(214, 40, 40, 0.25), transparent 60%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55));
 }
 
 /* Content */
@@ -834,13 +836,20 @@ section {
   position: relative;
   z-index: 1;
   max-width: 900px;
-  padding: 0 1.5rem;
+  padding: 2rem 2.25rem;
+  border-radius: 22px;
+  background: rgba(12, 12, 12, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
 }
 
 .hero-content h1 {
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 900;
   margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  text-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
 }
 
 .hero-content h1 span {
@@ -859,6 +868,7 @@ section {
   height: 250px;
   object-fit: contain;
   margin-bottom: 1.5rem;
+  filter: drop-shadow(0 12px 25px rgba(0, 0, 0, 0.35));
 }
 
 .hero-scroll {
@@ -866,14 +876,16 @@ section {
   left: 50%;
   bottom: 22px;
   transform: translateX(-50%);
-  width: 38px;
+  z-index: 2;
   height: 38px;
+  padding: 0 0.9rem;
   border-radius: 999px;
   border: 1.5px solid rgba(255, 255, 255, 0.8);
   background: transparent;
   color: #ffffff;
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   text-decoration: none;
   animation: hero-bob 2.2s ease-in-out infinite;
 }
@@ -882,6 +894,13 @@ section {
   width: 18px;
   height: 18px;
   fill: currentColor;
+}
+
+.hero-scroll span {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 .hero-scroll:hover {
@@ -937,12 +956,33 @@ section {
   padding: 1.25rem;
 }
 
+.staff-card h4 {
+  margin: 0.25rem 0 0.2rem;
+}
+
+.staff-card p {
+  margin: 0.25rem 0;
+}
+
 .staff-card img {
   width: 90px;
   height: 90px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 0.75rem;
+}
+
+.staff-discord {
+  margin: 0.35rem 0 0.5rem;
+}
+
+.staff-discord code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.85rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: rgba(214, 40, 40, 0.08);
+  color: var(--text);
 }
 
 /* FOOTER */
