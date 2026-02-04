@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BTE Canada</title>
+  <link rel="icon" href="assets/logo-square.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -23,18 +24,21 @@
     <!-- CENTER: Links -->
     <div class="nav-center fade-in fade-delay-2">
       <a href="#home" class="active">Home</a>
-      <a href="coming-soon.html">Showcase</a>
-      <a href="coming-soon.html">Documentation</a>
+      <a href="showcase.html">Showcase</a>
+      <a href="visit.html">Visit</a>
+      <a href="build.html">Build</a>
+      <a href="docs.html">Docs</a>
       <a href="map.html">Map</a>
     </div>
 
     <!-- RIGHT: Socials -->
     <div class="nav-right fade-in fade-delay-3">
-      <button class="theme-btn" type="button" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <button class="theme-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme">
         <!-- simple moon icon -->
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"></path>
         </svg>
+        <span class="theme-label">Light</span>
       </button>
       <!-- Discord -->
       <a class="icon-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" aria-label="Discord">
@@ -70,17 +74,20 @@
       <div class="pixel-overlay"></div>
     </div>
 
-    <h1>Building <span>Canada</span>, on a 1:1 scale.</h1>
-    <p>
-      We are recreating Canada at a 1:1 scale in Minecraft —
-      from coast to coast, one block at a time.
-    </p>
+    <h1>We are recreating <span>Canada 🇨🇦</span> in minecraft.</h1>
   </div>
+
+  <a href="#about" class="hero-scroll hero-scroll--label" aria-label="Learn more">
+    <span>Learn more</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 16l-6-6h12l-6 6z"></path>
+    </svg>
+  </a>
 </section>
 
 <!-- ABOUT -->
-<section class="about">
-  <h2 class="section-title">About BTE Canada</h2>
+<section id="about" class="about">
+  <h2 class="section-title">About BTE Canada 🇨🇦</h2>
   <p class="section-text">
     Welcome to BTE Canada! We are a division of the BuildTheEarth project. We are in charge of building all areas within the borders of Canada.
     We are a close-knit, friendly community of people all with one common goal: building Canada in minecraft.
@@ -88,42 +95,58 @@
 </section>
 
 <!-- SHOWCASE -->
-<section id="showcase">
-  <h2 class="section-title">Showcase</h2>
+<section id="showcase" class="showcase">
+  <div class="showcase-head">
+    <h2 class="section-title">Showcase</h2>
+    <a class="cta-btn ghost" href="showcase.html">See more</a>
+  </div>
 
-  <div class="showcase-grid">
-    <img src="assets/showcase/build1.jpg" alt="Build 1">
-    <img src="assets/showcase/build2.jpg" alt="Build 2">
-    <img src="assets/showcase/build3.jpg" alt="Build 3">
-    <img src="assets/showcase/build4.jpg" alt="Build 4">
+  <div class="shot-carousel" id="shotCarousel" aria-label="Showcase carousel">
+    <button class="shot-arrow left" type="button" aria-label="Previous" onclick="shotPrev()">‹</button>
+
+    <div class="shot-track" id="shotTrack">
+      <!-- slides injected by JS -->
+    </div>
+
+    <button class="shot-arrow right" type="button" aria-label="Next" onclick="shotNext()">›</button>
+
+    <div class="shot-dots" id="shotDots" aria-label="Carousel dots">
+      <!-- dots injected by JS -->
+    </div>
   </div>
 </section>
 
-<!-- SERVER -->
-<section class="cta-section">
-  <h2 class="section-title">Visit Our Server</h2>
-  <p class="section-text">
-    Join us in-game on Java Edition and start building Canada at a 1:1 scale.
-  </p>
+<div class="cta-row">
+  <!-- SERVER -->
+  <section class="cta-section">
+    <h2 class="section-title">Visit Our Server</h2>
+    <p class="section-text">
+      Join us in-game on Java Edition and see our builds, or start your building journey with us.
+    </p>
 
-  <div class="server-card">
-    <strong>Java Edition (1.21.10)</strong>
-    <span class="server-ip">btecanada.net</span>
-    <button class="cta-btn" onclick="copyIP()">Copy IP</button>
-  </div>
-</section>
+    <div class="server-card">
+      <strong>Java Edition (1.21.10)</strong>
+      <span class="server-ip">btecanada.net</span>
+      <button class="cta-btn" onclick="copyIP()">Copy IP</button>
+    </div>
+  </section>
 
-<!-- DISCORD -->
-<section class="cta-section">
-  <h2 class="section-title">Join Our Discord</h2>
-  <p class="section-text">
-    Get build permissions, share progress, and connect with builders from across Canada.
-  </p>
+  <!-- DISCORD -->
+  <section class="cta-section">
+    <h2 class="section-title">Join Our Discord</h2>
+    <p class="section-text">
+      Get build permissions, share progress, and connect with builders from across Canada.
+    </p>
 
-  <a href="https://discord.gg/pnPSvpfhAs" target="_blank" class="cta-btn">
-    Join Discord
-  </a>
-</section>
+    <div class="server-card">
+      <strong>Community Hub</strong>
+      <span class="server-ip">discord.gg/pnPSvpfhAs</span>
+      <a href="https://discord.gg/pnPSvpfhAs" target="_blank" class="cta-btn">
+        Join Discord
+      </a>
+    </div>
+  </section>
+</div>
 
 <!-- STAFF -->
 <section class="staff">
@@ -135,29 +158,33 @@
     <div class="staff-carousel" id="staffCarousel">
       <!-- CARD 1 -->
       <div class="staff-card">
-        <img src="assets/staff/admin1.jpg" alt="bobert59" />
+        <img src="assets/staff/bobert59.jpg" alt="bobert59" />
         <h4>bobert59</h4>
+        <p class="staff-discord"><code>bobert59</code></p>
         <p>Team Owner</p>
       </div>
 
       <!-- CARD 2 -->
       <div class="staff-card">
-        <img src="assets/staff/admin2.jpg" alt="TheNoctain" />
+        <img src="assets/staff/thenoctain.jpg" alt="TheNoctain" />
         <h4>TheNoctain</h4>
+        <p class="staff-discord"><code>thenoctain</code></p>
         <p>Administrator</p>
       </div>
 
       <!-- CARD 3 -->
       <div class="staff-card">
-        <img src="assets/staff/admin3.jpg" alt="GeoEssence" />
+        <img src="assets/staff/geoessence.jpg" alt="GeoEssence" />
         <h4>GeoEssence</h4>
+        <p class="staff-discord"><code>geoessence</code></p>
         <p>Administrator</p>
       </div>
 
       <!-- CARD 4 -->
       <div class="staff-card">
-        <img src="assets/staff/admin4.jpg" alt="wizardturtle1" />
+        <img src="assets/staff/wizardturtle1.jpg" alt="wizardturtle1" />
         <h4>wizardturtle1</h4>
+        <p class="staff-discord"><code>turtle33</code></p>
         <p>Administrator</p>
       </div>
 
@@ -169,7 +196,7 @@
 </section>
 
 <footer class="footer">
-  © 2026 BTE Canada · Not affiliated with Mojang
+  2026 BTE Canada · Not affiliated with Mojang
 </footer>
 
 <script src="script.js"></script>

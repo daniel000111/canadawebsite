@@ -4,16 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BTE Canada Map</title>
+  <link rel="icon" href="assets/logo-square.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body class="map-page">
   <!-- NAVBAR -->
     <header class="nav-wrap">
+    <div class="nav-clip">
     <nav class="nav">
         <!-- LEFT: Brand -->
         <div class="nav-left fade-in fade-delay-1">
-        <a href="#home" class="brand">
+        <a href="index.html" class="brand">
             <img src="assets/logo-square.png" alt="BTE Canada Logo" class="nav-logo" />
             <span class="brand-text">BTE CANADA</span>
         </a>
@@ -22,18 +24,21 @@
         <!-- CENTER: Links -->
         <div class="nav-center fade-in fade-delay-2">
         <a href="index.html">Home</a>
-        <a href="coming-soon.html">Showcase</a>
-        <a href="coming-soon.html">Documentation</a>
+        <a href="showcase.html">Showcase</a>
+        <a href="visit.html">Visit</a>
+        <a href="build.html">Build</a>
+        <a href="docs.html">Docs</a>
         <a href="map.html" class="active">Map</a>
         </div>
 
         <!-- RIGHT: Socials -->
         <div class="nav-right fade-in fade-delay-3">
-        <button class="theme-btn" type="button" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <button class="theme-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme">
             <!-- simple moon icon -->
             <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"></path>
             </svg>
+            <span class="theme-label">Light</span>
         </button>
         <!-- Discord -->
         <a class="icon-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" aria-label="Discord">
@@ -57,10 +62,19 @@
         </a>
         </div>
     </nav>
+    </div>
+    <button class="map-nav-toggle" type="button" onclick="toggleMapNav()" aria-pressed="false" aria-label="Hide navigation" title="Hide navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 7l-6 6h12l-6-6z"></path>
+      </svg>
+    </button>
     </header>
 
   <!-- MAP -->
   <main class="map-full">
+    <p class="map-note">
+      Not seeing anything? You may need to enable insecure content on your browser.
+    </p>
     <iframe
       src="http://btecanada.net:8124"
       title="BTE Canada Pl3xMap"
