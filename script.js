@@ -1,5 +1,11 @@
+/* -----------------------------
+   Existing site functions
+------------------------------ */
+
 function copyIP() {
-  navigator.clipboard.writeText("btecanada.net");
+  // Use your real IP/domain here
+  const ip = "btecanada.net";
+  navigator.clipboard.writeText(ip);
   alert("Server IP copied to clipboard!");
 }
 
@@ -7,8 +13,7 @@ function scrollStaff(direction) {
   const carousel = document.getElementById("staffCarousel");
   if (!carousel) return;
 
-  // scroll by about 1 card width + gap
-  const scrollAmount = 280;
+  const scrollAmount = 280; // ~ 1 card + gap
   carousel.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
 }
 
@@ -27,7 +32,8 @@ document.addEventListener("click", (e) => {
   const btn = document.querySelector(".nav-toggle");
   if (!menu || !btn) return;
 
-  if (menu.classList.contains("open") && e.target.closest(".nav-center a")) {
+  // Close menu after tapping a link
+  if (menu.classList.contains("open") && e.target.closest("#navMenu a")) {
     menu.classList.remove("open");
     btn.setAttribute("aria-expanded", "false");
   }
@@ -49,183 +55,154 @@ function toggleTheme() {
   }
 }
 
-// ---------- Showcase screenshots (carousel + gallery) ----------
-let SHOTS = [];
-let shotIndex = 0;
-let shotTimer = null;
+// -------------------------------
+// SHOWCASE PAGE (Grid + Lightbox)
+// -------------------------------
 
-async function loadShots() {
-  if (SHOTS.length) return SHOTS;
+const SHOTS_JSON_URL = "screenshots.json"; // change if you put it elsewhere
+let ALL_SHOTS = [];
+let currentIndex = 0;
 
+document.addEventListener("DOMContentLoaded", () => {
+  initShowcasePage();
+});
+
+async function initShowcasePage() {
+  const grid = document.getElementById("shotGrid");
+  if (!grid) return; // not on showcase page
+
+  ALL_SHOTS = await loadShots(SHOTS_JSON_URL);
+
+  if (!ALL_SHOTS.length) {
+    grid.innerHTML = `
+      <p style="color: var(--muted); max-width: 700px; margin: 0 auto;">
+        No screenshots found. Make sure <code>${SHOTS_JSON_URL}</code> exists and contains an array of
+        { "file": "...", "place": "..." }.
+      </p>
+    `;
+    return;
+  }
+
+  renderShotGrid(grid, ALL_SHOTS);
+
+  // Keyboard controls for lightbox
+  document.addEventListener("keydown", (e) => {
+    const box = document.getElementById("lightbox");
+    if (!box || !box.classList.contains("open")) return;
+
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") showPrev();
+    if (e.key === "ArrowRight") showNext();
+  });
+}
+
+async function loadShots(url) {
   try {
-    const res = await fetch("screenshots.json", { cache: "no-store" });
-    if (!res.ok) throw new Error("Failed to load screenshots.json");
-    SHOTS = await res.json();
-    return SHOTS;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error("Failed to load " + url);
+    const data = await res.json();
+
+    // Normalize
+    return (Array.isArray(data) ? data : [])
+      .map((s) => ({
+        file: String(s.file || "").trim(),
+        place: String(s.place || "").trim(),
+      }))
+      .filter((s) => s.file.length);
   } catch (err) {
     console.error(err);
     return [];
   }
 }
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-// Home carousel: random subset
-async function initShotCarousel() {
-  const track = document.getElementById("shotTrack");
-  const dotsWrap = document.getElementById("shotDots");
-  if (!track || !dotsWrap) return;
-
-  const all = await loadShots();
-  const picks = shuffle(all).slice(0, Math.min(6, all.length)); // show up to 6 random slides
-
-  track.innerHTML = "";
-  dotsWrap.innerHTML = "";
-  shotIndex = 0;
-
-  picks.forEach((s, i) => {
-    const slide = document.createElement("div");
-    slide.className = "shot-slide";
-    slide.style.backgroundImage = `url("${s.file}")`;
-
-    slide.innerHTML = `
-      <div class="shot-overlay"></div>
-      <div class="shot-caption">
-        <h3>${s.place}</h3>
-      </div>
-    `;
-    track.appendChild(slide);
-
-    const dot = document.createElement("button");
-    dot.className = "shot-dot" + (i === 0 ? " active" : "");
-    dot.type = "button";
-    dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
-    dot.addEventListener("click", () => goToShot(i, picks.length));
-    dotsWrap.appendChild(dot);
-  });
-
-  // store current carousel picks on the element so arrows work with them
-  track.dataset.count = String(picks.length);
-
-  startShotAuto();
-  updateShotUI(picks.length);
-}
-
-function updateShotUI(count) {
-  const track = document.getElementById("shotTrack");
-  const dots = document.querySelectorAll(".shot-dot");
-  if (!track) return;
-
-  track.style.transform = `translateX(-${shotIndex * 100}%)`;
-  dots.forEach((d, idx) => d.classList.toggle("active", idx === shotIndex));
-}
-
-function goToShot(i, count) {
-  shotIndex = (i + count) % count;
-  updateShotUI(count);
-  startShotAuto();
-}
-
-function shotPrev() {
-  const track = document.getElementById("shotTrack");
-  if (!track) return;
-  const count = Number(track.dataset.count || "0");
-  if (!count) return;
-
-  goToShot(shotIndex - 1, count);
-}
-
-function shotNext() {
-  const track = document.getElementById("shotTrack");
-  if (!track) return;
-  const count = Number(track.dataset.count || "0");
-  if (!count) return;
-
-  goToShot(shotIndex + 1, count);
-}
-
-function startShotAuto() {
-  if (shotTimer) clearInterval(shotTimer);
-
-  const track = document.getElementById("shotTrack");
-  if (!track) return;
-  const count = Number(track.dataset.count || "0");
-  if (count <= 1) return;
-
-  shotTimer = setInterval(() => {
-    goToShot(shotIndex + 1, count);
-  }, 4500);
-}
-
-// Showcase page: render all
-async function initShotGrid() {
-  const grid = document.getElementById("shotGrid");
-  if (!grid) return;
-
-  const all = await loadShots();
+function renderShotGrid(grid, shots) {
   grid.innerHTML = "";
 
-  all.forEach((s) => {
-  const card = document.createElement("div");
-  card.className = "shot-card";
-  card.style.cursor = "zoom-in";
-  card.innerHTML = `
-    <img src="${s.file}" alt="${s.place}">
-    <div class="shot-card-body">
-      <p class="shot-place">${s.place}</p>
-    </div>
-  `;
+  shots.forEach((s, i) => {
+    const card = document.createElement("div");
+    card.className = "shot-card";
+    card.style.cursor = "zoom-in";
 
-  card.addEventListener("click", () => {
-    openLightbox(s.file, s.place);
-  });
+    card.innerHTML = `
+      <img src="${s.file}" alt="${escapeHtml(s.place || "BTE Canada Screenshot")}" loading="lazy" />
+      <div class="shot-card-body">
+        <p class="shot-place">${escapeHtml(s.place || "Unknown Location")}</p>
+      </div>
+    `;
+
+    card.addEventListener("click", () => openLightbox(i));
     grid.appendChild(card);
   });
 }
 
-// Init when page loads
-document.addEventListener("DOMContentLoaded", () => {
-  initShotCarousel();
-  initShotGrid();
-});
+// -------------------------------
+// Lightbox functions (matches YOUR HTML)
+// -------------------------------
 
-// ---------- Lightbox ----------
-function openLightbox(src, caption) {
+function openLightbox(index) {
   const box = document.getElementById("lightbox");
   const img = document.getElementById("lightboxImg");
   const cap = document.getElementById("lightboxCaption");
 
   if (!box || !img || !cap) return;
 
-  img.src = src;
-  img.alt = caption || "";
-  cap.textContent = caption || "";
+  currentIndex = index;
+
+  const shot = ALL_SHOTS[currentIndex];
+  img.src = shot.file;
+  img.alt = shot.place || "BTE Canada Screenshot";
+  cap.textContent = shot.place || "";
 
   box.classList.add("open");
   box.setAttribute("aria-hidden", "false");
-
   document.body.style.overflow = "hidden";
 }
 
 function closeLightbox() {
   const box = document.getElementById("lightbox");
+  const img = document.getElementById("lightboxImg");
   if (!box) return;
 
   box.classList.remove("open");
   box.setAttribute("aria-hidden", "true");
-
   document.body.style.overflow = "";
+
+  if (img) img.src = "";
 }
 
-// Close with ESC
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeLightbox();
-});
+// Optional next/prev (keyboard arrows)
+function showPrev() {
+  if (!ALL_SHOTS.length) return;
+  currentIndex = (currentIndex - 1 + ALL_SHOTS.length) % ALL_SHOTS.length;
+  updateLightbox();
+}
+
+function showNext() {
+  if (!ALL_SHOTS.length) return;
+  currentIndex = (currentIndex + 1) % ALL_SHOTS.length;
+  updateLightbox();
+}
+
+function updateLightbox() {
+  const img = document.getElementById("lightboxImg");
+  const cap = document.getElementById("lightboxCaption");
+  if (!img || !cap) return;
+
+  const shot = ALL_SHOTS[currentIndex];
+  img.src = shot.file;
+  img.alt = shot.place || "BTE Canada Screenshot";
+  cap.textContent = shot.place || "";
+}
+
+// -------------------------------
+// Small helper
+// -------------------------------
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
