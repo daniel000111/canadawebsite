@@ -366,6 +366,76 @@ body {
   padding: 3rem 1.25rem;
 }
 
+.visit-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+}
+
+.visit-hero {
+  margin-bottom: 2.5rem;
+}
+
+.visit-info {
+  margin-bottom: 2.5rem;
+}
+
+.visit-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.visit-media {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(214, 40, 40, 0.16), rgba(17, 17, 17, 0.05)),
+    var(--surface);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-weight: 600;
+  min-height: 260px;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.visit-details {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.visit-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.visit-card h2 {
+  margin: 0 0 0.75rem;
+  text-align: left;
+}
+
+.visit-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--text);
+}
+
+.visit-list li {
+  margin: 0.6rem 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .visit-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .builder-hero {
   text-align: center;
   margin: 0 auto;
@@ -407,6 +477,69 @@ body {
   margin-top: 0;
   text-align: center;
   margin-bottom: 0.75rem;
+}
+
+.team-dropdown {
+  margin: 0 auto 1rem;
+  max-width: 360px;
+  text-align: center;
+}
+
+.team-dropdown summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text);
+  list-style: none;
+  text-align: center;
+}
+
+.team-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.team-dropdown summary::after {
+  content: "▾";
+  margin-left: 0.5rem;
+  color: var(--muted);
+  float: none;
+}
+
+.team-dropdown[open] summary::after {
+  content: "▴";
+}
+
+.team-list {
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 1rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.4;
+  text-align: left;
+}
+
+.team-list li {
+  margin: 0;
+}
+
+.builder-logos {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.builder-logo-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+  padding: 0.4rem;
+  background: rgba(214, 40, 40, 0.05);
 }
 
 .steps {
