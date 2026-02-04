@@ -1,6 +1,6 @@
 [
   { "file": "assets/screenshots/toronto.png", "place": "Toronto, ON" },
   { "file": "assets/screenshots/stjohns.png", "place": "St. John's, NL" },
-  { "file": "assets/screenshots/halifax.png", "place": "Halifax, NS" }
+  { "file": "assets/screenshots/halifax.png", "place": "Halifax, NS" },
   { "file": "assets/screenshots/ottawa.png", "place": "Ottawa, ON" }
 ]
