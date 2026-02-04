@@ -353,6 +353,77 @@ body {
   .shot-arrow { display: none; }
 }
 
+/* ===== Become a Builder Page ===== */
+.builder-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+}
+
+.builder-hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.builder-hero h1 {
+  margin-bottom: 0.5rem;
+}
+
+.builder-apply {
+  margin-bottom: 2.5rem;
+}
+
+.builder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.builder-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.builder-card h2 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.steps {
+  padding-left: 1.1rem;
+  margin: 0;
+}
+
+.steps li {
+  margin: 0.65rem 0;
+  line-height: 1.6;
+}
+
+.builder-note {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(214, 40, 40, 0.08);
+}
+
+.builder-help {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .builder-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Showcase tiles (button reset) */
 .shot{
   border: 0;
