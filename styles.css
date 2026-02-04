@@ -558,13 +558,11 @@ section {
 
 .section-title {
   font-size: 2rem;
-  text-align: center;
   margin-bottom: 1rem;
 }
 
 .section-text {
   max-width: 700px;
-  text-align: center;
   color: var(--muted);
   margin: 0 auto;
 }
