@@ -1,6 +1,6 @@
 [
-  { "file": "assets/screenshots/toronto.png", "place": "Toronto, ON" },
-  { "file": "assets/screenshots/stjohns.png", "place": "St. John's, NL" },
-  { "file": "assets/screenshots/halifax.png", "place": "Halifax, NS" },
-  { "file": "assets/screenshots/ottawa.png", "place": "Ottawa, ON" }
+  { "file": "assets/screenshots/toronto.jpg", "place": "Toronto, ON" },
+  { "file": "assets/screenshots/stjohns.jpg", "place": "St. John's, NL" },
+  { "file": "assets/screenshots/halifax.jpg", "place": "Halifax, NS" },
+  { "file": "assets/screenshots/ottawa.jpg", "place": "Ottawa, ON" }
 ]
