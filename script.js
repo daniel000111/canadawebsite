@@ -95,6 +95,7 @@ let CURRENT = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
   initShowcaseGrid();
+  initDocsGate();
 });
 
 async function initShowcaseGrid() {
@@ -199,6 +200,42 @@ function escapeHtml(str) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+// -------------------------------
+// DOCS PAGE: lightweight gate (client-side only)
+// -------------------------------
+
+function initDocsGate() {
+  const gate = document.querySelector(".docs-gate");
+  if (!gate) return;
+
+  const form = gate.querySelector("form");
+  const input = gate.querySelector("input[type=\"password\"]");
+  const error = gate.querySelector(".docs-error");
+  const content = document.querySelector(".docs-content");
+  const unlockKey = "docsUnlocked";
+  const password = gate.getAttribute("data-password") || "";
+
+  if (localStorage.getItem(unlockKey) === "true") {
+    gate.hidden = true;
+    if (content) content.hidden = false;
+    return;
+  }
+
+  if (!form || !input) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const value = input.value.trim();
+    if (value && value === password) {
+      localStorage.setItem(unlockKey, "true");
+      gate.hidden = true;
+      if (content) content.hidden = false;
+    } else if (error) {
+      error.textContent = "Incorrect password. Please try again.";
+    }
+  });
 }
 
 // -------------------------------

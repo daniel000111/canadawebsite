@@ -445,6 +445,176 @@ body {
   padding: 3rem 1.25rem;
 }
 
+.docs-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+}
+
+.docs-page .section-text {
+  text-align: left;
+  line-height: 1.75;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 1.5rem;
+}
+
+.docs-panel ul {
+  line-height: 1.7;
+}
+
+.docs-hero {
+  margin-bottom: 2.5rem;
+}
+
+.docs-card {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  text-align: center;
+}
+
+.docs-form {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.docs-form input {
+  min-width: 220px;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.docs-form input:focus {
+  outline: 2px solid rgba(214, 40, 40, 0.4);
+  border-color: rgba(214, 40, 40, 0.4);
+}
+
+.docs-error {
+  margin: 0.75rem 0 0;
+  color: var(--red);
+  font-weight: 600;
+  min-height: 1.2em;
+}
+
+.docs-note {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.docs-sidebar {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  background: var(--surface);
+}
+
+.docs-sidebar h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.docs-sidebar nav {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.docs-sidebar a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.docs-nav-group {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.docs-nav-sub {
+  display: grid;
+  gap: 0.25rem;
+  padding-left: 0.5rem;
+  margin-top: -0.1rem;
+}
+
+.docs-nav-sub a {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding: 0.2rem 0.4rem;
+}
+
+.docs-nav-sub a:hover {
+  color: var(--text);
+}
+
+.docs-sidebar a:hover {
+  border-color: var(--border);
+  background: rgba(214, 40, 40, 0.08);
+}
+
+.docs-panels {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.docs-panel {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  background: var(--surface);
+}
+
+.docs-panel h2 {
+  margin: 0 0 0.75rem;
+}
+
+.docs-panel h3 {
+  margin: 1rem 0 0.35rem;
+  font-size: 1rem;
+}
+
+.docs-panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+@media (max-width: 900px) {
+  .docs-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-sidebar {
+    position: static;
+  }
+}
+
 .visit-hero {
   margin-bottom: 2.5rem;
 }
