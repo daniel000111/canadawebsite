@@ -1,6 +1,6 @@
 [
-  { "file": "assets/screenshots/toronto.jpg", "place": "Toronto", "prov": "ON" },
-  { "file": "assets/screenshots/stjohns.jpg", "place": "St. John's", "prov": "NL" },
-  { "file": "assets/screenshots/halifax.jpg", "place": "Halifax", "prov": "NS" },
-  { "file": "assets/screenshots/ottawa.jpg", "place": "Ottawa", "prov": "ON" }
+  { "file": "assets/screenshots/toronto.jpg", "place": "Toronto", "prov": "ON", "builders": ["Builder1", "Builder2"] },
+  { "file": "assets/screenshots/stjohns.jpg", "place": "St. John's", "prov": "NL", "builders": ["Builder1"] },
+  { "file": "assets/screenshots/halifax.jpg", "place": "Halifax", "prov": "NS", "builders": ["Builder1"] },
+  { "file": "assets/screenshots/ottawa.jpg", "place": "Ottawa", "prov": "ON", "builders": ["Builder1", "Builder2", "Builder3"] }
 ]

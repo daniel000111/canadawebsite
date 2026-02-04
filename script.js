@@ -72,7 +72,7 @@ function toggleMapNav() {
 // -------------------------------
 // SHOWCASE PAGE: grid + fullscreen lightbox (works with your HTML)
 // Requires: <div id="shotGrid"></div> and your lightbox IDs
-// Data: screenshots.json [{ file: "...", place: "...", prov: "..." }, ...]
+// Data: screenshots.json [{ file: "...", place: "...", prov: "...", builders: ["..."] }, ...]
 // -------------------------------
 
 let SHOTS = [];
@@ -95,7 +95,8 @@ async function initShowcaseGrid() {
       .map(s => ({
         file: String(s.file || "").trim(),
         place: String(s.place || "").trim(),
-        prov: String(s.prov || "").trim()
+        prov: String(s.prov || "").trim(),
+        builders: Array.isArray(s.builders) ? s.builders.map(b => String(b || "").trim()).filter(Boolean) : []
       }))
       .filter(s => s.file);
 
@@ -111,6 +112,7 @@ async function initShowcaseGrid() {
       card.style.cursor = "zoom-in";
 
       const prov = escapeHtml(s.prov || "");
+      const builders = (s.builders || []).map(escapeHtml).join(", ");
       card.innerHTML = `
         <img src="${s.file}" alt="${escapeHtml(s.place || "Screenshot")}" loading="lazy" />
         <div class="shot-card-body">
@@ -118,6 +120,7 @@ async function initShowcaseGrid() {
             <p class="shot-place">${escapeHtml(s.place || "Unknown Location")}</p>
             ${prov ? `<span class="shot-pill">${prov}</span>` : ""}
           </div>
+          ${builders ? `<p class="shot-builders">Builders: <code>${builders}</code></p>` : ""}
         </div>
       `;
 
@@ -219,6 +222,7 @@ async function initShotCarousel() {
     slide.style.backgroundImage = `url("${s.file}")`;
 
     const prov = escapeHtml(s.prov || "");
+    const builders = (s.builders || []).map(escapeHtml).join(", ");
     slide.innerHTML = `
       <div class="shot-overlay"></div>
       <div class="shot-caption">
@@ -226,6 +230,7 @@ async function initShotCarousel() {
           <h3>${escapeHtml(s.place || "Unknown Location")}</h3>
           ${prov ? `<span class="shot-pill">${prov}</span>` : ""}
         </div>
+        ${builders ? `<p class="shot-builders">Builders: <code>${builders}</code></p>` : ""}
       </div>
     `;
 

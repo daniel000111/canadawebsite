@@ -263,6 +263,16 @@ body {
   color: #fff;
 }
 
+.shot-caption .shot-builders {
+  margin-top: 0.25rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.shot-caption .shot-builders code {
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+}
+
 .shot-arrow {
   position: absolute;
   top: 50%;
@@ -358,6 +368,21 @@ body {
 .shot-card .shot-place {
   font-weight: 800;
   margin: 0;
+}
+
+.shot-builders {
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.shot-builders code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.82rem;
+  background: rgba(214, 40, 40, 0.08);
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+  color: var(--text);
 }
 
 .shot-pill {
