@@ -1,5 +1,6 @@
 [
-  { "file": "assets/screenshots/toronto.jpg", "place": "Toronto" },
-  { "file": "assets/screenshots/stjohns.jpg", "place": "St. John's" },
-  { "file": "assets/screenshots/wem.jpg", "place": "West Edmonton Mall" }
+  { "file": "assets/screenshots/toronto.png", "place": "Toronto, ON" },
+  { "file": "assets/screenshots/stjohns.png", "place": "St. John's, NL" },
+  { "file": "assets/screenshots/halifax.png", "place": "Halifax, NS" }
+  { "file": "assets/screenshots/ottawa.png", "place": "Ottawa, ON" }
 ]
