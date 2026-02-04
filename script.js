@@ -55,6 +55,20 @@ function toggleTheme() {
   }
 }
 
+function toggleMapNav() {
+  const body = document.body;
+  if (!body || !body.classList.contains("map-page")) return;
+
+  const btn = document.querySelector(".map-nav-toggle");
+  const isHidden = body.classList.toggle("nav-hidden");
+
+  if (btn) {
+    btn.setAttribute("aria-pressed", isHidden ? "true" : "false");
+    btn.setAttribute("aria-label", isHidden ? "Show navigation" : "Hide navigation");
+    btn.setAttribute("title", isHidden ? "Show navigation" : "Hide navigation");
+  }
+}
+
 // -------------------------------
 // SHOWCASE PAGE: grid + fullscreen lightbox (works with your HTML)
 // Requires: <div id="shotGrid"></div> and your lightbox IDs
@@ -269,5 +283,4 @@ function shuffleArray(arr) {
 document.addEventListener("DOMContentLoaded", () => {
   initShotCarousel();
 });
-
 

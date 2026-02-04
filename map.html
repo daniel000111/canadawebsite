@@ -10,6 +10,7 @@
 <body class="map-page">
   <!-- NAVBAR -->
     <header class="nav-wrap">
+    <div class="nav-clip">
     <nav class="nav">
         <!-- LEFT: Brand -->
         <div class="nav-left fade-in fade-delay-1">
@@ -59,6 +60,12 @@
         </a>
         </div>
     </nav>
+    </div>
+    <button class="map-nav-toggle" type="button" onclick="toggleMapNav()" aria-pressed="false" aria-label="Hide navigation" title="Hide navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 7l-6 6h12l-6-6z"></path>
+      </svg>
+    </button>
     </header>
 
   <!-- MAP -->
