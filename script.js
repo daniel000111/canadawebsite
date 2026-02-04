@@ -56,102 +56,75 @@ function toggleTheme() {
 }
 
 // -------------------------------
-// SHOWCASE PAGE (Grid + Lightbox)
+// SHOWCASE PAGE: grid + fullscreen lightbox (works with your HTML)
+// Requires: <div id="shotGrid"></div> and your lightbox IDs
+// Data: screenshots.json [{ file: "...", place: "..." }, ...]
 // -------------------------------
 
-const SHOTS_JSON_URL = "screenshots.json"; // change if you put it elsewhere
-let ALL_SHOTS = [];
-let currentIndex = 0;
+let SHOTS = [];
+let CURRENT = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
-  initShowcasePage();
+  initShowcaseGrid();
 });
 
-async function initShowcasePage() {
+async function initShowcaseGrid() {
   const grid = document.getElementById("shotGrid");
-  if (!grid) return; // not on showcase page
+  if (!grid) return; // not on showcase.html
 
-  ALL_SHOTS = await loadShots(SHOTS_JSON_URL);
-
-  if (!ALL_SHOTS.length) {
-    grid.innerHTML = `
-      <p style="color: var(--muted); max-width: 700px; margin: 0 auto;">
-        No screenshots found. Make sure <code>${SHOTS_JSON_URL}</code> exists and contains an array of
-        { "file": "...", "place": "..." }.
-      </p>
-    `;
-    return;
-  }
-
-  renderShotGrid(grid, ALL_SHOTS);
-
-  // Keyboard controls for lightbox
-  document.addEventListener("keydown", (e) => {
-    const box = document.getElementById("lightbox");
-    if (!box || !box.classList.contains("open")) return;
-
-    if (e.key === "Escape") closeLightbox();
-    if (e.key === "ArrowLeft") showPrev();
-    if (e.key === "ArrowRight") showNext();
-  });
-}
-
-async function loadShots(url) {
   try {
-    const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) throw new Error("Failed to load " + url);
+    const res = await fetch("screenshots.json", { cache: "no-store" });
+    if (!res.ok) throw new Error("screenshots.json not found");
     const data = await res.json();
 
-    // Normalize
-    return (Array.isArray(data) ? data : [])
-      .map((s) => ({
-        file: String(s.file || "").trim(),
-        place: String(s.place || "").trim(),
-      }))
-      .filter((s) => s.file.length);
+    SHOTS = (Array.isArray(data) ? data : [])
+      .map(s => ({ file: String(s.file || "").trim(), place: String(s.place || "").trim() }))
+      .filter(s => s.file);
+
+    if (!SHOTS.length) {
+      grid.innerHTML = `<p style="color:var(--muted);">No screenshots in screenshots.json</p>`;
+      return;
+    }
+
+    grid.innerHTML = "";
+    SHOTS.forEach((s, i) => {
+      const card = document.createElement("div");
+      card.className = "shot-card";
+      card.style.cursor = "zoom-in";
+
+      card.innerHTML = `
+        <img src="${s.file}" alt="${escapeHtml(s.place || "Screenshot")}" loading="lazy" />
+        <div class="shot-card-body">
+          <p class="shot-place">${escapeHtml(s.place || "Unknown Location")}</p>
+        </div>
+      `;
+
+      card.addEventListener("click", () => openLightbox(i));
+      grid.appendChild(card);
+    });
+
   } catch (err) {
     console.error(err);
-    return [];
+    grid.innerHTML = `<p style="color:var(--muted);">Couldn’t load screenshots.json</p>`;
   }
 }
-
-function renderShotGrid(grid, shots) {
-  grid.innerHTML = "";
-
-  shots.forEach((s, i) => {
-    const card = document.createElement("div");
-    card.className = "shot-card";
-    card.style.cursor = "zoom-in";
-
-    card.innerHTML = `
-      <img src="${s.file}" alt="${escapeHtml(s.place || "BTE Canada Screenshot")}" loading="lazy" />
-      <div class="shot-card-body">
-        <p class="shot-place">${escapeHtml(s.place || "Unknown Location")}</p>
-      </div>
-    `;
-
-    card.addEventListener("click", () => openLightbox(i));
-    grid.appendChild(card);
-  });
-}
-
-// -------------------------------
-// Lightbox functions (matches YOUR HTML)
-// -------------------------------
 
 function openLightbox(index) {
   const box = document.getElementById("lightbox");
   const img = document.getElementById("lightboxImg");
   const cap = document.getElementById("lightboxCaption");
 
-  if (!box || !img || !cap) return;
+  if (!box || !img || !cap) {
+    console.error("Lightbox elements missing from HTML");
+    return;
+  }
 
-  currentIndex = index;
+  CURRENT = index;
 
-  const shot = ALL_SHOTS[currentIndex];
-  img.src = shot.file;
-  img.alt = shot.place || "BTE Canada Screenshot";
-  cap.textContent = shot.place || "";
+  const s = SHOTS[CURRENT];
+  img.src = s.file;
+  img.alt = s.place || "Screenshot";
+  cap.textContent = s.place || "";
 
   box.classList.add("open");
   box.setAttribute("aria-hidden", "false");
@@ -161,6 +134,7 @@ function openLightbox(index) {
 function closeLightbox() {
   const box = document.getElementById("lightbox");
   const img = document.getElementById("lightboxImg");
+
   if (!box) return;
 
   box.classList.remove("open");
@@ -170,33 +144,14 @@ function closeLightbox() {
   if (img) img.src = "";
 }
 
-// Optional next/prev (keyboard arrows)
-function showPrev() {
-  if (!ALL_SHOTS.length) return;
-  currentIndex = (currentIndex - 1 + ALL_SHOTS.length) % ALL_SHOTS.length;
-  updateLightbox();
-}
+// ESC to close
+document.addEventListener("keydown", (e) => {
+  const box = document.getElementById("lightbox");
+  if (!box || !box.classList.contains("open")) return;
+  if (e.key === "Escape") closeLightbox();
+});
 
-function showNext() {
-  if (!ALL_SHOTS.length) return;
-  currentIndex = (currentIndex + 1) % ALL_SHOTS.length;
-  updateLightbox();
-}
-
-function updateLightbox() {
-  const img = document.getElementById("lightboxImg");
-  const cap = document.getElementById("lightboxCaption");
-  if (!img || !cap) return;
-
-  const shot = ALL_SHOTS[currentIndex];
-  img.src = shot.file;
-  img.alt = shot.place || "BTE Canada Screenshot";
-  cap.textContent = shot.place || "";
-}
-
-// -------------------------------
-// Small helper
-// -------------------------------
+// helper
 function escapeHtml(str) {
   return String(str)
     .replaceAll("&", "&amp;")

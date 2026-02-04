@@ -392,6 +392,9 @@ body {
 }
 html.lightbox-open .lightbox{ display:block; }
 
+.lightbox { display: none; }
+.lightbox.open { display: block; }
+
 .lightbox-backdrop{
   position: absolute;
   inset: 0;
