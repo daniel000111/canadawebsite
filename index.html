@@ -88,14 +88,24 @@
 </section>
 
 <!-- SHOWCASE -->
-<section id="showcase">
-  <h2 class="section-title">Showcase</h2>
+<section id="showcase" class="showcase">
+  <div class="showcase-head">
+    <h2 class="section-title">Showcase</h2>
+    <a class="cta-btn ghost" href="showcase.html">See more</a>
+  </div>
 
-  <div class="showcase-grid">
-    <img src="assets/showcase/build1.jpg" alt="Build 1">
-    <img src="assets/showcase/build2.jpg" alt="Build 2">
-    <img src="assets/showcase/build3.jpg" alt="Build 3">
-    <img src="assets/showcase/build4.jpg" alt="Build 4">
+  <div class="shot-carousel" id="shotCarousel" aria-label="Showcase carousel">
+    <button class="shot-arrow left" type="button" aria-label="Previous" onclick="shotPrev()">‹</button>
+
+    <div class="shot-track" id="shotTrack">
+      <!-- slides injected by JS -->
+    </div>
+
+    <button class="shot-arrow right" type="button" aria-label="Next" onclick="shotNext()">›</button>
+
+    <div class="shot-dots" id="shotDots" aria-label="Carousel dots">
+      <!-- dots injected by JS -->
+    </div>
   </div>
 </section>
 
