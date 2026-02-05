@@ -171,7 +171,7 @@ function openLightbox(index) {
   const s = SHOTS[CURRENT];
   img.src = s.file;
   img.alt = s.place || "Screenshot";
-  cap.textContent = s.place || "";
+  cap.textContent = `${s.place || ""} (scroll to zoom)`;
   resetLightboxZoom();
   if (frame) {
     frame.classList.remove("swap");
