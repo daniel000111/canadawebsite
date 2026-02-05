@@ -1008,8 +1008,8 @@ html.lightbox-open .lightbox{ display:block; }
   background: rgba(255,255,255,0.12);
   color: #fff;
 }
-.lightbox-nav.prev{ left: -50px; }
-.lightbox-nav.next{ right: -50px; }
+.lightbox-nav.prev{ left: -75px; }
+.lightbox-nav.next{ right: -75px; }
 .lightbox-nav:disabled{ opacity: 0.35; cursor: default; }
 
 
