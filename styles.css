@@ -942,7 +942,7 @@ html.lightbox-open .lightbox{ display:block; }
   width: 100%;
   display: grid;
   gap: 0.75rem;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 16px;
   position: relative;
 }
@@ -955,6 +955,7 @@ html.lightbox-open .lightbox{ display:block; }
   transform-origin: var(--zoom-x, 50%) var(--zoom-y, 50%);
   cursor: zoom-in;
   border-radius: 16px;
+  display: block;
 }
 .lightbox-img.zoomed{
   transform: scale(var(--zoom, 1.6));
@@ -970,8 +971,8 @@ html.lightbox-open .lightbox{ display:block; }
 
 .lightbox-close{
   position: absolute;
-  top: -18px;
-  right: -18px;
+  top: -26px;
+  right: -26px;
   width: 44px;
   height: 44px;
   border-radius: 999px;
@@ -996,8 +997,8 @@ html.lightbox-open .lightbox{ display:block; }
   background: rgba(255,255,255,0.12);
   color: #fff;
 }
-.lightbox-nav.prev{ left: -18px; }
-.lightbox-nav.next{ right: -18px; }
+.lightbox-nav.prev{ left: -26px; }
+.lightbox-nav.next{ right: -26px; }
 .lightbox-nav:disabled{ opacity: 0.35; cursor: default; }
 
 
