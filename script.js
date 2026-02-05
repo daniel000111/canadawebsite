@@ -159,6 +159,7 @@ function openLightbox(index) {
   const box = document.getElementById("lightbox");
   const img = document.getElementById("lightboxImg");
   const cap = document.getElementById("lightboxCaption");
+  const frame = document.querySelector(".lightbox-frame");
 
   if (!box || !img || !cap) {
     console.error("Lightbox elements missing from HTML");
@@ -172,6 +173,11 @@ function openLightbox(index) {
   img.alt = s.place || "Screenshot";
   cap.textContent = s.place || "";
   resetLightboxZoom();
+  if (frame) {
+    frame.classList.remove("swap");
+    void frame.offsetWidth;
+    frame.classList.add("swap");
+  }
 
   box.classList.add("open");
   document.documentElement.classList.add("lightbox-open");
