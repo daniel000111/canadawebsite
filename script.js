@@ -96,6 +96,7 @@ let CURRENT = 0;
 document.addEventListener("DOMContentLoaded", () => {
   initShowcaseGrid();
   initDocsGate();
+  initLightboxZoom();
 });
 
 async function initShowcaseGrid() {
@@ -166,8 +167,12 @@ function openLightbox(index) {
   img.src = s.file;
   img.alt = s.place || "Screenshot";
   cap.textContent = s.place || "";
+  img.classList.remove("zoomed");
+  img.style.removeProperty("--zoom-x");
+  img.style.removeProperty("--zoom-y");
 
   box.classList.add("open");
+  document.documentElement.classList.add("lightbox-open");
   box.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 }
@@ -179,10 +184,16 @@ function closeLightbox() {
   if (!box) return;
 
   box.classList.remove("open");
+  document.documentElement.classList.remove("lightbox-open");
   box.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
 
-  if (img) img.src = "";
+  if (img) {
+    img.src = "";
+    img.classList.remove("zoomed");
+    img.style.removeProperty("--zoom-x");
+    img.style.removeProperty("--zoom-y");
+  }
 }
 
 // ESC to close
@@ -191,6 +202,36 @@ document.addEventListener("keydown", (e) => {
   if (!box || !box.classList.contains("open")) return;
   if (e.key === "Escape") closeLightbox();
 });
+
+function initLightboxZoom() {
+  const box = document.getElementById("lightbox");
+  const img = document.getElementById("lightboxImg");
+  if (!box || !img) return;
+
+  img.addEventListener("click", (e) => {
+    e.stopPropagation();
+    img.classList.toggle("zoomed");
+    if (!img.classList.contains("zoomed")) {
+      img.style.setProperty("--zoom-x", "50%");
+      img.style.setProperty("--zoom-y", "50%");
+    }
+  });
+
+  img.addEventListener("mousemove", (e) => {
+    if (!img.classList.contains("zoomed")) return;
+    const rect = img.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    img.style.setProperty("--zoom-x", `${x}%`);
+    img.style.setProperty("--zoom-y", `${y}%`);
+  });
+
+  img.addEventListener("mouseleave", () => {
+    if (!img.classList.contains("zoomed")) return;
+    img.style.setProperty("--zoom-x", "50%");
+    img.style.setProperty("--zoom-y", "50%");
+  });
+}
 
 // helper
 function escapeHtml(str) {
