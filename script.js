@@ -92,6 +92,10 @@ function toggleMapNav() {
 
 let SHOTS = [];
 let CURRENT = 0;
+let LIGHTBOX_ZOOM = 1;
+const LIGHTBOX_ZOOM_MIN = 1;
+const LIGHTBOX_ZOOM_MAX = 3;
+const LIGHTBOX_ZOOM_STEP = 0.15;
 
 document.addEventListener("DOMContentLoaded", () => {
   initShowcaseGrid();
@@ -167,9 +171,7 @@ function openLightbox(index) {
   img.src = s.file;
   img.alt = s.place || "Screenshot";
   cap.textContent = s.place || "";
-  img.classList.remove("zoomed");
-  img.style.removeProperty("--zoom-x");
-  img.style.removeProperty("--zoom-y");
+  resetLightboxZoom();
 
   box.classList.add("open");
   document.documentElement.classList.add("lightbox-open");
@@ -190,9 +192,7 @@ function closeLightbox() {
 
   if (img) {
     img.src = "";
-    img.classList.remove("zoomed");
-    img.style.removeProperty("--zoom-x");
-    img.style.removeProperty("--zoom-y");
+    resetLightboxZoom();
   }
 }
 
@@ -201,6 +201,8 @@ document.addEventListener("keydown", (e) => {
   const box = document.getElementById("lightbox");
   if (!box || !box.classList.contains("open")) return;
   if (e.key === "Escape") closeLightbox();
+  if (e.key === "ArrowLeft") lightboxPrev();
+  if (e.key === "ArrowRight") lightboxNext();
 });
 
 function initLightboxZoom() {
@@ -210,15 +212,16 @@ function initLightboxZoom() {
 
   img.addEventListener("click", (e) => {
     e.stopPropagation();
-    img.classList.toggle("zoomed");
-    if (!img.classList.contains("zoomed")) {
-      img.style.setProperty("--zoom-x", "50%");
-      img.style.setProperty("--zoom-y", "50%");
+    if (LIGHTBOX_ZOOM <= 1) {
+      setLightboxZoom(1.6);
+      img.classList.add("zoomed");
+    } else {
+      resetLightboxZoom();
     }
   });
 
   img.addEventListener("mousemove", (e) => {
-    if (!img.classList.contains("zoomed")) return;
+    if (LIGHTBOX_ZOOM <= 1) return;
     const rect = img.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -227,10 +230,58 @@ function initLightboxZoom() {
   });
 
   img.addEventListener("mouseleave", () => {
-    if (!img.classList.contains("zoomed")) return;
+    if (LIGHTBOX_ZOOM <= 1) return;
     img.style.setProperty("--zoom-x", "50%");
     img.style.setProperty("--zoom-y", "50%");
   });
+
+  box.addEventListener(
+    "wheel",
+    (e) => {
+      if (!box.classList.contains("open")) return;
+      e.preventDefault();
+      const dir = e.deltaY > 0 ? -1 : 1;
+      const nextZoom = LIGHTBOX_ZOOM + dir * LIGHTBOX_ZOOM_STEP;
+      setLightboxZoom(nextZoom);
+    },
+    { passive: false }
+  );
+}
+
+function setLightboxZoom(value) {
+  const img = document.getElementById("lightboxImg");
+  if (!img) return;
+  LIGHTBOX_ZOOM = Math.min(LIGHTBOX_ZOOM_MAX, Math.max(LIGHTBOX_ZOOM_MIN, value));
+  img.style.setProperty("--zoom", LIGHTBOX_ZOOM.toFixed(2));
+  if (LIGHTBOX_ZOOM > 1) {
+    img.classList.add("zoomed");
+  } else {
+    img.classList.remove("zoomed");
+    img.style.setProperty("--zoom-x", "50%");
+    img.style.setProperty("--zoom-y", "50%");
+  }
+}
+
+function resetLightboxZoom() {
+  const img = document.getElementById("lightboxImg");
+  if (!img) return;
+  LIGHTBOX_ZOOM = 1;
+  img.classList.remove("zoomed");
+  img.style.removeProperty("--zoom");
+  img.style.setProperty("--zoom-x", "50%");
+  img.style.setProperty("--zoom-y", "50%");
+}
+
+function lightboxPrev() {
+  if (!SHOTS.length) return;
+  CURRENT = (CURRENT - 1 + SHOTS.length) % SHOTS.length;
+  openLightbox(CURRENT);
+}
+
+function lightboxNext() {
+  if (!SHOTS.length) return;
+  CURRENT = (CURRENT + 1) % SHOTS.length;
+  openLightbox(CURRENT);
 }
 
 // helper
