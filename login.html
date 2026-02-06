@@ -3,35 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BTE Canada - Showcase</title>
+  <title>BTE Canada - Login</title>
   <link rel="icon" href="assets/logo-square.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
   <!-- NAVBAR -->
-    <header class="nav-wrap">
+  <header class="nav-wrap">
     <nav class="nav">
-        <!-- LEFT: Brand -->
-        <div class="nav-left fade-in fade-delay-1">
+      <div class="nav-left fade-in fade-delay-1">
         <a href="index.html" class="brand">
-            <img src="assets/logo-square.gif" alt="BTE Canada Logo" class="nav-logo" />
-            <span class="brand-text">BTE CANADA</span>
+          <img src="assets/logo-square.png" alt="BTE Canada Logo" class="nav-logo" />
+          <span class="brand-text">BTE CANADA</span>
         </a>
-        </div>
+      </div>
 
-        <!-- CENTER: Links -->
-        <div class="nav-center fade-in fade-delay-2">
+      <div class="nav-center fade-in fade-delay-2">
         <a href="index.html">Home</a>
-        <a href="showcase.html"  class="active">Showcase</a>
+        <a href="showcase.html">Showcase</a>
         <a href="visit.html">Visit</a>
         <a href="build.html">Build</a>
         <a href="docs.html">Docs</a>
         <a href="map.html">Map</a>
-        </div>
+      </div>
 
-        <!-- RIGHT: Socials -->
-            <div class="nav-right fade-in fade-delay-3">
+          <div class="nav-right fade-in fade-delay-3">
       <a class="icon-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" aria-label="Discord">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.249a18.27 18.27 0 0 0-5.487 0c-.164-.385-.397-.874-.608-1.249a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.683 4.37a.07.07 0 0 0-.032.027C.533 9.045-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.461-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.371-.291a.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.099.245.197.372.291a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.106c.36.699.772 1.364 1.225 1.994a.076.076 0 0 0 .084.028 19.9 19.9 0 0 0 5.994-3.03.077.077 0 0 0 .03-.056c.5-5.177-.838-9.673-3.548-13.66a.061.061 0 0 0-.031-.03z"/>
@@ -66,43 +62,53 @@
       </div>
     </div>
   </nav>
-    </header>
+  </header>
 
-  <main class="showcase-page">
-    <h1 class="section-title">All Screenshots</h1>
-    <p class="section-text">A collection of builds and locations across Canada.</p>
-
-    <div class="shot-grid" id="shotGrid">
-      <!-- cards injected by JS -->
-    </div>
+  <main class="visit-page">
+    <section class="docs-card">
+      <h2>Admin Login</h2>
+      <p class="section-text">Sign in with Discord to access the uploader.</p>
+      <button class="cta-btn" id="discordLogin" type="button">Continue with Discord</button>
+      <p class="docs-note" id="loginStatus"></p>
+    </section>
   </main>
 
-  <!-- Lightbox -->
-  <div id="lightbox" class="lightbox" aria-hidden="true">
-    <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+  <footer class="footer">
+    2026 BTE Canada · Not affiliated with Mojang
+  </footer>
 
-    <div class="lightbox-panel">
-      <figure class="lightbox-figure">
-        <div class="lightbox-frame">
-          <img id="lightboxImg" class="lightbox-img" alt="" />
-        </div>
-        <button class="lightbox-nav prev" onclick="lightboxPrev()" aria-label="Previous">&#8249;</button>
-        <button class="lightbox-nav next" onclick="lightboxNext()" aria-label="Next">&#8250;</button>
-        <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">&times;</button>
-        <figcaption id="lightboxCaption" class="lightbox-cap"></figcaption>
-      </figure>
-    </div>
-  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    (function () {
+      const supabaseConfig = window.APP_SUPABASE || {};
+      const sbClient = window.APP_SUPABASE_CLIENT || window.supabase?.createClient(supabaseConfig.url, supabaseConfig.key);
 
-<footer class="footer">
-  2026 BTE Canada · Not affiliated with Mojang
-</footer>
+      const btn = document.getElementById("discordLogin");
+      const status = document.getElementById("loginStatus");
 
-<script src="script.js"></script>
-
+      btn.addEventListener("click", async () => {
+        if (!sbClient) {
+          status.textContent = "Supabase failed to load. Please refresh and try again.";
+          return;
+        }
+        btn.disabled = true;
+        status.textContent = "Redirecting to Discord...";
+        const redirectTo = location.origin + (location.pathname.endsWith("/login") ? "/admin" : "/admin.html");
+        const { error } = await sbClient.auth.signInWithOAuth({
+          provider: "discord",
+          options: { redirectTo }
+        });
+        if (error) {
+          console.error("Discord login failed:", error);
+          status.textContent = `Login failed: ${error.message}`;
+          btn.disabled = false;
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
-
 
 
 

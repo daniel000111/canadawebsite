@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BTE Canada - Admin Upload</title>
+  <link rel="icon" href="assets/logo-square.png" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="nav-wrap">
+    <nav class="nav">
+      <div class="nav-left fade-in fade-delay-1">
+        <a href="index.html" class="brand">
+          <img src="assets/logo-square.png" alt="BTE Canada Logo" class="nav-logo" />
+          <span class="brand-text">BTE CANADA</span>
+        </a>
+      </div>
+
+      <div class="nav-center fade-in fade-delay-2">
+        <a href="index.html">Home</a>
+        <a href="showcase.html">Showcase</a>
+        <a href="visit.html">Visit</a>
+        <a href="build.html">Build</a>
+        <a href="docs.html">Docs</a>
+        <a href="map.html">Map</a>
+      </div>
+
+          <div class="nav-right fade-in fade-delay-3">
+      <a class="icon-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" aria-label="Discord">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.249a18.27 18.27 0 0 0-5.487 0c-.164-.385-.397-.874-.608-1.249a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.683 4.37a.07.07 0 0 0-.032.027C.533 9.045-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.461-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.371-.291a.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.099.245.197.372.291a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.106c.36.699.772 1.364 1.225 1.994a.076.076 0 0 0 .084.028 19.9 19.9 0 0 0 5.994-3.03.077.077 0 0 0 .03-.056c.5-5.177-.838-9.673-3.548-13.66a.061.061 0 0 0-.031-.03z"/>
+        </svg>
+      </a>
+      <a class="icon-btn" href="https://www.instagram.com/bte.canada/" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10zm-5 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm4.75-.75a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5z"/>
+        </svg>
+      </a>
+      <a class="icon-btn" href="https://www.tiktok.com/@btecanada" target="_blank" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M16.5 3a5.5 5.5 0 0 0 4 1.8V8a8.4 8.4 0 0 1-4-1.1v6.6a6.5 6.5 0 1 1-6.5-6.5c.3 0 .6 0 .9.1V10a3.5 3.5 0 1 0 2.6 3.4V3h3z"/>
+        </svg>
+      </a>
+      <div class="settings-wrap">
+        <button class="settings-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Open settings" onclick="toggleSettingsMenu(event)">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19.14 12.94a7.94 7.94 0 0 0 .05-.94 7.94 7.94 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.6 7.6 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.75 8.86a.5.5 0 0 0 .12.64l2.03 1.58c-.03.31-.05.63-.05.94s.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.5.42 1.05.72 1.63.94l.36 2.54a.5.5 0 0 0 .5.42h3.84a.5.5 0 0 0 .5-.42l.36-2.54c.58-.22 1.12-.52 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"></path>
+          </svg>
+        </button>
+        <div class="settings-menu" aria-hidden="true">
+          <button class="theme-btn ghost" type="button" onclick="toggleTheme()" aria-label="Toggle theme">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"></path>
+            </svg>
+            <span class="theme-label">Light</span>
+          </button>
+          <a class="cta-btn admin-btn" id="adminLink" href="login.html">Admin Login</a>
+          <button class="cta-btn logout-btn" id="logoutBtnMenu" type="button">Log out</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  </header>
+
+  <main class="visit-page">
+    <section class="docs-card admin-gate" id="adminGate">
+      <h2>Admin Access Required</h2>
+      <p class="section-text">Please log in with Discord to access the admin panel.</p>
+      <a class="cta-btn admin-btn" href="login.html">Go to Login</a>
+      <p class="docs-note" id="adminGateStatus"></p>
+    </section>
+
+    <div id="adminContent" style="display:none;">
+      <section class="docs-card admin-welcome-card">
+        <h2 id="welcomeText">Welcome, Builder!</h2>
+      </section>
+
+      <section class="docs-card">
+      <h2>Screenshot Uploader</h2>
+      <p class="section-text">Upload a screenshot and add the details.</p>
+
+      <form id="uploadForm" class="docs-form">
+        <input type="file" id="imageFile" accept="image/*" required />
+        <input type="text" id="placeInput" placeholder="Place name" required />
+        <input type="text" id="provInput" placeholder="Province (e.g. ON)" />
+        <input type="text" id="buildersInput" placeholder="Builders (comma separated)" />
+        <input type="text" id="folderInput" placeholder="Optional folder (e.g. toronto)" />
+        <button class="cta-btn" type="submit">Upload</button>
+      </form>
+
+      <div class="admin-preview">
+        <img id="imagePreview" alt="Preview" />
+        <div class="admin-progress">
+          <progress id="uploadProgress" max="100" value="0"></progress>
+          <span id="uploadProgressText">0%</span>
+        </div>
+      </div>
+
+      <p class="docs-note" id="uploadStatus"></p>
+    </section>
+    <section class="docs-card admin-list-card">
+      <div class="admin-list-header">
+        <div>
+          <h2>Manage Screenshots</h2>
+          <p class="section-text">Edit details or delete uploads.</p>
+        </div>
+        <input type="search" id="adminSearch" class="admin-search" placeholder="Search by place or province..." />
+      </div>
+      <div id="adminList" class="admin-list"></div>
+    </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    2026 BTE Canada · Not affiliated with Mojang
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+  <script>
+  (function () {
+    const supabaseConfig = window.APP_SUPABASE || {};
+    const ADMIN_SUPABASE_URL = supabaseConfig.url;
+    const ADMIN_SUPABASE_ANON_KEY = supabaseConfig.key;
+    const sbClient = window.APP_SUPABASE_CLIENT || window.supabase.createClient(ADMIN_SUPABASE_URL, ADMIN_SUPABASE_ANON_KEY);
+    const SUPABASE_BUCKET = "screenshots";
+
+    const ALLOWED_DISCORD_IDS = [
+      "617699025973542930",
+      "451804972728975371"
+    ];
+
+    const gate = document.getElementById("adminGate");
+    const gateStatus = document.getElementById("adminGateStatus");
+    const content = document.getElementById("adminContent");
+    const form = document.getElementById("uploadForm");
+    const status = document.getElementById("uploadStatus");
+    const welcomeText = document.getElementById("welcomeText");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const preview = document.getElementById("imagePreview");
+    const progress = document.getElementById("uploadProgress");
+    const progressText = document.getElementById("uploadProgressText");
+    const listEl = document.getElementById("adminList");
+    const searchInput = document.getElementById("adminSearch");
+
+    async function requireSession() {
+      const { data } = await sbClient.auth.getSession();
+      if (!data.session) {
+        if (gate) gate.hidden = false;
+        if (content) content.style.display = "none";
+        window.location.href = "login.html";
+        return null;
+      }
+      const discordIdentity = data.session.user?.identities?.find((i) => i.provider === "discord");
+      const discordId = data.session.user?.user_metadata?.provider_id
+        || data.session.user?.user_metadata?.sub
+        || discordIdentity?.id
+        || "";
+      const username = data.session.user?.user_metadata?.full_name
+        || data.session.user?.user_metadata?.name
+        || data.session.user?.user_metadata?.preferred_username
+        || data.session.user?.email
+        || "Builder";
+      if (ALLOWED_DISCORD_IDS.length && !ALLOWED_DISCORD_IDS.includes(discordId)) {
+        if (gate) gate.hidden = false;
+        if (gateStatus) gateStatus.textContent = `Not authorized. Detected Discord ID: ${discordId || "unknown"}`;
+        if (content) content.style.display = "none";
+        form.querySelectorAll("input,button").forEach((el) => (el.disabled = true));
+        return null;
+      }
+      if (gate) gate.hidden = true;
+      if (content) content.style.display = "";
+      if (welcomeText) {
+        welcomeText.textContent = `Welcome, ${username}!`;
+      }
+      return data.session;
+    }
+
+  async function uploadWithProgress(file, path, accessToken) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      const safePath = path.split("/").map(encodeURIComponent).join("/");
+      xhr.open("POST", `${ADMIN_SUPABASE_URL}/storage/v1/object/${SUPABASE_BUCKET}/${safePath}`);
+      xhr.setRequestHeader("Authorization", `Bearer ${accessToken}`);
+      xhr.setRequestHeader("apikey", ADMIN_SUPABASE_ANON_KEY);
+      xhr.setRequestHeader("x-upsert", "false");
+
+      xhr.upload.onprogress = (e) => {
+        if (!e.lengthComputable) return;
+        const pct = Math.round((e.loaded / e.total) * 100);
+        progress.value = pct;
+        progressText.textContent = `${pct}%`;
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve();
+        } else {
+          reject(new Error(xhr.responseText || "Upload failed"));
+        }
+      };
+
+      xhr.onerror = () => reject(new Error("Network error"));
+      xhr.send(file);
+    });
+  }
+
+    let ADMIN_ROWS = [];
+
+    function renderAdminList(rows) {
+      listEl.innerHTML = "";
+      if (!rows.length) {
+        listEl.innerHTML = `<p class="section-text">No screenshots match your search.</p>`;
+        return;
+      }
+
+      rows.forEach((row) => {
+        const card = document.createElement("div");
+        card.className = "admin-item";
+        const imgUrl = `${ADMIN_SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${row.image_path}`;
+        const builders = Array.isArray(row.builders) ? row.builders.join(", ") : "";
+
+        card.innerHTML = `
+          <img src="${imgUrl}" alt="${row.place || "Screenshot"}" />
+          <div class="admin-item-body">
+            <input type="text" value="${row.place || ""}" data-field="place" />
+            <input type="text" value="${row.prov || ""}" data-field="prov" />
+            <input type="text" value="${builders}" data-field="builders" />
+            <div class="admin-item-actions">
+              <button class="cta-btn admin-save" type="button">Save</button>
+              <button class="cta-btn ghost admin-delete" type="button">Delete</button>
+            </div>
+          </div>
+        `;
+
+        card.querySelector(".admin-save").addEventListener("click", async () => {
+          const place = card.querySelector("[data-field=\"place\"]").value.trim();
+          const prov = card.querySelector("[data-field=\"prov\"]").value.trim();
+          const buildersRaw = card.querySelector("[data-field=\"builders\"]").value.trim();
+          const buildersList = buildersRaw ? buildersRaw.split(",").map(s => s.trim()).filter(Boolean) : [];
+
+          const { error: updateError } = await sbClient
+            .from("screenshots")
+            .update({ place, prov, builders: buildersList })
+            .eq("id", row.id);
+
+          if (updateError) {
+            status.textContent = `Update failed: ${updateError.message}`;
+          } else {
+            status.textContent = "Updated successfully!";
+            row.place = place;
+            row.prov = prov;
+            row.builders = buildersList;
+          }
+        });
+
+        card.querySelector(".admin-delete").addEventListener("click", async () => {
+          if (!confirm("Delete this screenshot?")) return;
+          const { error: deleteError } = await sbClient
+            .from("screenshots")
+            .delete()
+            .eq("id", row.id);
+
+          if (deleteError) {
+            status.textContent = `Delete failed: ${deleteError.message}`;
+            return;
+          }
+
+          await sbClient.storage.from(SUPABASE_BUCKET).remove([row.image_path]);
+          status.textContent = "Deleted.";
+          ADMIN_ROWS = ADMIN_ROWS.filter((r) => r.id !== row.id);
+          renderAdminList(filterRows(searchInput?.value || ""));
+        });
+
+        listEl.appendChild(card);
+      });
+    }
+
+    function filterRows(term) {
+      const q = term.toLowerCase().trim();
+      if (!q) return ADMIN_ROWS;
+      return ADMIN_ROWS.filter((row) => {
+        return (row.place || "").toLowerCase().includes(q)
+          || (row.prov || "").toLowerCase().includes(q);
+      });
+    }
+
+    async function loadAdminList() {
+      const { data, error } = await sbClient
+        .from("screenshots")
+        .select("id,image_path,place,prov,builders,created_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        listEl.textContent = `Failed to load list: ${error.message}`;
+        return;
+      }
+
+      ADMIN_ROWS = data || [];
+      if (!ADMIN_ROWS.length) {
+        listEl.innerHTML = `<p class="section-text">No screenshots yet.</p>`;
+        return;
+      }
+      renderAdminList(ADMIN_ROWS);
+    }
+
+  document.getElementById("imageFile").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      preview.removeAttribute("src");
+      return;
+    }
+    preview.src = URL.createObjectURL(file);
+  });
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async () => {
+        await sbClient.auth.signOut();
+        window.location.href = "login.html";
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", () => {
+        renderAdminList(filterRows(searchInput.value));
+      });
+    }
+
+    (async () => {
+      const session = await requireSession();
+      if (!session) return;
+      await loadAdminList();
+    })();
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    status.textContent = "Uploading...";
+    progress.value = 0;
+    progressText.textContent = "0%";
+
+    const file = document.getElementById("imageFile").files[0];
+    const place = document.getElementById("placeInput").value.trim();
+    const prov = document.getElementById("provInput").value.trim();
+    const buildersRaw = document.getElementById("buildersInput").value.trim();
+    const folder = document.getElementById("folderInput").value.trim();
+
+    if (!file || !place) {
+      status.textContent = "Please add a file and place name.";
+      return;
+    }
+
+      const { data } = await sbClient.auth.getSession();
+      const accessToken = data.session?.access_token;
+    if (!accessToken) {
+      status.textContent = "Session expired. Please log in again.";
+      return;
+    }
+
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const prefix = folder ? `${folder.replace(/[^a-zA-Z0-9/_-]/g, "")}/` : "";
+    const path = `${prefix}${Date.now()}_${safeName}`;
+
+    try {
+      await uploadWithProgress(file, path, accessToken);
+    } catch (err) {
+      status.textContent = `Upload failed: ${err.message}`;
+      return;
+    }
+
+    const builders = buildersRaw
+      ? buildersRaw.split(",").map(s => s.trim()).filter(Boolean)
+      : [];
+
+      const { error: insertError } = await sbClient
+        .from("screenshots")
+        .insert([{ image_path: path, place, prov, builders }]);
+
+    if (insertError) {
+      status.textContent = `Database error: ${insertError.message}`;
+      return;
+    }
+
+    status.textContent = "Uploaded successfully!";
+    form.reset();
+    preview.removeAttribute("src");
+    await loadAdminList();
+  });
+  })();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

@@ -70,6 +70,121 @@ function updateThemeToggleLabel() {
   });
 }
 
+function toggleSettingsMenu(event) {
+  event.stopPropagation();
+  const wrap = event.currentTarget.closest(".settings-wrap");
+  if (!wrap) return;
+  const menu = wrap.querySelector(".settings-menu");
+  if (!menu) return;
+
+  const isOpen = menu.classList.contains("open");
+  document.querySelectorAll(".settings-menu.open").forEach((el) => {
+    el.classList.remove("open");
+    el.setAttribute("aria-hidden", "true");
+  });
+  document.querySelectorAll(".settings-btn[aria-expanded=\"true\"]").forEach((btn) => {
+    btn.setAttribute("aria-expanded", "false");
+  });
+
+  if (!isOpen) {
+    menu.classList.add("open");
+    menu.setAttribute("aria-hidden", "false");
+    event.currentTarget.setAttribute("aria-expanded", "true");
+  }
+}
+
+function initSettingsMenu() {
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".settings-menu.open").forEach((el) => {
+      el.classList.remove("open");
+      el.setAttribute("aria-hidden", "true");
+    });
+    document.querySelectorAll(".settings-btn[aria-expanded=\"true\"]").forEach((btn) => {
+      btn.setAttribute("aria-expanded", "false");
+    });
+  });
+}
+
+function initAdminLink() {
+  const adminLinks = document.querySelectorAll("#adminLink");
+  if (!adminLinks.length) return;
+  const logoutButtons = document.querySelectorAll("#logoutBtnMenu");
+
+  function setAdminLink(isAuthed) {
+    adminLinks.forEach((link) => {
+      if (isAuthed) {
+        link.textContent = "Admin Panel";
+        link.setAttribute("href", "admin.html");
+      } else {
+        link.textContent = "Admin Login";
+        link.setAttribute("href", "login.html");
+      }
+    });
+    logoutButtons.forEach((btn) => {
+      btn.style.display = isAuthed ? "inline-flex" : "none";
+    });
+  }
+
+  if (!window.supabase) {
+    setAdminLink(!!getCachedSupabaseSession());
+    return;
+  }
+
+  const client = getSupabaseClient();
+  if (!client) {
+    setAdminLink(!!getCachedSupabaseSession());
+    return;
+  }
+  client.auth.getSession().then(({ data }) => {
+    setAdminLink(!!data.session);
+  });
+
+  client.auth.onAuthStateChange((_event, session) => {
+    setAdminLink(!!session);
+  });
+}
+
+function initLogoutButton() {
+  const logoutButtons = document.querySelectorAll("#logoutBtnMenu");
+  if (!logoutButtons.length) return;
+
+  const client = getSupabaseClient();
+  logoutButtons.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      if (client) {
+        await client.auth.signOut();
+      } else {
+        clearSupabaseSession();
+      }
+      window.location.href = "login.html";
+    });
+  });
+}
+
+function getCachedSupabaseSession() {
+  try {
+    const ref = (SUPABASE_URL || "").replace("https://", "").split(".")[0];
+    const key = `sb-${ref}-auth-token`;
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (data?.expires_at && Date.now() / 1000 > data.expires_at) return null;
+    return data;
+  } catch (err) {
+    return null;
+  }
+}
+
+function clearSupabaseSession() {
+  try {
+    const ref = (SUPABASE_URL || "").replace("https://", "").split(".")[0];
+    const key = `sb-${ref}-auth-token`;
+    localStorage.removeItem(key);
+  } catch (err) {
+    return;
+  }
+}
+
 function toggleMapNav() {
   const body = document.body;
   if (!body || !body.classList.contains("map-page")) return;
@@ -87,7 +202,7 @@ function toggleMapNav() {
 // -------------------------------
 // SHOWCASE PAGE: grid + fullscreen lightbox (works with your HTML)
 // Requires: <div id="shotGrid"></div> and your lightbox IDs
-// Data: screenshots.json [{ file: "...", place: "...", prov: "...", builders: ["..."] }, ...]
+// Data: Supabase table `screenshots` with image_path, place, prov, builders
 // -------------------------------
 
 let SHOTS = [];
@@ -97,10 +212,31 @@ const LIGHTBOX_ZOOM_MIN = 1;
 const LIGHTBOX_ZOOM_MAX = 3;
 const LIGHTBOX_ZOOM_STEP = 0.15;
 
+const SUPABASE_URL = "https://ggrszibzbsvqrsowuctg.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdncnN6aWJ6YnN2cXJzb3d1Y3RnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjY4ODEsImV4cCI6MjA4NTkwMjg4MX0.GKsex6OlVv9Wtzkr4c1DmhpHsv_8l2I-6l0mmDtl0qc";
+const SUPABASE_TABLE = "screenshots";
+const SUPABASE_BUCKET = "screenshots";
+
+window.APP_SUPABASE = {
+  url: SUPABASE_URL,
+  key: SUPABASE_ANON_KEY
+};
+
+function getSupabaseClient() {
+  if (!window.supabase) return null;
+  if (!window.APP_SUPABASE_CLIENT) {
+    window.APP_SUPABASE_CLIENT = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+  return window.APP_SUPABASE_CLIENT;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initShowcaseGrid();
   initDocsGate();
   initLightboxZoom();
+  initSettingsMenu();
+  initAdminLink();
+  initLogoutButton();
 });
 
 async function initShowcaseGrid() {
@@ -108,21 +244,10 @@ async function initShowcaseGrid() {
   if (!grid) return; // not on showcase.html
 
   try {
-    const res = await fetch("screenshots.json", { cache: "no-store" });
-    if (!res.ok) throw new Error("screenshots.json not found");
-    const data = await res.json();
-
-    SHOTS = (Array.isArray(data) ? data : [])
-      .map(s => ({
-        file: String(s.file || "").trim(),
-        place: String(s.place || "").trim(),
-        prov: String(s.prov || "").trim(),
-        builders: Array.isArray(s.builders) ? s.builders.map(b => String(b || "").trim()).filter(Boolean) : []
-      }))
-      .filter(s => s.file);
+    SHOTS = await loadShots();
 
     if (!SHOTS.length) {
-      grid.innerHTML = `<p style="color:var(--muted);">No screenshots in screenshots.json</p>`;
+      grid.innerHTML = `<p style="color:var(--muted);">No screenshots found.</p>`;
       return;
     }
 
@@ -148,11 +273,56 @@ async function initShowcaseGrid() {
       card.addEventListener("click", () => openLightbox(i));
       grid.appendChild(card);
     });
-
   } catch (err) {
     console.error(err);
-    grid.innerHTML = `<p style="color:var(--muted);">Couldn’t load screenshots.json</p>`;
+    grid.innerHTML = `<p style="color:var(--muted);">Couldn’t load screenshots.</p>`;
   }
+}
+
+async function loadShots() {
+  try {
+    return await fetchShotsFromSupabase();
+  } catch (err) {
+    console.warn("Supabase fetch failed, falling back to screenshots.json", err);
+    const res = await fetch("screenshots.json", { cache: "no-store" });
+    if (!res.ok) throw new Error("screenshots.json not found");
+    const data = await res.json();
+    return normalizeShotData(data, false);
+  }
+}
+
+async function fetchShotsFromSupabase() {
+  const url = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?select=image_path,place,prov,builders&order=created_at.desc`;
+  const res = await fetch(url, {
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+    }
+  });
+  if (!res.ok) throw new Error("Supabase fetch failed");
+  const data = await res.json();
+  return normalizeShotData(data, true);
+}
+
+function normalizeShotData(data, fromSupabase) {
+  return (Array.isArray(data) ? data : [])
+    .map(s => {
+      const imagePath = String(fromSupabase ? s.image_path : s.file || "").trim();
+      const file = imagePath
+        ? (imagePath.startsWith("http://") || imagePath.startsWith("https://"))
+          ? imagePath
+          : `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${imagePath}`
+        : "";
+      return {
+        file,
+        place: String(s.place || "").trim(),
+        prov: String(s.prov || "").trim(),
+        builders: Array.isArray(s.builders)
+          ? s.builders.map(b => String(b || "").trim()).filter(Boolean)
+          : []
+      };
+    })
+    .filter(s => s.file);
 }
 
 function openLightbox(index) {
@@ -351,7 +521,7 @@ async function initShotCarousel() {
 
   // Reuse the same loader if it exists, otherwise fetch directly
   const shots = (typeof loadShots === "function")
-    ? await loadShots("screenshots.json")
+    ? await loadShots()
     : await (await fetch("screenshots.json", { cache: "no-store" })).json();
 
   if (!Array.isArray(shots) || shots.length === 0) {
@@ -450,3 +620,4 @@ function shuffleArray(arr) {
 document.addEventListener("DOMContentLoaded", () => {
   initShotCarousel();
 });
+
