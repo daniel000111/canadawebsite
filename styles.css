@@ -972,6 +972,20 @@ body.login-body {
 .admin-announcement-card {
   padding: 1.25rem 1.5rem;
   margin: 1.5rem 0;
+  text-align: center;
+}
+
+.admin-announcement-form {
+  align-items: center;
+}
+
+.admin-announcement-form textarea {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.admin-announcement-actions {
+  justify-content: center;
 }
 
 .admin-item .cta-btn{
