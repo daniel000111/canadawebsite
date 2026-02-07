@@ -67,49 +67,67 @@
   <main class="visit-page">
     <section class="docs-card admin-gate" id="adminGate">
       <h2>Admin Access Required</h2>
-      <p class="section-text">Please log in with Discord to access the admin panel.</p>
-      <a class="cta-btn admin-btn" href="login.html">Go to Login</a>
+      <p class="section-text">This account hasn't been authorized to access the panel.</p>
+      <a class="cta-btn admin-btn" href="login.html">Retry Login</a>
       <p class="docs-note" id="adminGateStatus"></p>
     </section>
 
     <div id="adminContent" style="display:none;">
-      <section class="docs-card admin-welcome-card">
-        <h2 id="welcomeText">Welcome, Builder!</h2>
-      </section>
+      <div class="admin-dashboard">
+        <aside class="admin-sidebar">
+          <div class="admin-sidebar-header">
+            <span class="admin-sidebar-title">Admin</span>
+            <span class="admin-sidebar-sub">Dashboard</span>
+          </div>
+          <nav class="admin-nav">
+            <a class="active" href="#admin-overview">Overview</a>
+            <a href="#admin-upload">Screenshot Uploader</a>
+            <a href="#admin-manage">Manage Screenshots</a>
+          </nav>
+        </aside>
 
-      <section class="docs-card">
-      <h2>Screenshot Uploader</h2>
-      <p class="section-text">Upload a screenshot and add the details.</p>
+        <div class="admin-main">
+          <section class="docs-card admin-welcome-card" id="admin-overview">
+            <h2 id="welcomeText">Welcome, Builder!</h2>
+            <p class="section-text">More can be added later as we add functionality.</p>
+          </section>
 
-      <form id="uploadForm" class="docs-form">
-        <input type="file" id="imageFile" accept="image/*" required />
-        <input type="text" id="placeInput" placeholder="Place name" required />
-        <input type="text" id="provInput" placeholder="Province (e.g. ON)" />
-        <input type="text" id="buildersInput" placeholder="Builders (comma separated)" />
-        <input type="text" id="folderInput" placeholder="Optional folder (e.g. toronto)" />
-        <button class="cta-btn" type="submit">Upload</button>
-      </form>
+          <section class="docs-card" id="admin-upload">
+            <h2>Screenshot Uploader</h2>
+            <p class="section-text">Upload a screenshot and add the details.</p>
 
-      <div class="admin-preview">
-        <img id="imagePreview" alt="Preview" />
-        <div class="admin-progress">
-          <progress id="uploadProgress" max="100" value="0"></progress>
-          <span id="uploadProgressText">0%</span>
+            <form id="uploadForm" class="docs-form">
+              <input type="file" id="imageFile" accept="image/*" required />
+              <input type="text" id="placeInput" placeholder="Place name" required />
+              <input type="text" id="provInput" placeholder="Province (e.g. ON)" />
+              <input type="text" id="buildersInput" placeholder="Builders (comma separated)" />
+              <input type="text" id="folderInput" placeholder="Optional folder (e.g. toronto)" />
+              <button class="cta-btn" type="submit">Upload</button>
+            </form>
+
+            <div class="admin-preview">
+              <img id="imagePreview" alt="Preview" />
+              <div class="admin-progress">
+                <progress id="uploadProgress" max="100" value="0"></progress>
+                <span id="uploadProgressText">0%</span>
+              </div>
+            </div>
+
+            <p class="docs-note" id="uploadStatus"></p>
+          </section>
+
+          <section class="docs-card admin-list-card" id="admin-manage">
+            <div class="admin-list-header">
+              <div>
+                <h2>Manage Screenshots</h2>
+                <p class="section-text">Edit details or delete uploads.</p>
+              </div>
+              <input type="search" id="adminSearch" class="admin-search" placeholder="Search by place or province..." />
+            </div>
+            <div id="adminList" class="admin-list"></div>
+          </section>
         </div>
       </div>
-
-      <p class="docs-note" id="uploadStatus"></p>
-    </section>
-    <section class="docs-card admin-list-card">
-      <div class="admin-list-header">
-        <div>
-          <h2>Manage Screenshots</h2>
-          <p class="section-text">Edit details or delete uploads.</p>
-        </div>
-        <input type="search" id="adminSearch" class="admin-search" placeholder="Search by place or province..." />
-      </div>
-      <div id="adminList" class="admin-list"></div>
-    </section>
     </div>
   </main>
 
@@ -391,7 +409,6 @@
 </script>
 </body>
 </html>
-
 
 
 
