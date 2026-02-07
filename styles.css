@@ -64,6 +64,31 @@ body {
   z-index: 100;
 }
 
+.nav-announcement {
+  display: none;
+  background: var(--red);
+  color: #fff;
+  text-align: center;
+  padding: 0.45rem 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.nav-announcement.show {
+  display: block;
+}
+
+body.map-page .nav-announcement {
+  display: none !important;
+}
+
+.announcement-controls {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 /* NAV BAR */
 .nav {
   max-width: 1200px;
@@ -733,6 +758,23 @@ body.login-body {
   border-color: rgba(214, 40, 40, 0.4);
 }
 
+.docs-form textarea {
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 90px;
+}
+
+.docs-form textarea:focus {
+  outline: 2px solid rgba(214, 40, 40, 0.4);
+  border-color: rgba(214, 40, 40, 0.4);
+}
+
 .docs-error {
   margin: 0.75rem 0 0;
   color: var(--red);
@@ -904,6 +946,12 @@ body.login-body {
 }
 
 .admin-item-actions{
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.admin-announcement-actions {
   display: flex;
   gap: 0.6rem;
   flex-wrap: wrap;

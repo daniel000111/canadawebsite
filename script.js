@@ -166,6 +166,94 @@ function initLogoutButton() {
   });
 }
 
+function ensureNavAnnouncement() {
+  const navWraps = document.querySelectorAll(".nav-wrap");
+  navWraps.forEach((wrap) => {
+    if (wrap.querySelector(".nav-announcement")) return;
+    const bar = document.createElement("div");
+    bar.className = "nav-announcement";
+    bar.setAttribute("role", "status");
+    bar.setAttribute("aria-live", "polite");
+    wrap.appendChild(bar);
+  });
+}
+
+function setNavAnnouncement(message) {
+  document.querySelectorAll(".nav-announcement").forEach((bar) => {
+    const text = (message || "").trim();
+    if (!text) {
+      bar.textContent = "";
+      bar.classList.remove("show");
+      return;
+    }
+    bar.textContent = text;
+    bar.classList.add("show");
+  });
+}
+
+async function fetchAnnouncement() {
+  const client = getSupabaseClient();
+  if (!client) return "";
+  const { data, error } = await client
+    .from("announcements")
+    .select("message")
+    .eq("id", 1)
+    .maybeSingle();
+  if (error) return "";
+  return data?.message || "";
+}
+
+async function upsertAnnouncement(message) {
+  const client = getSupabaseClient();
+  if (!client) return { error: new Error("Supabase not available.") };
+  return client
+    .from("announcements")
+    .upsert({ id: 1, message }, { onConflict: "id" });
+}
+
+async function initAnnouncementBar() {
+  if (document.body.classList.contains("map-page")) return;
+  ensureNavAnnouncement();
+  const message = await fetchAnnouncement();
+  setNavAnnouncement(message);
+}
+
+function initAdminAnnouncement() {
+  const input = document.getElementById("announcementInput");
+  const saveBtn = document.getElementById("announcementSave");
+  const clearBtn = document.getElementById("announcementClear");
+  const status = document.getElementById("announcementStatus");
+  if (!input || !saveBtn || !clearBtn) return;
+
+  fetchAnnouncement().then((message) => {
+    if (message) input.value = message;
+  });
+
+  saveBtn.addEventListener("click", async () => {
+    const message = input.value.trim();
+    if (status) status.textContent = "Saving...";
+    const { error } = await upsertAnnouncement(message);
+    if (error) {
+      if (status) status.textContent = `Save failed: ${error.message}`;
+      return;
+    }
+    if (status) status.textContent = "Announcement updated.";
+    setNavAnnouncement(message);
+  });
+
+  clearBtn.addEventListener("click", async () => {
+    input.value = "";
+    if (status) status.textContent = "Clearing...";
+    const { error } = await upsertAnnouncement("");
+    if (error) {
+      if (status) status.textContent = `Clear failed: ${error.message}`;
+      return;
+    }
+    if (status) status.textContent = "Announcement cleared.";
+    setNavAnnouncement("");
+  });
+}
+
 function resolveDiscordAvatar(user) {
   const meta = user?.user_metadata || {};
   const avatarUrl = meta.avatar_url || meta.picture;
@@ -307,6 +395,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initDocsGate();
   initLightboxZoom();
   initSettingsMenu();
+  initAnnouncementBar();
+  initAdminAnnouncement();
   initSettingsProfile();
   initAdminLink();
   initLogoutButton();
