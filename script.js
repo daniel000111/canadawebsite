@@ -121,7 +121,7 @@ function initAdminLink() {
         link.textContent = "Admin Panel";
         link.setAttribute("href", "admin.html");
       } else {
-        link.textContent = "Admin Login";
+        link.textContent = "Login";
         link.setAttribute("href", "login.html");
       }
     });
