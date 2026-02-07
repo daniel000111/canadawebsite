@@ -764,7 +764,9 @@ body.login-body {
   font-size: 0.95rem;
   font-family: inherit;
   resize: vertical;
-  min-height: 90px;
+  min-height: 120px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .docs-form textarea:focus {
@@ -952,6 +954,11 @@ body.login-body {
   display: flex;
   gap: 0.6rem;
   flex-wrap: wrap;
+}
+
+.admin-announcement-card {
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
 }
 
 .admin-item .cta-btn{
