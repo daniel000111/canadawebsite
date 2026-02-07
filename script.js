@@ -184,11 +184,27 @@ function setNavAnnouncement(message) {
     if (!text) {
       bar.textContent = "";
       bar.classList.remove("show");
+      document.body.classList.remove("announcement-active");
+      syncMapAnnouncementOffset();
       return;
     }
     bar.textContent = text;
     bar.classList.add("show");
+    document.body.classList.add("announcement-active");
+    syncMapAnnouncementOffset();
   });
+}
+
+function syncMapAnnouncementOffset() {
+  if (!document.body.classList.contains("map-page")) return;
+  const bar = document.querySelector(".nav-announcement");
+  const isHidden = document.body.classList.contains("nav-hidden");
+  if (!bar || isHidden || !bar.classList.contains("show")) {
+    document.body.style.setProperty("--map-announce-offset", "0px");
+    return;
+  }
+  const offset = bar.offsetHeight + 6;
+  document.body.style.setProperty("--map-announce-offset", `${offset}px`);
 }
 
 async function fetchAnnouncement() {
@@ -372,6 +388,7 @@ function toggleMapNav() {
     btn.setAttribute("aria-label", isHidden ? "Show navigation" : "Hide navigation");
     btn.setAttribute("title", isHidden ? "Show navigation" : "Hide navigation");
   }
+  syncMapAnnouncementOffset();
 }
 
 // -------------------------------
