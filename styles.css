@@ -629,12 +629,6 @@ body {
   width: 100%;
 }
 
-.admin-avatar-wrap {
-  display: flex;
-  align-items: center;
-  margin-right: 0.5rem;
-}
-
 .admin-avatar {
   width: 32px;
   height: 32px;
@@ -657,6 +651,26 @@ body {
   gap: 1rem;
   flex-wrap: wrap;
   text-align: left;
+}
+
+.settings-profile {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0 0.65rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.6rem;
+}
+
+.settings-avatar {
+  width: 44px;
+  height: 44px;
+  border-width: 2px;
+}
+
+.settings-name {
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 

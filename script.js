@@ -94,6 +94,11 @@ function toggleSettingsMenu(event) {
 }
 
 function initSettingsMenu() {
+  document.querySelectorAll(".settings-menu").forEach((menu) => {
+    menu.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+  });
   document.addEventListener("click", () => {
     document.querySelectorAll(".settings-menu.open").forEach((el) => {
       el.classList.remove("open");
