@@ -193,14 +193,30 @@ function setNavAnnouncement(message) {
 
 async function fetchAnnouncement() {
   const client = getSupabaseClient();
-  if (!client) return "";
-  const { data, error } = await client
-    .from("announcements")
-    .select("message")
-    .eq("id", 1)
-    .maybeSingle();
-  if (error) return "";
-  return data?.message || "";
+  if (client) {
+    const { data, error } = await client
+      .from("announcements")
+      .select("message")
+      .eq("id", 1)
+      .maybeSingle();
+    if (error) return "";
+    return data?.message || "";
+  }
+
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/announcements?id=eq.1&select=message`;
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    if (!res.ok) return "";
+    const rows = await res.json();
+    return rows?.[0]?.message || "";
+  } catch (err) {
+    return "";
+  }
 }
 
 async function upsertAnnouncement(message) {
