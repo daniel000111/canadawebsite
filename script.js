@@ -212,7 +212,6 @@ async function upsertAnnouncement(message) {
 }
 
 async function initAnnouncementBar() {
-  if (document.body.classList.contains("map-page")) return;
   ensureNavAnnouncement();
   const message = await fetchAnnouncement();
   setNavAnnouncement(message);
