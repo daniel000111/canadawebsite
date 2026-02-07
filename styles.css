@@ -80,10 +80,7 @@ body {
 }
 
 body.map-page .nav-announcement {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: static;
   margin: 0;
 }
 
@@ -92,7 +89,7 @@ body.map-page.nav-hidden .nav-announcement {
 }
 
 body.map-page.announcement-active {
-  --map-announce-offset: 24px;
+  --map-announce-offset: 26px;
 }
 
 
