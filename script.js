@@ -203,7 +203,7 @@ function syncMapAnnouncementOffset() {
     document.body.style.setProperty("--map-announce-offset", "0px");
     return;
   }
-  const offset = bar.offsetHeight + 6;
+  const offset = Math.max(0, bar.offsetHeight - 6);
   document.body.style.setProperty("--map-announce-offset", `${offset}px`);
 }
 
