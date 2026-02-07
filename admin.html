@@ -159,18 +159,6 @@
     const listEl = document.getElementById("adminList");
     const searchInput = document.getElementById("adminSearch");
 
-    function resolveDiscordAvatar(user) {
-      const meta = user?.user_metadata || {};
-      const avatarUrl = meta.avatar_url || meta.picture;
-      if (avatarUrl) return avatarUrl;
-      const discordId = meta.provider_id || meta.sub;
-      const avatarHash = meta.avatar;
-      if (discordId && avatarHash) {
-        return `https://cdn.discordapp.com/avatars/${discordId}/${avatarHash}.png?size=128`;
-      }
-      return "";
-    }
-
     async function requireSession() {
       const { data } = await sbClient.auth.getSession();
       if (!data.session) {
@@ -208,19 +196,6 @@
           avatarHero.src = avatarUrl;
           avatarHero.alt = `${username} avatar`;
           avatarHero.style.display = "block";
-        }
-        const settingsAvatar = document.getElementById("settingsAvatar");
-        const settingsName = document.getElementById("settingsName");
-        const settingsProfile = document.getElementById("settingsProfile");
-        if (settingsAvatar) {
-          settingsAvatar.src = avatarUrl;
-          settingsAvatar.alt = `${username} avatar`;
-        }
-        if (settingsName) {
-          settingsName.textContent = username;
-        }
-        if (settingsProfile) {
-          settingsProfile.style.display = "grid";
         }
       }
       return data.session;

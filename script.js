@@ -166,6 +166,73 @@ function initLogoutButton() {
   });
 }
 
+function resolveDiscordAvatar(user) {
+  const meta = user?.user_metadata || {};
+  const avatarUrl = meta.avatar_url || meta.picture;
+  if (avatarUrl) return avatarUrl;
+  const discordId = meta.provider_id || meta.sub;
+  const avatarHash = meta.avatar;
+  if (discordId && avatarHash) {
+    return `https://cdn.discordapp.com/avatars/${discordId}/${avatarHash}.png?size=128`;
+  }
+  return "";
+}
+
+function resolveDisplayName(user) {
+  const meta = user?.user_metadata || {};
+  return meta.full_name
+    || meta.name
+    || meta.preferred_username
+    || user?.email
+    || "Builder";
+}
+
+function setSettingsProfile(user) {
+  const profile = document.getElementById("settingsProfile");
+  if (!profile) return;
+  if (!user) {
+    profile.style.display = "none";
+    return;
+  }
+  const avatarUrl = resolveDiscordAvatar(user);
+  const name = resolveDisplayName(user);
+  const avatarEl = document.getElementById("settingsAvatar");
+  const nameEl = document.getElementById("settingsName");
+
+  if (avatarEl && avatarUrl) {
+    avatarEl.src = avatarUrl;
+    avatarEl.alt = `${name} avatar`;
+  }
+  if (nameEl) {
+    nameEl.textContent = name;
+  }
+  if (avatarUrl || name) {
+    profile.style.display = "grid";
+  }
+}
+
+function initSettingsProfile() {
+  const profile = document.getElementById("settingsProfile");
+  if (!profile) return;
+
+  const cached = getCachedSupabaseSession();
+  if (cached?.user) {
+    setSettingsProfile(cached.user);
+  }
+
+  if (!window.supabase) return;
+  const client = getSupabaseClient();
+  if (!client) return;
+
+  client.auth.getSession().then(({ data }) => {
+    setSettingsProfile(data.session?.user || null);
+  });
+
+  client.auth.onAuthStateChange((_event, session) => {
+    setSettingsProfile(session?.user || null);
+  });
+}
+
 function getCachedSupabaseSession() {
   try {
     const ref = (SUPABASE_URL || "").replace("https://", "").split(".")[0];
@@ -240,6 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initDocsGate();
   initLightboxZoom();
   initSettingsMenu();
+  initSettingsProfile();
   initAdminLink();
   initLogoutButton();
 });
