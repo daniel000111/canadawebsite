@@ -13,7 +13,7 @@
     <nav class="nav">
       <div class="nav-left fade-in fade-delay-1">
         <a href="index.html" class="brand">
-          <img src="assets/logo-square.png" alt="BTE Canada Logo" class="nav-logo" />
+          <img src="assets/logo-square.gif" alt="BTE Canada Logo" class="nav-logo" />
           <span class="brand-text">BTE CANADA</span>
         </a>
       </div>
@@ -73,61 +73,45 @@
     </section>
 
     <div id="adminContent" style="display:none;">
-      <div class="admin-dashboard">
-        <aside class="admin-sidebar">
-          <div class="admin-sidebar-header">
-            <span class="admin-sidebar-title">Admin</span>
-            <span class="admin-sidebar-sub">Dashboard</span>
+      <section class="builder-hero" id="admin-overview">
+        <h1 id="welcomeText">Welcome, Builder!</h1>
+        <p class="section-text">More can be added later as we add functionality.</p>
+      </section>
+
+      <section class="docs-card" id="admin-upload">
+        <h2>Screenshot Uploader</h2>
+        <p class="section-text">Upload a screenshot and add the details.</p>
+
+        <form id="uploadForm" class="docs-form">
+          <input type="file" id="imageFile" accept="image/*" required />
+          <input type="text" id="placeInput" placeholder="Place name" required />
+          <input type="text" id="provInput" placeholder="Province (e.g. ON)" />
+          <input type="text" id="buildersInput" placeholder="Builders (comma separated)" />
+          <input type="text" id="folderInput" placeholder="Optional folder (e.g. toronto)" />
+          <button class="cta-btn" type="submit">Upload</button>
+        </form>
+
+        <div class="admin-preview">
+          <img id="imagePreview" alt="Preview" />
+          <div class="admin-progress">
+            <progress id="uploadProgress" max="100" value="0"></progress>
+            <span id="uploadProgressText">0%</span>
           </div>
-          <nav class="admin-nav">
-            <a class="active" href="#admin-overview">Overview</a>
-            <a href="#admin-upload">Screenshot Uploader</a>
-            <a href="#admin-manage">Manage Screenshots</a>
-          </nav>
-        </aside>
-
-        <div class="admin-main">
-          <section class="docs-card admin-welcome-card" id="admin-overview">
-            <h2 id="welcomeText">Welcome, Builder!</h2>
-            <p class="section-text">More can be added later as we add functionality.</p>
-          </section>
-
-          <section class="docs-card" id="admin-upload">
-            <h2>Screenshot Uploader</h2>
-            <p class="section-text">Upload a screenshot and add the details.</p>
-
-            <form id="uploadForm" class="docs-form">
-              <input type="file" id="imageFile" accept="image/*" required />
-              <input type="text" id="placeInput" placeholder="Place name" required />
-              <input type="text" id="provInput" placeholder="Province (e.g. ON)" />
-              <input type="text" id="buildersInput" placeholder="Builders (comma separated)" />
-              <input type="text" id="folderInput" placeholder="Optional folder (e.g. toronto)" />
-              <button class="cta-btn" type="submit">Upload</button>
-            </form>
-
-            <div class="admin-preview">
-              <img id="imagePreview" alt="Preview" />
-              <div class="admin-progress">
-                <progress id="uploadProgress" max="100" value="0"></progress>
-                <span id="uploadProgressText">0%</span>
-              </div>
-            </div>
-
-            <p class="docs-note" id="uploadStatus"></p>
-          </section>
-
-          <section class="docs-card admin-list-card" id="admin-manage">
-            <div class="admin-list-header">
-              <div>
-                <h2>Manage Screenshots</h2>
-                <p class="section-text">Edit details or delete uploads.</p>
-              </div>
-              <input type="search" id="adminSearch" class="admin-search" placeholder="Search by place or province..." />
-            </div>
-            <div id="adminList" class="admin-list"></div>
-          </section>
         </div>
-      </div>
+
+        <p class="docs-note" id="uploadStatus"></p>
+      </section>
+
+      <section class="docs-card admin-list-card" id="admin-manage">
+        <div class="admin-list-header">
+          <div>
+            <h2>Manage Screenshots</h2>
+            <p class="section-text">Edit details or delete uploads.</p>
+          </div>
+          <input type="search" id="adminSearch" class="admin-search" placeholder="Search by place or province..." />
+        </div>
+        <div id="adminList" class="admin-list"></div>
+      </section>
     </div>
   </main>
 
@@ -409,7 +393,6 @@
 </script>
 </body>
 </html>
-
 
 
 
