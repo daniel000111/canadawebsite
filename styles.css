@@ -629,6 +629,36 @@ body {
   width: 100%;
 }
 
+.admin-avatar-wrap {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.admin-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  object-fit: cover;
+  background: var(--surface);
+}
+
+.admin-avatar-lg {
+  width: 56px;
+  height: 56px;
+  border-width: 3px;
+}
+
+.admin-hero-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
 
 .admin-gate {
   text-align: center;
