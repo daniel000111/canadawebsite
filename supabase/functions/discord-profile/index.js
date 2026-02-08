@@ -63,7 +63,7 @@ serve(async (req) => {
   }
 
   const user = await res.json();
-  const username = user.global_name || user.username || "";
+  const username = user.username || "";
   let avatarUrl = "";
   if (user.avatar) {
     avatarUrl = `https://cdn.discordapp.com/avatars/${discordId}/${user.avatar}.png?size=128`;

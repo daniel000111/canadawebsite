@@ -440,7 +440,7 @@ async function fetchStaffMembers() {
   if (client) {
     const { data, error } = await client
       .from("staff_members")
-      .select("mc_username,discord_id,discord_username,role,show_on_front,avatar_url")
+      .select("mc_username,discord_id,discord_username,official_title,role,show_on_front,avatar_url")
       .eq("show_on_front", true)
       .order("mc_username", { ascending: true });
     if (error) return [];
@@ -448,7 +448,7 @@ async function fetchStaffMembers() {
   }
 
   try {
-    const url = `${SUPABASE_URL}/rest/v1/staff_members?select=mc_username,discord_id,discord_username,role,show_on_front,avatar_url&show_on_front=eq.true`;
+    const url = `${SUPABASE_URL}/rest/v1/staff_members?select=mc_username,discord_id,discord_username,official_title,role,show_on_front,avatar_url&show_on_front=eq.true`;
     const res = await fetch(url, {
       headers: {
         apikey: SUPABASE_ANON_KEY,
@@ -479,17 +479,31 @@ async function initStaffGrid() {
     return;
   }
 
+  const roleRank = {
+    admin: 3,
+    developer: 2,
+    staff: 1,
+    none: 0
+  };
+  rows.sort((a, b) => {
+    const rankA = roleRank[(a.role || "none").toLowerCase()] ?? 0;
+    const rankB = roleRank[(b.role || "none").toLowerCase()] ?? 0;
+    if (rankA !== rankB) return rankB - rankA;
+    return (a.mc_username || "").localeCompare(b.mc_username || "");
+  });
+
   carousel.innerHTML = "";
   rows.forEach((row) => {
     const card = document.createElement("div");
     card.className = "staff-card";
     const avatar = row.avatar_url || getDiscordFallbackAvatar(row.discord_id);
     const handle = row.discord_username || row.discord_id || "";
+    const title = row.official_title || row.role || "Staff";
     card.innerHTML = `
       <img src="${avatar}" alt="${escapeHtml(row.mc_username || "Staff")}" />
       <h4>${escapeHtml(row.mc_username || "Staff")}</h4>
       <p class="staff-discord"><code>${escapeHtml(handle)}</code></p>
-      <p>${escapeHtml(row.role || "Staff")}</p>
+      <p>${escapeHtml(title)}</p>
     `;
     carousel.appendChild(card);
   });
