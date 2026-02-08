@@ -424,24 +424,23 @@
           }
           staffStatus.textContent = "Refreshing Discord profile...";
           const profile = await fetchDiscordProfile(discord_id);
-          if (profile?.avatar_url) {
-            card.querySelector("[data-field=\"avatar_url\"]").value = profile.avatar_url;
-          }
-          if (profile?.username) {
-            card.querySelector("[data-field=\"discord_username\"]").value = profile.username;
-          }
+          const nextAvatar = profile?.avatar_url || "";
+          const nextUsername = profile?.username || "";
+          card.querySelector("[data-field=\"avatar_url\"]").value = nextAvatar;
+          card.querySelector("[data-field=\"discord_username\"]").value = nextUsername;
           const { error: updateError } = await sbClient
             .from("staff_members")
             .update({
               discord_id,
-              discord_username: profile?.username || "",
-              avatar_url: profile?.avatar_url || ""
+              discord_username: nextUsername,
+              avatar_url: nextAvatar
             })
             .eq("id", row.id);
           if (updateError) {
             staffStatus.textContent = `Refresh failed: ${updateError.message}`;
           } else {
             staffStatus.textContent = "Profile refreshed.";
+            loadStaffList();
           }
         });
 

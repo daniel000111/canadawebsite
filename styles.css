@@ -2255,6 +2255,7 @@ button, input, textarea, select {
 .staff-manager-card {
   width: min(1000px, 94vw);
   text-align: left;
+  margin: 0 auto;
 }
 
 .staff-manager-card .admin-card-header {
@@ -2370,6 +2371,10 @@ button, input, textarea, select {
   transform: translateY(12px) scale(0.98);
   opacity: 0;
   transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.staff-manager-card {
+  max-height: none;
 }
 
 .admin-modal.show .admin-modal-card {
