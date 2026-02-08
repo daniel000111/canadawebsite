@@ -2193,6 +2193,9 @@ button, input, textarea, select {
   background: var(--red);
   border: 1px solid var(--red);
   color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .admin-actions .cta-btn {
@@ -2201,6 +2204,13 @@ button, input, textarea, select {
 
 .admin-actions .cta-btn:hover {
   box-shadow: 0 6px 18px rgba(214, 40, 40, 0.35);
+}
+
+.admin-actions .cta-btn.ghost,
+.admin-actions .cta-btn.ghost:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
 }
 
 .admin-modal {
