@@ -614,7 +614,10 @@ body.admin-body {
   background:
     radial-gradient(1400px 400px at 20% -20px, rgba(214, 40, 40, 0.22), transparent 60%),
     linear-gradient(135deg, rgba(17, 17, 17, 0.08), rgba(255, 255, 255, 0.02)),
+    url("assets/hero.jpg"),
     var(--bg);
+  background-size: cover;
+  background-position: center;
   min-height: 100vh;
 }
 
@@ -2146,6 +2149,7 @@ button, input, textarea, select {
 }
 
 .admin-card {
+  width: min(520px, 92vw);
   background: var(--login-panel-bg);
   border: 1px solid var(--login-panel-border);
   border-radius: 20px;
@@ -2155,6 +2159,7 @@ button, input, textarea, select {
   gap: 1.5rem;
   text-align: center;
   justify-items: center;
+  box-sizing: border-box;
 }
 
 .admin-card .section-text {
@@ -2176,25 +2181,32 @@ button, input, textarea, select {
 
 .admin-action {
   width: 100%;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  min-height: 44px;
+  padding: 0.75rem 1.75rem;
 }
 
 .admin-modal {
   position: fixed;
   inset: 0;
   background: rgba(8, 10, 14, 0.55);
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 200;
   padding: 2rem 1.25rem;
   opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   transition: opacity 0.25s ease;
 }
 
 .admin-modal.show {
-  display: flex;
   opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .admin-modal-card {
