@@ -84,7 +84,7 @@
   <section class="visit-info">
     <div class="visit-grid">
       <div class="visit-media">
-        <img src="assets/screenshots/toronto.jpg" alt="Toronto build screenshot" loading="lazy" />
+        <img id="visitScreenshot" src="assets/hero.jpg" alt="BTE Canada build screenshot" loading="lazy" />
       </div>
 
       <div class="visit-details">
@@ -136,6 +136,37 @@
 </footer>
 
 <script src="script.js"></script>
+<script>
+  (function loadVisitScreenshot() {
+    const img = document.getElementById("visitScreenshot");
+    if (!img) return;
+
+    const shotId = "060be5b7-4062-4ac1-a300-f9395f9f25de";
+    if (!window.APP_SUPABASE) return;
+
+    const url = `${window.APP_SUPABASE.url}/rest/v1/screenshots?id=eq.${shotId}&select=image_path,place,prov,builders`;
+
+    fetch(url, {
+      headers: {
+        apikey: window.APP_SUPABASE.key,
+        Authorization: `Bearer ${window.APP_SUPABASE.key}`
+      }
+    })
+      .then((res) => res.ok ? res.json() : Promise.reject(res))
+      .then((rows) => {
+        const row = rows && rows[0];
+        if (!row || !row.image_path) return;
+        const path = String(row.image_path).trim();
+        if (!path) return;
+        img.src = `${window.APP_SUPABASE.url}/storage/v1/object/public/screenshots/${path}`;
+        const label = [row.place, row.prov].filter(Boolean).join(", ");
+        if (label) img.alt = `BTE Canada build screenshot: ${label}`;
+      })
+      .catch(() => {
+        // Keep the fallback image if the fetch fails
+      });
+  })();
+</script>
 </body>
 </html>
 

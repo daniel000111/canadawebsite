@@ -83,7 +83,7 @@
       <div class="status-head">
         <div class="status-title-group">
           <p class="status-kicker">Address</p>
-          <h2 class="status-title" id="statusAddress">btecanada.net:25565</h2>
+          <h2 class="status-title" id="statusAddress">btecanada.net</h2>
         </div>
         <div class="status-pill offline" id="statusState" aria-live="polite">Checking...</div>
       </div>
@@ -128,8 +128,8 @@
   (function initStatus() {
     const host = "btecanada.net";
     const port = 25565;
-    const address = `${host}:${port}`;
-    const apiUrl = `https://api.mcsrvstat.us/2/${address}`;
+    const address = host;
+    const apiUrl = `https://api.mcsrvstat.us/2/${host}:${port}`;
 
     const addressEl = document.getElementById("statusAddress");
     const statusEl = document.getElementById("statusState");
