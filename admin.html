@@ -327,11 +327,34 @@
         const { data, error } = await sbClient.functions.invoke("discord-profile", {
           body: { discord_id: discordId }
         });
-        if (error) {
-          if (staffStatus) staffStatus.textContent = `Discord lookup failed: ${error.message || error}`;
+        if (!error) return data || null;
+
+        const status = error?.context?.status || error?.status || "";
+        const msg = error?.message || error?.context?.body || String(error);
+        if (staffStatus) staffStatus.textContent = `Discord lookup failed (${status}): ${msg}`;
+        console.error("Discord lookup failed via invoke:", error);
+      } catch (err) {
+        if (staffStatus) staffStatus.textContent = `Discord lookup failed: ${err.message || err}`;
+        console.error("Discord lookup failed via invoke:", err);
+      }
+
+      try {
+        const fnUrl = `${supabaseConfig.url}/functions/v1/discord-profile`;
+        const res = await fetch(fnUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${supabaseConfig.key}`,
+            apikey: supabaseConfig.key
+          },
+          body: JSON.stringify({ discord_id: discordId })
+        });
+        if (!res.ok) {
+          const text = await res.text();
+          if (staffStatus) staffStatus.textContent = `Discord lookup failed (${res.status}): ${text}`;
           return null;
         }
-        return data || null;
+        return await res.json();
       } catch (err) {
         if (staffStatus) staffStatus.textContent = `Discord lookup failed: ${err.message || err}`;
         return null;
