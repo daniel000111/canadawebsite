@@ -41,11 +41,22 @@ serve(async (req) => {
     return jsonResponse({ error: "discord_id is required" }, 400);
   }
 
-  const res = await fetch(`https://discord.com/api/v10/users/${discordId}`, {
-    headers: {
-      Authorization: `Bot ${token}`
-    }
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  let res;
+  try {
+    res = await fetch(`https://discord.com/api/v10/users/${discordId}`, {
+      headers: {
+        Authorization: `Bot ${token}`
+      },
+      signal: controller.signal
+    });
+  } catch (_err) {
+    clearTimeout(timeout);
+    return jsonResponse({ error: "Discord request timed out" }, 504);
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!res.ok) {
     return jsonResponse({ error: "Discord lookup failed" }, res.status);

@@ -327,9 +327,13 @@
         const { data, error } = await sbClient.functions.invoke("discord-profile", {
           body: { discord_id: discordId }
         });
-        if (error) throw error;
+        if (error) {
+          if (staffStatus) staffStatus.textContent = `Discord lookup failed: ${error.message || error}`;
+          return null;
+        }
         return data || null;
       } catch (err) {
+        if (staffStatus) staffStatus.textContent = `Discord lookup failed: ${err.message || err}`;
         return null;
       }
     }
