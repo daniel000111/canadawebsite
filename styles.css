@@ -2198,6 +2198,18 @@ button, input, textarea, select {
   text-decoration: none;
 }
 
+.admin-actions .cta-btn.admin-action {
+  min-height: 44px;
+  padding: 0.75rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  box-sizing: border-box;
+  background: var(--red);
+  border: 1px solid var(--red);
+  color: #fff;
+}
+
 .admin-actions .cta-btn {
   margin-top: 0;
 }
@@ -2211,6 +2223,92 @@ button, input, textarea, select {
   background: var(--red);
   border-color: var(--red);
   color: #fff;
+}
+
+.admin-action.is-disabled,
+.admin-actions .cta-btn.is-disabled {
+  opacity: 0.55;
+  pointer-events: none;
+  background: #777;
+  border-color: #777;
+  color: #f2f2f2;
+}
+
+.staff-manager-card {
+  width: min(900px, 94vw);
+  text-align: left;
+}
+
+.staff-manager-card .admin-card-header {
+  text-align: center;
+}
+
+.staff-form {
+  width: 100%;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.staff-form select {
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.staff-form select:focus {
+  outline: 2px solid rgba(214, 40, 40, 0.4);
+  border-color: rgba(214, 40, 40, 0.4);
+}
+
+.staff-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.staff-checkbox.inline {
+  justify-content: flex-start;
+}
+
+.staff-list {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+}
+
+.staff-item {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  background: var(--surface);
+  display: grid;
+  gap: 0.8rem;
+}
+
+.staff-item-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.2fr 1.4fr 0.9fr 0.6fr;
+  gap: 0.6rem;
+}
+
+.staff-item-grid input,
+.staff-item-grid select {
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+@media (max-width: 900px) {
+  .staff-item-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .admin-modal {

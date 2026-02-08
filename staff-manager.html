@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BTE Canada - Staff Manager</title>
+  <link rel="icon" href="assets/logo-square.png" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="admin-body">
+  <!-- NAVBAR -->
+  <header class="nav-wrap">
+    <nav class="nav">
+      <div class="nav-left fade-in fade-delay-1">
+        <a href="index.html" class="brand">
+          <img src="assets/logo-square.gif" alt="BTE Canada Logo" class="nav-logo" />
+          <span class="brand-text">BTE CANADA</span>
+        </a>
+      </div>
+
+      <div class="nav-center fade-in fade-delay-2">
+        <a href="index.html">Home</a>
+        <a href="showcase.html">Showcase</a>
+        <a href="visit.html">Visit</a>
+        <a href="build.html">Build</a>
+        <a href="docs.html">Docs</a>
+        <a href="map.html">Map</a>
+      </div>
+
+      <div class="nav-right fade-in fade-delay-3">
+        <a class="icon-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" aria-label="Discord">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.249a18.27 18.27 0 0 0-5.487 0c-.164-.385-.397-.874-.608-1.249a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.683 4.37a.07.07 0 0 0-.032.027C.533 9.045-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.461-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.371-.291a.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.099.245.197.372.291a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.106c.36.699.772 1.364 1.225 1.994a.076.076 0 0 0 .084.028 19.9 19.9 0 0 0 5.994-3.03.077.077 0 0 0 .03-.056c.5-5.177-.838-9.673-3.548-13.66a.061.061 0 0 0-.031-.03z"/>
+          </svg>
+        </a>
+        <a class="icon-btn" href="https://www.instagram.com/bte.canada/" target="_blank" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10zm-5 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm4.75-.75a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5z"/>
+          </svg>
+        </a>
+        <a class="icon-btn" href="https://www.tiktok.com/@btecanada" target="_blank" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M16.5 3a5.5 5.5 0 0 0 4 1.8V8a8.4 8.4 0 0 1-4-1.1v6.6a6.5 6.5 0 1 1-6.5-6.5c.3 0 .6 0 .9.1V10a3.5 3.5 0 1 0 2.6 3.4V3h3z"/>
+          </svg>
+        </a>
+        <div class="settings-wrap">
+          <button class="settings-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Open settings" onclick="toggleSettingsMenu(event)">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19.14 12.94a7.94 7.94 0 0 0 .05-.94 7.94 7.94 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.6 7.6 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.75 8.86a.5.5 0 0 0 .12.64l2.03 1.58c-.03.31-.05.63-.05.94s.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.5.42 1.05.72 1.63.94l.36 2.54a.5.5 0 0 0 .5.42h3.84a.5.5 0 0 0 .5-.42l.36-2.54c.58-.22 1.12-.52 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"></path>
+            </svg>
+          </button>
+          <div class="settings-menu" aria-hidden="true">
+            <div class="settings-profile" id="settingsProfile" style="display:none;">
+              <img id="settingsAvatar" class="admin-avatar settings-avatar" alt="" />
+              <span id="settingsName" class="settings-name"></span>
+            </div>
+            <button class="theme-btn ghost" type="button" onclick="toggleTheme()" aria-label="Toggle theme">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"></path>
+              </svg>
+              <span class="theme-label">Light</span>
+            </button>
+            <a class="cta-btn admin-btn" id="adminLink" href="login.html">Login</a>
+            <button class="cta-btn logout-btn" id="logoutBtnMenu" type="button">Log out</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="admin-page">
+    <section class="docs-card admin-gate" id="adminGate">
+      <h2>Admin Access Required</h2>
+      <p class="section-text">This account hasn't been authorized to access the panel.</p>
+      <a class="cta-btn admin-btn" href="login.html">Retry Login</a>
+      <p class="docs-note" id="adminGateStatus"></p>
+    </section>
+
+    <div id="staffManagerContent" style="display:none;">
+      <section class="admin-hero-panel">
+        <div class="admin-card staff-manager-card">
+          <div class="admin-card-header">
+            <h1>Staff Manager</h1>
+            <p class="section-text">Add members and set permission levels.</p>
+          </div>
+
+          <form id="staffAddForm" class="docs-form staff-form">
+            <input type="text" id="staffMcInput" placeholder="Minecraft username" required />
+            <input type="text" id="staffDiscordInput" placeholder="Discord ID" required />
+            <input type="text" id="staffAvatarInput" placeholder="Discord avatar URL (optional)" />
+            <select id="staffRoleInput" required>
+              <option value="None">None</option>
+              <option value="Staff">Staff</option>
+              <option value="Developer">Developer</option>
+              <option value="Admin">Admin</option>
+            </select>
+            <label class="staff-checkbox">
+              <input type="checkbox" id="staffShowInput" />
+              <span>Show on front page</span>
+            </label>
+            <button class="cta-btn admin-btn" type="submit">Add User</button>
+          </form>
+
+          <p class="docs-note" id="staffStatus"></p>
+
+          <div class="staff-list" id="staffList"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    (function () {
+      const supabaseConfig = window.APP_SUPABASE || {};
+      const sbClient = window.APP_SUPABASE_CLIENT || window.supabase?.createClient(supabaseConfig.url, supabaseConfig.key);
+
+      const ALLOWED_DISCORD_IDS = [
+        "617699025973542930",
+        "451804972728975371",
+        "808025660425371718",
+        "292688678789054465",
+        "440983805487218698"
+      ];
+
+      const gate = document.getElementById("adminGate");
+      const gateStatus = document.getElementById("adminGateStatus");
+      const content = document.getElementById("staffManagerContent");
+      const form = document.getElementById("staffAddForm");
+      const status = document.getElementById("staffStatus");
+      const listEl = document.getElementById("staffList");
+
+      async function fetchStaffRole(discordId) {
+        if (!discordId) return null;
+        try {
+          const { data } = await sbClient
+            .from("staff_members")
+            .select("role")
+            .eq("discord_id", discordId)
+            .maybeSingle();
+          return data?.role || null;
+        } catch (err) {
+          return null;
+        }
+      }
+
+      function getDiscordId(session) {
+        const discordIdentity = session.user?.identities?.find((i) => i.provider === "discord");
+        return session.user?.user_metadata?.provider_id
+          || session.user?.user_metadata?.sub
+          || discordIdentity?.id
+          || "";
+      }
+
+      async function requireAdmin() {
+        const { data } = await sbClient.auth.getSession();
+        if (!data.session) {
+          if (gate) gate.hidden = false;
+          if (content) content.style.display = "none";
+          window.location.href = "login.html";
+          return null;
+        }
+        const discordId = getDiscordId(data.session);
+        const staffRole = await fetchStaffRole(discordId);
+        const isAdminAllowlist = ALLOWED_DISCORD_IDS.includes(discordId);
+        const isAdmin = isAdminAllowlist || staffRole === "Admin";
+        if (!isAdmin) {
+          if (gate) gate.hidden = false;
+          if (gateStatus) gateStatus.textContent = "Admin access required.";
+          if (content) content.style.display = "none";
+          form.querySelectorAll("input,button,select").forEach((el) => (el.disabled = true));
+          window.location.href = "admin.html";
+          return null;
+        }
+        if (gate) gate.hidden = true;
+        if (content) content.style.display = "";
+        return data.session;
+      }
+
+      async function loadStaffList() {
+        const { data, error } = await sbClient
+          .from("staff_members")
+          .select("id,mc_username,discord_id,role,show_on_front,avatar_url")
+          .order("mc_username", { ascending: true });
+        if (error) {
+          if (status) status.textContent = `Failed to load staff: ${error.message}`;
+          return;
+        }
+        renderStaffList(data || []);
+      }
+
+      function renderStaffList(rows) {
+        listEl.innerHTML = "";
+        if (!rows.length) {
+          listEl.innerHTML = "<p class=\"section-text\">No staff added yet.</p>";
+          return;
+        }
+        rows.forEach((row) => {
+          const card = document.createElement("div");
+          card.className = "staff-item";
+          card.innerHTML = `
+            <div class="staff-item-grid">
+              <input type="text" value="${row.mc_username || ""}" data-field="mc_username" />
+              <input type="text" value="${row.discord_id || ""}" data-field="discord_id" />
+              <input type="text" value="${row.avatar_url || ""}" data-field="avatar_url" placeholder="Avatar URL" />
+              <select data-field="role">
+                <option value="None">None</option>
+                <option value="Staff">Staff</option>
+                <option value="Developer">Developer</option>
+                <option value="Admin">Admin</option>
+              </select>
+              <label class="staff-checkbox inline">
+                <input type="checkbox" data-field="show_on_front" ${row.show_on_front ? "checked" : ""} />
+                <span>Show</span>
+              </label>
+            </div>
+            <div class="admin-item-actions">
+              <button class="cta-btn admin-save" type="button">Save</button>
+              <button class="cta-btn ghost admin-delete" type="button">Delete</button>
+            </div>
+          `;
+          const roleSelect = card.querySelector("[data-field=\"role\"]");
+          roleSelect.value = row.role || "None";
+
+          card.querySelector(".admin-save").addEventListener("click", async () => {
+            const mc_username = card.querySelector("[data-field=\"mc_username\"]").value.trim();
+            const discord_id = card.querySelector("[data-field=\"discord_id\"]").value.trim();
+            const avatar_url = card.querySelector("[data-field=\"avatar_url\"]").value.trim();
+            const role = card.querySelector("[data-field=\"role\"]").value;
+            const show_on_front = card.querySelector("[data-field=\"show_on_front\"]").checked;
+
+            const { error: updateError } = await sbClient
+              .from("staff_members")
+              .update({ mc_username, discord_id, avatar_url, role, show_on_front })
+              .eq("id", row.id);
+
+            if (updateError) {
+              status.textContent = `Update failed: ${updateError.message}`;
+            } else {
+              status.textContent = "Updated successfully.";
+            }
+          });
+
+          card.querySelector(".admin-delete").addEventListener("click", async () => {
+            if (!confirm("Delete this staff member?")) return;
+            const { error: deleteError } = await sbClient
+              .from("staff_members")
+              .delete()
+              .eq("id", row.id);
+            if (deleteError) {
+              status.textContent = `Delete failed: ${deleteError.message}`;
+              return;
+            }
+            status.textContent = "Deleted.";
+            loadStaffList();
+          });
+
+          listEl.appendChild(card);
+        });
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const mc_username = document.getElementById("staffMcInput").value.trim();
+        const discord_id = document.getElementById("staffDiscordInput").value.trim();
+        const avatar_url = document.getElementById("staffAvatarInput").value.trim();
+        const role = document.getElementById("staffRoleInput").value;
+        const show_on_front = document.getElementById("staffShowInput").checked;
+
+        if (!mc_username || !discord_id) {
+          status.textContent = "Please add Minecraft username and Discord ID.";
+          return;
+        }
+        status.textContent = "Saving...";
+        const { error } = await sbClient
+          .from("staff_members")
+          .insert([{ mc_username, discord_id, avatar_url, role, show_on_front }]);
+        if (error) {
+          status.textContent = `Save failed: ${error.message}`;
+          return;
+        }
+        status.textContent = "User added.";
+        form.reset();
+        loadStaffList();
+      });
+
+      (async () => {
+        const session = await requireAdmin();
+        if (!session) return;
+        await loadStaffList();
+      })();
+    })();
+  </script>
+</body>
+</html>

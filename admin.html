@@ -87,10 +87,10 @@
             </div>
           </div>
           <div class="admin-actions">
-            <button class="cta-btn admin-action" type="button" data-modal-target="screenshotModal">Screenshot Manager</button>
-            <button class="cta-btn ghost admin-action" type="button" data-modal-target="announcementModal">Edit Announcement</button>
-            <a class="cta-btn ghost admin-action" href="#" aria-disabled="true">Docs Editor</a>
-            <a class="cta-btn ghost admin-action" href="#" aria-disabled="true">Staff Manager</a>
+            <button class="cta-btn admin-action" type="button" data-modal-target="screenshotModal" data-min-role="staff">Screenshot Manager</button>
+            <button class="cta-btn ghost admin-action" type="button" data-modal-target="announcementModal" data-min-role="staff">Edit Announcement</button>
+            <a class="cta-btn ghost admin-action" href="#" aria-disabled="true" data-min-role="developer">Docs Editor</a>
+            <a class="cta-btn ghost admin-action" href="staff-manager.html" data-min-role="admin">Staff Manager</a>
           </div>
         </div>
       </section>
@@ -237,6 +237,47 @@
       });
     }
 
+    async function fetchStaffRole(discordId) {
+      if (!discordId) return null;
+      try {
+        const { data } = await sbClient
+          .from("staff_members")
+          .select("role")
+          .eq("discord_id", discordId)
+          .maybeSingle();
+        return data?.role || null;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function applyRoleAccess(role) {
+      const roleRank = {
+        none: 0,
+        staff: 1,
+        developer: 2,
+        admin: 3
+      };
+      const currentRank = roleRank[(role || "none").toLowerCase()] ?? 0;
+      document.querySelectorAll("[data-min-role]").forEach((el) => {
+        const required = el.getAttribute("data-min-role") || "none";
+        const requiredRank = roleRank[required.toLowerCase()] ?? 0;
+        const allowed = currentRank >= requiredRank;
+        if (el.tagName === "A") {
+          el.setAttribute("aria-disabled", allowed ? "false" : "true");
+          el.classList.toggle("is-disabled", !allowed);
+          if (!allowed) {
+            el.setAttribute("tabindex", "-1");
+          } else {
+            el.removeAttribute("tabindex");
+          }
+        } else {
+          el.disabled = !allowed;
+          el.classList.toggle("is-disabled", !allowed);
+        }
+      });
+    }
+
     async function requireSession() {
       const { data } = await sbClient.auth.getSession();
       if (!data.session) {
@@ -255,7 +296,11 @@
         || data.session.user?.user_metadata?.preferred_username
         || data.session.user?.email
         || "Builder";
-      if (ALLOWED_DISCORD_IDS.length && !ALLOWED_DISCORD_IDS.includes(discordId)) {
+      const staffRole = await fetchStaffRole(discordId);
+      const isAdminAllowlist = ALLOWED_DISCORD_IDS.length && ALLOWED_DISCORD_IDS.includes(discordId);
+      const resolvedRole = isAdminAllowlist ? "Admin" : (staffRole || "None");
+
+      if (!isAdminAllowlist && (!staffRole || staffRole === "None")) {
         if (gate) gate.hidden = false;
         if (gateStatus) gateStatus.textContent = `Not authorized. Detected Discord ID: ${discordId || "unknown"}`;
         if (content) content.style.display = "none";
@@ -267,6 +312,7 @@
       if (welcomeText) {
         welcomeText.textContent = `Welcome, ${username}!`;
       }
+      applyRoleAccess(resolvedRole);
       const avatarUrl = resolveDiscordAvatar(data.session.user);
       if (avatarUrl) {
         const avatarHero = document.getElementById("adminAvatarHero");

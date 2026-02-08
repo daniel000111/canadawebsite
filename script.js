@@ -424,6 +424,7 @@ function getSupabaseClient() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initShowcaseGrid();
+  initStaffGrid();
   initDocsGate();
   initLightboxZoom();
   initSettingsMenu();
@@ -433,6 +434,65 @@ document.addEventListener("DOMContentLoaded", () => {
   initAdminLink();
   initLogoutButton();
 });
+
+async function fetchStaffMembers() {
+  const client = getSupabaseClient();
+  if (client) {
+    const { data, error } = await client
+      .from("staff_members")
+      .select("mc_username,discord_id,role,show_on_front,avatar_url")
+      .eq("show_on_front", true)
+      .order("mc_username", { ascending: true });
+    if (error) return [];
+    return data || [];
+  }
+
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/staff_members?select=mc_username,discord_id,role,show_on_front,avatar_url&show_on_front=eq.true`;
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    return [];
+  }
+}
+
+function getDiscordFallbackAvatar(discordId) {
+  const idNum = Number(discordId);
+  if (!Number.isFinite(idNum)) return "https://cdn.discordapp.com/embed/avatars/0.png";
+  const index = Math.abs(idNum) % 6;
+  return `https://cdn.discordapp.com/embed/avatars/${index}.png`;
+}
+
+async function initStaffGrid() {
+  const carousel = document.getElementById("staffCarousel");
+  if (!carousel) return;
+
+  const rows = await fetchStaffMembers();
+  if (!rows.length) {
+    carousel.innerHTML = `<p class="section-text">No staff listed yet.</p>`;
+    return;
+  }
+
+  carousel.innerHTML = "";
+  rows.forEach((row) => {
+    const card = document.createElement("div");
+    card.className = "staff-card";
+    const avatar = row.avatar_url || getDiscordFallbackAvatar(row.discord_id);
+    card.innerHTML = `
+      <img src="${avatar}" alt="${escapeHtml(row.mc_username || "Staff")}" />
+      <h4>${escapeHtml(row.mc_username || "Staff")}</h4>
+      <p class="staff-discord"><code>${escapeHtml(row.discord_id || "")}</code></p>
+      <p>${escapeHtml(row.role || "Staff")}</p>
+    `;
+    carousel.appendChild(card);
+  });
+}
 
 async function initShowcaseGrid() {
   const grid = document.getElementById("shotGrid");
