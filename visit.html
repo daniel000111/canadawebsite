@@ -96,7 +96,9 @@
               <span class="server-ip">btecanada.net</span>
               <button class="copy-ip-btn" type="button" onclick="copyIP()">Copy IP</button>
             </li>
-            <li class="visit-version"><strong>Version:</strong> 1.21.10 (Java)</li>
+            <li class="visit-version"><strong>Version:</strong> <span id="visitStatusVersion">Java 1.21.10</span></li>
+            <li class="visit-version"><strong>Status:</strong> <span class="visit-status"><span class="status-dot neutral" id="visitStatusDot" aria-hidden="true"></span><span id="visitStatusState">Checking...</span></span></li>
+            <li class="visit-version"><strong>Players:</strong> <span id="visitStatusPlayers">--</span></li>
           </ul>
         </div>
 
@@ -164,6 +166,79 @@
       })
       .catch(() => {
         // Keep the fallback image if the fetch fails
+      });
+  })();
+</script>
+<script>
+  (function loadVisitStatus() {
+    const versionEl = document.getElementById("visitStatusVersion");
+    const statusEl = document.getElementById("visitStatusState");
+    const playersEl = document.getElementById("visitStatusPlayers");
+
+    if (!versionEl || !statusEl || !playersEl) return;
+
+    const host = "btecanada.net";
+    const port = 25565;
+    const apiUrl = `https://api.mcsrvstat.us/2/${host}`;
+    const fallbackUrl = `https://api.mcstatus.io/v2/status/java/${host}:${port}`;
+
+    function setDot(state) {
+      const dot = document.getElementById("visitStatusDot");
+      if (!dot) return;
+      dot.classList.remove("online", "offline", "neutral");
+      dot.classList.add(state);
+    }
+
+    function setState(online) {
+      statusEl.textContent = online ? "Online" : "Unavailable";
+      setDot(online ? "online" : "offline");
+    }
+
+    function setPlayers(online, max) {
+      if (typeof online === "number") {
+        playersEl.textContent = `${online} / ${typeof max === "number" ? max : "?"}`;
+      } else {
+        playersEl.textContent = "Unknown";
+      }
+    }
+
+    function setVersion(version) {
+      versionEl.textContent = version ? `Java ${version}` : "Java Unknown";
+    }
+
+    fetch(apiUrl)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.online) {
+          setState(true);
+          setPlayers(data.players?.online, data.players?.max);
+          setVersion(data.version || "Unknown");
+          return;
+        }
+        return fetch(fallbackUrl)
+          .then((res) => res.ok ? res.json() : Promise.reject(res))
+          .then((alt) => {
+            if (alt && alt.online) {
+              setState(true);
+              setPlayers(alt.players?.online, alt.players?.max);
+              setVersion(alt.version?.name_clean || alt.version?.name_raw || alt.version?.name || "Unknown");
+              return;
+            }
+            setState(false);
+            playersEl.textContent = "Unavailable";
+            setVersion("");
+          })
+          .catch(() => {
+            setState(false);
+            playersEl.textContent = "Unavailable";
+            setVersion("");
+          });
+      })
+      .catch(() => {
+        statusEl.textContent = "Unavailable";
+        playersEl.textContent = "Unavailable";
+        versionEl.textContent = "Java Unavailable";
+        setDot("offline");
       });
   })();
 </script>
