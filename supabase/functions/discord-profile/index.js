@@ -36,7 +36,7 @@ serve(async (req) => {
     return jsonResponse({ error: "Invalid JSON body" }, 400);
   }
 
-  const discordId = (payload.discord_id || "").trim();
+  const discordId = String(payload.discord_id || "").trim();
   if (!discordId) {
     return jsonResponse({ error: "discord_id is required" }, 400);
   }
