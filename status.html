@@ -129,7 +129,8 @@
     const host = "btecanada.net";
     const port = 25565;
     const address = host;
-    const apiUrl = `https://api.mcsrvstat.us/2/${host}:${port}`;
+    const apiUrl = `https://api.mcsrvstat.us/2/${host}`;
+    const fallbackUrl = `https://api.mcstatus.io/v2/status/java/${host}:${port}`;
 
     const addressEl = document.getElementById("statusAddress");
     const statusEl = document.getElementById("statusState");
@@ -190,32 +191,62 @@
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 7000);
 
+    function renderOnline(data) {
+      setState(true);
+      const playersOnline = data.players && typeof data.players.online === "number" ? data.players.online : null;
+      const playersMax = data.players && typeof data.players.max === "number" ? data.players.max : null;
+      playersEl.textContent = playersOnline === null ? "Unknown" : `${playersOnline} / ${playersMax ?? "?"}`;
+      versionEl.textContent = data.version || "Unknown";
+
+      const motdClean = data.motd && Array.isArray(data.motd.clean) ? data.motd.clean.join("\n") : "";
+      const motdRaw = data.motd && Array.isArray(data.motd.raw) ? data.motd.raw.join("\n") : "";
+      setMotd(motdClean || motdRaw || "No MOTD available.");
+      setIcon(data.icon || "");
+      setChecked();
+    }
+
+    function renderOffline(message) {
+      setState(false);
+      playersEl.textContent = "Offline";
+      versionEl.textContent = "Offline";
+      setMotd(message || "Server is currently offline.");
+      setIcon("");
+      setChecked();
+    }
+
     fetch(apiUrl, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         clearTimeout(timeoutId);
         const online = !!data.online;
-        setState(online);
-        if (!online) {
-          playersEl.textContent = "Offline";
-          versionEl.textContent = "Offline";
-          setMotd("Server is currently offline.");
-          setIcon("");
-          setChecked();
+        if (online) {
+          renderOnline(data);
           return;
         }
 
-        const playersOnline = data.players && typeof data.players.online === "number" ? data.players.online : null;
-        const playersMax = data.players && typeof data.players.max === "number" ? data.players.max : null;
-        playersEl.textContent = playersOnline === null ? "Unknown" : `${playersOnline} / ${playersMax ?? "?"}`;
-        versionEl.textContent = data.version || "Unknown";
-
-        const motdClean = data.motd && Array.isArray(data.motd.clean) ? data.motd.clean.join("\n") : "";
-        const motdRaw = data.motd && Array.isArray(data.motd.raw) ? data.motd.raw.join("\n") : "";
-        setMotd(motdClean || motdRaw || "No MOTD available.");
-
-        setIcon(data.icon || "");
-        setChecked();
+        // Try fallback provider in case SRV routing isn't detected upstream
+        return fetch(fallbackUrl)
+          .then((res) => res.ok ? res.json() : Promise.reject(res))
+          .then((alt) => {
+            if (alt && alt.online) {
+              const mapped = {
+                online: true,
+                players: alt.players,
+                version: alt.version?.name_clean || alt.version?.name_raw || alt.version?.name || "Unknown",
+                motd: {
+                  clean: alt.motd?.clean ? [alt.motd.clean] : [],
+                  raw: alt.motd?.raw ? [alt.motd.raw] : []
+                },
+                icon: alt.icon
+              };
+              renderOnline(mapped);
+              return;
+            }
+            renderOffline("Server is currently offline.");
+          })
+          .catch(() => {
+            renderOffline("Server is currently offline.");
+          });
       })
       .catch(() => {
         clearTimeout(timeoutId);
