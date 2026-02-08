@@ -2253,7 +2253,7 @@ button, input, textarea, select {
 }
 
 .staff-manager-card {
-  width: min(900px, 94vw);
+  width: min(1000px, 94vw);
   text-align: left;
 }
 
@@ -2297,6 +2297,7 @@ button, input, textarea, select {
   width: 100%;
   display: grid;
   gap: 1rem;
+  max-height: none;
 }
 
 .staff-item {
@@ -2310,7 +2311,7 @@ button, input, textarea, select {
 
 .staff-item-grid {
   display: grid;
-  grid-template-columns: 1.1fr 1.2fr 1.1fr 1.4fr 0.9fr 0.6fr;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0.6rem;
 }
 
@@ -2321,6 +2322,7 @@ button, input, textarea, select {
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
+  min-width: 0;
 }
 
 .staff-item-grid input[readonly] {
@@ -2356,9 +2358,10 @@ button, input, textarea, select {
 }
 
 .admin-modal-card {
-  width: min(920px, 92vw);
-  max-height: 88vh;
-  overflow: auto;
+  width: min(1100px, 96vw);
+  max-height: 90vh;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 18px;
