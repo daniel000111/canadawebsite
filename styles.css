@@ -2156,6 +2156,13 @@ button, input, textarea, select {
   transform: translateY(-3vh);
 }
 
+.admin-modal-card .admin-hero-panel {
+  width: 100%;
+  margin: 1.5rem auto;
+  display: flex;
+  justify-content: center;
+}
+
 .admin-card {
   width: min(520px, 92vw);
   background: var(--login-panel-bg);
