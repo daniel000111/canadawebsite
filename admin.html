@@ -7,7 +7,7 @@
   <link rel="icon" href="assets/logo-square.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="admin-body">
   <!-- NAVBAR -->
   <header class="nav-wrap">
     <nav class="nav">
@@ -68,7 +68,7 @@
   </nav>
   </header>
 
-  <main class="visit-page">
+  <main class="admin-page">
     <section class="docs-card admin-gate" id="adminGate">
       <h2>Admin Access Required</h2>
       <p class="section-text">This account hasn't been authorized to access the panel.</p>
@@ -77,28 +77,32 @@
     </section>
 
     <div id="adminContent" style="display:none;">
-      <section class="builder-hero admin-hero" id="admin-overview">
-        <div class="admin-hero-head">
-          <img id="adminAvatarHero" class="admin-avatar admin-avatar-lg" alt="" style="display:none;" />
-          <div>
-            <h1 id="welcomeText">Welcome, Builder!</h1>
-            <p class="section-text">You can edit site settings here.</p>
+      <section class="admin-hero-panel">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <img id="adminAvatarHero" class="admin-avatar admin-avatar-lg" alt="" style="display:none;" />
+            <div>
+              <h1 id="welcomeText">Welcome, Builder!</h1>
+              <p class="section-text">You can edit site settings here.</p>
+            </div>
+          </div>
+          <div class="admin-actions">
+            <button class="cta-btn admin-action" type="button" data-modal-target="screenshotModal">Screenshot Manager</button>
+            <button class="cta-btn ghost admin-action" type="button" data-modal-target="announcementModal">Edit Announcement</button>
+            <a class="cta-btn ghost admin-action" href="#" aria-disabled="true">Docs Editor</a>
+            <a class="cta-btn ghost admin-action" href="#" aria-disabled="true">Staff Manager</a>
           </div>
         </div>
       </section>
+    </div>
+  </main>
 
-      <section class="docs-card admin-announcement-card">
-        <h2>Announcement</h2>
-        <p class="section-text">Set a short message that appears in the navbar.</p>
-        <div class="docs-form admin-announcement-form">
-          <textarea id="announcementInput" rows="4" placeholder="Enter announcement..."></textarea>
-          <div class="admin-announcement-actions">
-            <button class="cta-btn admin-btn" id="announcementSave" type="button">Update Announcement</button>
-            <button class="cta-btn ghost" id="announcementClear" type="button">Clear Announcement</button>
-          </div>
-        </div>
-        <p class="docs-note" id="announcementStatus"></p>
-      </section>
+  <div class="admin-modal" id="screenshotModal" aria-hidden="true">
+    <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="screenshotModalTitle">
+      <div class="admin-modal-header">
+        <h2 id="screenshotModalTitle">Screenshot Manager</h2>
+        <button class="admin-modal-close" type="button" data-modal-close>Close</button>
+      </div>
 
       <section class="docs-card" id="admin-upload">
         <h2>Screenshot Uploader</h2>
@@ -135,7 +139,27 @@
         <div id="adminList" class="admin-list"></div>
       </section>
     </div>
-  </main>
+  </div>
+
+  <div class="admin-modal" id="announcementModal" aria-hidden="true">
+    <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="announcementModalTitle">
+      <div class="admin-modal-header">
+        <h2 id="announcementModalTitle">Edit Announcement</h2>
+        <button class="admin-modal-close" type="button" data-modal-close>Close</button>
+      </div>
+      <section class="docs-card admin-announcement-card">
+        <p class="section-text">Set a short message that appears in the navbar.</p>
+        <div class="docs-form admin-announcement-form">
+          <textarea id="announcementInput" rows="4" placeholder="Enter announcement..."></textarea>
+          <div class="admin-announcement-actions">
+            <button class="cta-btn admin-btn" id="announcementSave" type="button">Update Announcement</button>
+            <button class="cta-btn ghost" id="announcementClear" type="button">Clear Announcement</button>
+          </div>
+        </div>
+        <p class="docs-note" id="announcementStatus"></p>
+      </section>
+    </div>
+  </div>
 
   <footer class="footer">
     2026 BTE Canada · Not affiliated with Mojang
@@ -171,6 +195,47 @@
     const progressText = document.getElementById("uploadProgressText");
     const listEl = document.getElementById("adminList");
     const searchInput = document.getElementById("adminSearch");
+
+    function initAdminModals() {
+      const openers = document.querySelectorAll("[data-modal-target]");
+      const closers = document.querySelectorAll("[data-modal-close]");
+
+      openers.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-modal-target");
+          const modal = document.getElementById(id);
+          if (!modal) return;
+          modal.classList.add("show");
+          modal.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      function closeModal(modal) {
+        modal.classList.remove("show");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      closers.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const modal = btn.closest(".admin-modal");
+          if (modal) closeModal(modal);
+        });
+      });
+
+      document.querySelectorAll(".admin-modal").forEach((modal) => {
+        modal.addEventListener("click", (event) => {
+          if (event.target === modal) closeModal(modal);
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        const modal = document.querySelector(".admin-modal.show");
+        if (modal) closeModal(modal);
+      });
+    }
 
     async function requireSession() {
       const { data } = await sbClient.auth.getSession();
@@ -368,6 +433,7 @@
       const session = await requireSession();
       if (!session) return;
       await loadAdminList();
+      initAdminModals();
     })();
 
   form.addEventListener("submit", async (e) => {
