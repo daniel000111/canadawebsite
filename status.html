@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BTE Canada | Server Status</title>
+  <link rel="icon" href="assets/logo-square.png" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="nav-wrap">
+  <nav class="nav">
+    <!-- LEFT: Brand -->
+    <div class="nav-left fade-in fade-delay-1">
+      <a href="index.html" class="brand">
+        <img src="assets/logo-square.gif" alt="BTE Canada Logo" class="nav-logo" />
+        <span class="brand-text">BTE CANADA</span>
+      </a>
+    </div>
+
+    <!-- CENTER: Links -->
+    <div class="nav-center fade-in fade-delay-2">
+      <a href="index.html">Home</a>
+      <a href="showcase.html">Showcase</a>
+      <a href="visit.html">Visit</a>
+      <a href="build.html">Build</a>
+      <a href="docs.html">Docs</a>
+      <a href="map.html">Map</a>
+    </div>
+
+    <!-- RIGHT: Socials -->
+    <div class="nav-right fade-in fade-delay-3">
+      <a class="icon-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" aria-label="Discord">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.249a18.27 18.27 0 0 0-5.487 0c-.164-.385-.397-.874-.608-1.249a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.683 4.37a.07.07 0 0 0-.032.027C.533 9.045-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.461-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.371-.291a.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.099.245.197.372.291a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.106c.36.699.772 1.364 1.225 1.994a.076.076 0 0 0 .084.028 19.9 19.9 0 0 0 5.994-3.03.077.077 0 0 0 .03-.056c.5-5.177-.838-9.673-3.548-13.66a.061.061 0 0 0-.031-.03z"/>
+        </svg>
+      </a>
+      <a class="icon-btn" href="https://www.instagram.com/bte.canada/" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10zm-5 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm4.75-.75a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5z"/>
+        </svg>
+      </a>
+      <a class="icon-btn" href="https://www.tiktok.com/@btecanada" target="_blank" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M16.5 3a5.5 5.5 0 0 0 4 1.8V8a8.4 8.4 0 0 1-4-1.1v6.6a6.5 6.5 0 1 1-6.5-6.5c.3 0 .6 0 .9.1V10a3.5 3.5 0 1 0 2.6 3.4V3h3z"/>
+        </svg>
+      </a>
+      <div class="settings-wrap">
+        <button class="settings-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Open settings" onclick="toggleSettingsMenu(event)">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19.14 12.94a7.94 7.94 0 0 0 .05-.94 7.94 7.94 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.6 7.6 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.75 8.86a.5.5 0 0 0 .12.64l2.03 1.58c-.03.31-.05.63-.05.94s.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.5.42 1.05.72 1.63.94l.36 2.54a.5.5 0 0 0 .5.42h3.84a.5.5 0 0 0 .5-.42l.36-2.54c.58-.22 1.12-.52 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"></path>
+          </svg>
+        </button>
+        <div class="settings-menu" aria-hidden="true">
+          <div class="settings-profile" id="settingsProfile" style="display:none;">
+            <img id="settingsAvatar" class="admin-avatar settings-avatar" alt="" />
+            <span id="settingsName" class="settings-name"></span>
+          </div>
+          <button class="theme-btn ghost" type="button" onclick="toggleTheme()" aria-label="Toggle theme">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"></path>
+            </svg>
+            <span class="theme-label">Light</span>
+          </button>
+          <a class="cta-btn admin-btn" id="adminLink" href="login.html">Login</a>
+          <button class="cta-btn logout-btn" id="logoutBtnMenu" type="button">Log out</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="status-page">
+  <section class="builder-hero status-hero">
+    <h1>Server Status</h1>
+  </section>
+
+  <section class="status-panel">
+    <div class="status-card">
+      <div class="status-head">
+        <div class="status-title-group">
+          <p class="status-kicker">Address</p>
+          <h2 class="status-title" id="statusAddress">btecanada.net:25565</h2>
+        </div>
+        <div class="status-pill offline" id="statusState" aria-live="polite">Checking...</div>
+      </div>
+      <div class="status-meta">
+        <div class="status-icon-wrap">
+          <img id="statusIcon" class="status-icon" alt="Server icon" />
+        </div>
+        <div class="status-actions">
+          <button class="cta-btn" type="button" id="copyAddress">Copy Address</button>
+          <span class="status-note">Java Edition � Port 25565</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-grid">
+      <div class="status-item">
+        <h3>Players</h3>
+        <p id="statusPlayers">--</p>
+      </div>
+      <div class="status-item">
+        <h3>Version</h3>
+        <p id="statusVersion">--</p>
+      </div>
+      <div class="status-item status-item-wide">
+        <h3>MOTD</h3>
+        <p id="statusMotd" class="status-motd">--</p>
+      </div>
+      <div class="status-item">
+        <h3>Last Checked</h3>
+        <p id="statusChecked">--</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  (c) 2026 BTE Canada � Not affiliated with Mojang
+</footer>
+
+<script src="script.js"></script>
+<script>
+  (function initStatus() {
+    const host = "btecanada.net";
+    const port = 25565;
+    const address = `${host}:${port}`;
+    const apiUrl = `https://api.mcsrvstat.us/2/${address}`;
+
+    const addressEl = document.getElementById("statusAddress");
+    const statusEl = document.getElementById("statusState");
+    const playersEl = document.getElementById("statusPlayers");
+    const versionEl = document.getElementById("statusVersion");
+    const motdEl = document.getElementById("statusMotd");
+    const checkedEl = document.getElementById("statusChecked");
+    const iconEl = document.getElementById("statusIcon");
+    const copyBtn = document.getElementById("copyAddress");
+
+    if (addressEl) addressEl.textContent = address;
+
+    function setState(isOnline) {
+      if (!statusEl) return;
+      statusEl.classList.remove("online", "offline");
+      if (isOnline) {
+        statusEl.classList.add("online");
+        statusEl.textContent = "Online";
+      } else {
+        statusEl.classList.add("offline");
+        statusEl.textContent = "Offline";
+      }
+    }
+
+    function setChecked() {
+      if (!checkedEl) return;
+      checkedEl.textContent = new Date().toLocaleString();
+    }
+
+    function setMotd(text) {
+      if (!motdEl) return;
+      motdEl.textContent = text || "No MOTD available.";
+    }
+
+    function setIcon(iconData) {
+      if (!iconEl) return;
+      if (!iconData) {
+        iconEl.style.display = "none";
+        return;
+      }
+      iconEl.src = iconData;
+      iconEl.style.display = "block";
+    }
+
+    function setCopy() {
+      if (!copyBtn) return;
+      copyBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(address);
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => {
+          copyBtn.textContent = "Copy Address";
+        }, 1600);
+      });
+    }
+
+    setCopy();
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 7000);
+
+    fetch(apiUrl, { signal: controller.signal })
+      .then((res) => res.json())
+      .then((data) => {
+        clearTimeout(timeoutId);
+        const online = !!data.online;
+        setState(online);
+        if (!online) {
+          playersEl.textContent = "Offline";
+          versionEl.textContent = "Offline";
+          setMotd("Server is currently offline.");
+          setIcon("");
+          setChecked();
+          return;
+        }
+
+        const playersOnline = data.players && typeof data.players.online === "number" ? data.players.online : null;
+        const playersMax = data.players && typeof data.players.max === "number" ? data.players.max : null;
+        playersEl.textContent = playersOnline === null ? "Unknown" : `${playersOnline} / ${playersMax ?? "?"}`;
+        versionEl.textContent = data.version || "Unknown";
+
+        const motdClean = data.motd && Array.isArray(data.motd.clean) ? data.motd.clean.join("\n") : "";
+        const motdRaw = data.motd && Array.isArray(data.motd.raw) ? data.motd.raw.join("\n") : "";
+        setMotd(motdClean || motdRaw || "No MOTD available.");
+
+        setIcon(data.icon || "");
+        setChecked();
+      })
+      .catch(() => {
+        clearTimeout(timeoutId);
+        setState(false);
+        playersEl.textContent = "Unavailable";
+        versionEl.textContent = "Unavailable";
+        setMotd("Unable to reach the status endpoint.");
+        setIcon("");
+        setChecked();
+      });
+  })();
+</script>
+</body>
+</html>

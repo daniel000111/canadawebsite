@@ -104,7 +104,7 @@
         }
         btn.disabled = true;
         status.textContent = "Redirecting to Discord...";
-        const redirectTo = location.origin + (location.pathname.endsWith("/login") ? "/admin" : "/admin.html");
+        const redirectTo = "https://www.btecanada.net/admin.html";
         const { error } = await sbClient.auth.signInWithOAuth({
           provider: "discord",
           options: { redirectTo }
