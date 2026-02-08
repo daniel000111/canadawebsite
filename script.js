@@ -440,7 +440,7 @@ async function fetchStaffMembers() {
   if (client) {
     const { data, error } = await client
       .from("staff_members")
-      .select("mc_username,discord_id,role,show_on_front,avatar_url")
+      .select("mc_username,discord_id,discord_username,role,show_on_front,avatar_url")
       .eq("show_on_front", true)
       .order("mc_username", { ascending: true });
     if (error) return [];
@@ -448,7 +448,7 @@ async function fetchStaffMembers() {
   }
 
   try {
-    const url = `${SUPABASE_URL}/rest/v1/staff_members?select=mc_username,discord_id,role,show_on_front,avatar_url&show_on_front=eq.true`;
+    const url = `${SUPABASE_URL}/rest/v1/staff_members?select=mc_username,discord_id,discord_username,role,show_on_front,avatar_url&show_on_front=eq.true`;
     const res = await fetch(url, {
       headers: {
         apikey: SUPABASE_ANON_KEY,
@@ -484,10 +484,11 @@ async function initStaffGrid() {
     const card = document.createElement("div");
     card.className = "staff-card";
     const avatar = row.avatar_url || getDiscordFallbackAvatar(row.discord_id);
+    const handle = row.discord_username || row.discord_id || "";
     card.innerHTML = `
       <img src="${avatar}" alt="${escapeHtml(row.mc_username || "Staff")}" />
       <h4>${escapeHtml(row.mc_username || "Staff")}</h4>
-      <p class="staff-discord"><code>${escapeHtml(row.discord_id || "")}</code></p>
+      <p class="staff-discord"><code>${escapeHtml(handle)}</code></p>
       <p>${escapeHtml(row.role || "Staff")}</p>
     `;
     carousel.appendChild(card);

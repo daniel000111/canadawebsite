@@ -987,6 +987,11 @@ body.admin-body {
   text-align: center;
 }
 
+.admin-modal-card .admin-announcement-card {
+  margin: 0 auto;
+  max-width: 640px;
+}
+
 .admin-announcement-form {
   align-items: center;
 }
@@ -2147,6 +2152,8 @@ button, input, textarea, select {
 .admin-hero-panel {
   width: min(560px, 90vw);
   margin: 2rem auto;
+  animation: admin-card-fade 0.45s ease both;
+  transform: translateY(-3vh);
 }
 
 .admin-card {
@@ -2172,6 +2179,17 @@ button, input, textarea, select {
   display: grid;
   gap: 0.6rem;
   justify-items: center;
+}
+
+@keyframes admin-card-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-1vh) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-3vh) scale(1);
+  }
 }
 
 .admin-actions {
@@ -2292,7 +2310,7 @@ button, input, textarea, select {
 
 .staff-item-grid {
   display: grid;
-  grid-template-columns: 1.1fr 1.2fr 1.4fr 0.9fr 0.6fr;
+  grid-template-columns: 1.1fr 1.2fr 1.1fr 1.4fr 0.9fr 0.6fr;
   gap: 0.6rem;
 }
 
@@ -2303,6 +2321,10 @@ button, input, textarea, select {
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
+}
+
+.staff-item-grid input[readonly] {
+  opacity: 0.75;
 }
 
 @media (max-width: 900px) {

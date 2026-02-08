@@ -90,7 +90,7 @@
             <button class="cta-btn admin-action" type="button" data-modal-target="screenshotModal" data-min-role="staff">Screenshot Manager</button>
             <button class="cta-btn ghost admin-action" type="button" data-modal-target="announcementModal" data-min-role="staff">Edit Announcement</button>
             <a class="cta-btn ghost admin-action" href="#" aria-disabled="true" data-min-role="developer">Docs Editor</a>
-            <a class="cta-btn ghost admin-action" href="staff-manager.html" data-min-role="admin">Staff Manager</a>
+            <button class="cta-btn ghost admin-action" type="button" data-modal-target="staffManagerModal" data-min-role="admin">Staff Manager</button>
           </div>
         </div>
       </section>
@@ -161,6 +161,43 @@
     </div>
   </div>
 
+  <div class="admin-modal" id="staffManagerModal" aria-hidden="true">
+    <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="staffManagerModalTitle">
+      <div class="admin-modal-header">
+        <h2 id="staffManagerModalTitle">Staff Manager</h2>
+        <button class="admin-modal-close" type="button" data-modal-close>Close</button>
+      </div>
+      <section class="admin-hero-panel">
+        <div class="admin-card staff-manager-card">
+          <div class="admin-card-header">
+            <h3>Add Staff Member</h3>
+            <p class="section-text">Add members and set permission levels.</p>
+          </div>
+
+          <form id="staffAddForm" class="docs-form staff-form">
+            <input type="text" id="staffMcInput" placeholder="Minecraft username" required />
+            <input type="text" id="staffDiscordInput" placeholder="Discord ID" required />
+            <select id="staffRoleInput" required>
+              <option value="None">None</option>
+              <option value="Staff">Staff</option>
+              <option value="Developer">Developer</option>
+              <option value="Admin">Admin</option>
+            </select>
+            <label class="staff-checkbox">
+              <input type="checkbox" id="staffShowInput" />
+              <span>Show on front page</span>
+            </label>
+            <button class="cta-btn admin-btn" type="submit">Add User</button>
+          </form>
+
+          <p class="docs-note" id="staffStatus"></p>
+
+          <div class="staff-list" id="staffList"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
   <footer class="footer">
     2026 BTE Canada · Not affiliated with Mojang
   </footer>
@@ -195,6 +232,10 @@
     const progressText = document.getElementById("uploadProgressText");
     const listEl = document.getElementById("adminList");
     const searchInput = document.getElementById("adminSearch");
+    const staffForm = document.getElementById("staffAddForm");
+    const staffStatus = document.getElementById("staffStatus");
+    const staffListEl = document.getElementById("staffList");
+    const staffModal = document.getElementById("staffManagerModal");
 
     function initAdminModals() {
       const openers = document.querySelectorAll("[data-modal-target]");
@@ -208,6 +249,9 @@
           modal.classList.add("show");
           modal.setAttribute("aria-hidden", "false");
           document.body.style.overflow = "hidden";
+          if (modal === staffModal) {
+            loadStaffList();
+          }
         });
       });
 
@@ -275,6 +319,143 @@
           el.disabled = !allowed;
           el.classList.toggle("is-disabled", !allowed);
         }
+      });
+    }
+
+    async function fetchDiscordProfile(discordId) {
+      try {
+        const { data, error } = await sbClient.functions.invoke("discord-profile", {
+          body: { discord_id: discordId }
+        });
+        if (error) throw error;
+        return data || null;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    async function loadStaffList() {
+      if (!staffListEl) return;
+      const { data, error } = await sbClient
+        .from("staff_members")
+        .select("id,mc_username,discord_id,discord_username,role,show_on_front,avatar_url")
+        .order("mc_username", { ascending: true });
+      if (error) {
+        if (staffStatus) staffStatus.textContent = `Failed to load staff: ${error.message}`;
+        return;
+      }
+      renderStaffList(data || []);
+    }
+
+    function renderStaffList(rows) {
+      if (!staffListEl) return;
+      staffListEl.innerHTML = "";
+      if (!rows.length) {
+        staffListEl.innerHTML = "<p class=\"section-text\">No staff added yet.</p>";
+        return;
+      }
+      rows.forEach((row) => {
+        const card = document.createElement("div");
+        card.className = "staff-item";
+        card.innerHTML = `
+          <div class="staff-item-grid">
+            <input type="text" value="${row.mc_username || ""}" data-field="mc_username" />
+            <input type="text" value="${row.discord_id || ""}" data-field="discord_id" />
+            <input type="text" value="${row.discord_username || ""}" data-field="discord_username" placeholder="Discord username" readonly />
+            <input type="text" value="${row.avatar_url || ""}" data-field="avatar_url" placeholder="Avatar URL" readonly />
+            <select data-field="role">
+              <option value="None">None</option>
+              <option value="Staff">Staff</option>
+              <option value="Developer">Developer</option>
+              <option value="Admin">Admin</option>
+            </select>
+            <label class="staff-checkbox inline">
+              <input type="checkbox" data-field="show_on_front" ${row.show_on_front ? "checked" : ""} />
+              <span>Show</span>
+            </label>
+          </div>
+          <div class="admin-item-actions">
+            <button class="cta-btn admin-save" type="button">Save</button>
+            <button class="cta-btn ghost admin-refresh" type="button">Refresh Profile</button>
+            <button class="cta-btn ghost admin-delete" type="button">Delete</button>
+          </div>
+        `;
+        const roleSelect = card.querySelector("[data-field=\"role\"]");
+        roleSelect.value = row.role || "None";
+
+        card.querySelector(".admin-save").addEventListener("click", async () => {
+          const mc_username = card.querySelector("[data-field=\"mc_username\"]").value.trim();
+          const discord_id = card.querySelector("[data-field=\"discord_id\"]").value.trim();
+          const avatar_url_field = card.querySelector("[data-field=\"avatar_url\"]");
+          const discord_username_field = card.querySelector("[data-field=\"discord_username\"]");
+          const role = card.querySelector("[data-field=\"role\"]").value;
+          const show_on_front = card.querySelector("[data-field=\"show_on_front\"]").checked;
+
+          let avatar_url = avatar_url_field?.value?.trim() || "";
+          let discord_username = discord_username_field?.value?.trim() || "";
+
+          if (discord_id && (!discord_username || !avatar_url)) {
+            const profile = await fetchDiscordProfile(discord_id);
+            if (profile?.avatar_url) avatar_url = profile.avatar_url;
+            if (profile?.username) discord_username = profile.username;
+          }
+
+          const { error: updateError } = await sbClient
+            .from("staff_members")
+            .update({ mc_username, discord_id, discord_username, avatar_url, role, show_on_front })
+            .eq("id", row.id);
+
+          if (updateError) {
+            staffStatus.textContent = `Update failed: ${updateError.message}`;
+          } else {
+            staffStatus.textContent = "Updated successfully.";
+          }
+        });
+
+        card.querySelector(".admin-refresh").addEventListener("click", async () => {
+          const discord_id = card.querySelector("[data-field=\"discord_id\"]").value.trim();
+          if (!discord_id) {
+            staffStatus.textContent = "Add a Discord ID before refreshing.";
+            return;
+          }
+          staffStatus.textContent = "Refreshing Discord profile...";
+          const profile = await fetchDiscordProfile(discord_id);
+          if (profile?.avatar_url) {
+            card.querySelector("[data-field=\"avatar_url\"]").value = profile.avatar_url;
+          }
+          if (profile?.username) {
+            card.querySelector("[data-field=\"discord_username\"]").value = profile.username;
+          }
+          const { error: updateError } = await sbClient
+            .from("staff_members")
+            .update({
+              discord_id,
+              discord_username: profile?.username || "",
+              avatar_url: profile?.avatar_url || ""
+            })
+            .eq("id", row.id);
+          if (updateError) {
+            staffStatus.textContent = `Refresh failed: ${updateError.message}`;
+          } else {
+            staffStatus.textContent = "Profile refreshed.";
+          }
+        });
+
+        card.querySelector(".admin-delete").addEventListener("click", async () => {
+          if (!confirm("Delete this staff member?")) return;
+          const { error: deleteError } = await sbClient
+            .from("staff_members")
+            .delete()
+            .eq("id", row.id);
+          if (deleteError) {
+            staffStatus.textContent = `Delete failed: ${deleteError.message}`;
+            return;
+          }
+          staffStatus.textContent = "Deleted.";
+          loadStaffList();
+        });
+
+        staffListEl.appendChild(card);
       });
     }
 
@@ -481,6 +662,36 @@
       await loadAdminList();
       initAdminModals();
     })();
+
+    if (staffForm) {
+      staffForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const mc_username = document.getElementById("staffMcInput").value.trim();
+        const discord_id = document.getElementById("staffDiscordInput").value.trim();
+        const role = document.getElementById("staffRoleInput").value;
+        const show_on_front = document.getElementById("staffShowInput").checked;
+
+        if (!mc_username || !discord_id) {
+          staffStatus.textContent = "Please add Minecraft username and Discord ID.";
+          return;
+        }
+        staffStatus.textContent = "Looking up Discord profile...";
+        const profile = await fetchDiscordProfile(discord_id);
+        const avatar_url = profile?.avatar_url || "";
+        const discord_username = profile?.username || "";
+        staffStatus.textContent = "Saving...";
+        const { error } = await sbClient
+          .from("staff_members")
+          .insert([{ mc_username, discord_id, discord_username, avatar_url, role, show_on_front }]);
+        if (error) {
+          staffStatus.textContent = `Save failed: ${error.message}`;
+          return;
+        }
+        staffStatus.textContent = "User added.";
+        staffForm.reset();
+        loadStaffList();
+      });
+    }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
