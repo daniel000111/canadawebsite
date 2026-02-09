@@ -89,7 +89,7 @@
           <div class="admin-actions">
             <button class="cta-btn admin-action" type="button" data-modal-target="screenshotModal" data-min-role="staff">Screenshot Manager</button>
             <button class="cta-btn ghost admin-action" type="button" data-modal-target="announcementModal" data-min-role="staff">Edit Announcement</button>
-            <a class="cta-btn ghost admin-action" href="#" aria-disabled="true" data-min-role="developer">Docs Editor</a>
+            <a class="cta-btn ghost admin-action" href="#" aria-disabled="true" data-min-role="developer">Docs Editor (coming soon)</a>
             <button class="cta-btn ghost admin-action" type="button" data-modal-target="staffManagerModal" data-min-role="admin">Staff Manager</button>
           </div>
         </div>
@@ -512,7 +512,7 @@
 
       if (!isAdminAllowlist && (!staffRole || staffRole === "None")) {
         if (gate) gate.hidden = false;
-        if (gateStatus) gateStatus.textContent = `Not authorized. Detected Discord ID: ${discordId || "unknown"}`;
+        if (gateStatus) gateStatus.textContent = "Not authorized. Please contact an admin for access.";
         if (content) content.style.display = "none";
         form.querySelectorAll("input,button").forEach((el) => (el.disabled = true));
         return null;
