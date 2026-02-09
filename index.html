@@ -95,22 +95,81 @@
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="about">
-  <h2 class="section-title">About BTE Canada <img src="assets/canadaflag.png" alt="Canada flag" class="flag-icon" /></h2>
-  <p class="section-text">
-    Welcome to BTE Canada! We are a division of the BuildTheEarth project. We are in charge of building all areas within the borders of Canada.
-    We are a close-knit, friendly community of people all with one common goal: building Canada in minecraft.
-  </p>
+<section id="about" class="about reveal-on-scroll">
+  <div class="about-inner">
+    <div class="about-copy">
+      <h2 class="section-title reveal-on-scroll">About BTE Canada <img src="assets/canadaflag.png" alt="Canada flag" class="flag-icon" /></h2>
+      <p class="section-text reveal-on-scroll">
+        Welcome to BTE Canada! We are a division of the BuildTheEarth project. We are in charge of building all areas within the borders of Canada.
+        We are a close-knit, friendly community of people all with one common goal: building Canada in minecraft.
+      </p>
+      <a class="cta-btn reveal-on-scroll" href="visit.html">Join Now</a>
+    </div>
+    <div class="about-media reveal-on-scroll">
+      <img src="assets/hero.jpg" alt="BTE Canada builds" loading="lazy" />
+    </div>
+  </div>
 </section>
 
+<!-- STATS -->
+<section class="stats-band reveal-on-scroll" aria-label="Community stats">
+  <div class="stats-wrap">
+    <div class="stats-grid">
+      <div class="stat-card reveal-on-scroll">
+        <div class="stat-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img" focusable="false">
+            <path d="M3 21h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M7 21V8l5-3 5 3v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 21v-6h6v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="stat-number" data-count="550" data-suffix="+">0+</div>
+        <div class="stat-label">Builders</div>
+      </div>
+
+      <div class="stat-card reveal-on-scroll">
+        <div class="stat-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img" focusable="false">
+            <path d="M4 20h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M6 20V10l6-4 6 4v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 12h6M9 15h6M9 18h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="stat-number" data-count="5000" data-suffix="+">0+</div>
+        <div class="stat-label">Builds Complete</div>
+      </div>
+    </div>
+
+    <div class="stat-note reveal-on-scroll">Across all provinces.</div>
+  </div>
+</section>
+
+<!-- BUILD WITH US -->
+<section class="build-with-us reveal-on-scroll">
+  <div class="build-with-us-inner">
+    <div class="build-with-us-media reveal-on-scroll">
+      <img src="assets/hero.jpg" alt="BTE Canada builders at work" loading="lazy" />
+    </div>
+    <div class="build-with-us-copy">
+      <h2 class="section-title reveal-on-scroll">Ready to Build?</h2>
+      <p class="section-text reveal-on-scroll">
+        Be part of a growing online community recreating Canada in Minecraft. Learn good build practices, earn points, and
+        help us shape every part of Canada block by block. Don't stress, our trial process is easy, anyone can build!
+      </p>
+      <a class="cta-btn reveal-on-scroll" href="visit.html">Build With Us</a>
+    </div>
+  </div>
+</section>
+
+
 <!-- SHOWCASE -->
-<section id="showcase" class="showcase">
+<section id="showcase" class="showcase reveal-on-scroll">
   <div class="showcase-head">
-    <h2 class="section-title">Showcase</h2>
-    <a class="cta-btn ghost" href="showcase.html">See more</a>
+    <h2 class="section-title reveal-on-scroll">Showcase</h2>
+    <a class="cta-btn ghost reveal-on-scroll" href="showcase.html">See more</a>
   </div>
 
-  <div class="shot-carousel" id="shotCarousel" aria-label="Showcase carousel">
+  <div class="shot-carousel reveal-on-scroll" id="shotCarousel" aria-label="Showcase carousel">
     <button class="shot-arrow left" type="button" aria-label="Previous" onclick="shotPrev()">‹</button>
 
     <div class="shot-track" id="shotTrack">
@@ -125,15 +184,15 @@
   </div>
 </section>
 
-<div class="cta-row">
+<div class="cta-row reveal-on-scroll">
   <!-- SERVER -->
-  <section class="cta-section">
-    <h2 class="section-title">Visit Our Server</h2>
-    <p class="section-text">
+  <section class="cta-section reveal-on-scroll">
+    <h2 class="section-title reveal-on-scroll">Visit Our Server</h2>
+    <p class="section-text reveal-on-scroll">
       Join us in-game on Java Edition and see our builds, or start your building journey with us.
     </p>
 
-    <div class="server-card">
+    <div class="server-card reveal-on-scroll">
       <strong>Java Edition (1.21.10)</strong>
       <span class="server-ip">btecanada.net</span>
       <button class="cta-btn" onclick="copyIP()">Copy IP</button>
@@ -141,13 +200,13 @@
   </section>
 
   <!-- DISCORD -->
-  <section class="cta-section">
-    <h2 class="section-title">Join Our Discord</h2>
-    <p class="section-text">
+  <section class="cta-section reveal-on-scroll">
+    <h2 class="section-title reveal-on-scroll">Join Our Discord</h2>
+    <p class="section-text reveal-on-scroll">
       Get build permissions, share progress, and connect with builders from across Canada.
     </p>
 
-    <div class="server-card">
+    <div class="server-card reveal-on-scroll">
       <strong>Community Hub</strong>
       <span class="server-ip">discord.gg/pnPSvpfhAs</span>
       <a href="https://discord.gg/pnPSvpfhAs" target="_blank" class="cta-btn">
@@ -158,10 +217,10 @@
 </div>
 
 <!-- STAFF -->
-<section class="staff">
-  <h2 class="section-title">Admin & Staff</h2>
+<section class="staff reveal-on-scroll">
+  <h2 class="section-title reveal-on-scroll">Admin & Staff</h2>
 
-  <div class="staff-carousel-wrap">
+  <div class="staff-carousel-wrap reveal-on-scroll">
     <button class="carousel-btn prev" type="button" aria-label="Previous" onclick="scrollStaff(-1)">‹</button>
 
     <div class="staff-carousel" id="staffCarousel"></div>
@@ -177,11 +236,5 @@
 <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
 
 

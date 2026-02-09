@@ -166,6 +166,94 @@ function initLogoutButton() {
   });
 }
 
+
+function initStatCounters() {
+  const counters = Array.from(document.querySelectorAll(".stat-number[data-count]"));
+  if (!counters.length) return;
+
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function setFinalValue(el) {
+    const target = Number(el.dataset.count || "0");
+    const suffix = el.dataset.suffix || "";
+    el.textContent = `${target.toLocaleString()}${suffix}`;
+  }
+
+  function animateCount(el) {
+    if (el.dataset.started === "true") return;
+    el.dataset.started = "true";
+
+    const target = Number(el.dataset.count || "0");
+    const suffix = el.dataset.suffix || "";
+    const duration = Number(el.dataset.duration || "1600");
+    const start = performance.now();
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const step = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = easeOutCubic(progress);
+      const value = Math.round(target * eased);
+      el.textContent = `${value.toLocaleString()}${suffix}`;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+
+    requestAnimationFrame(step);
+  }
+
+  if (prefersReduced) {
+    counters.forEach(setFinalValue);
+    return;
+  }
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animateCount(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.45 }
+    );
+
+    counters.forEach((el) => observer.observe(el));
+  } else {
+    counters.forEach(animateCount);
+  }
+}
+
+function initScrollReveal() {
+  const targets = document.querySelectorAll(".reveal-on-scroll");
+  if (!targets.length) return;
+
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReduced) {
+    targets.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    targets.forEach((el) => observer.observe(el));
+  } else {
+    targets.forEach((el) => el.classList.add("is-visible"));
+  }
+}
+
 function ensureNavAnnouncement() {
   const navWraps = document.querySelectorAll(".nav-wrap");
   navWraps.forEach((wrap) => {
@@ -433,6 +521,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initSettingsProfile();
   initAdminLink();
   initLogoutButton();
+  initStatCounters();
+  initScrollReveal();
 });
 
 async function fetchStaffMembers() {
