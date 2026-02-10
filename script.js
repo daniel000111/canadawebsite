@@ -499,6 +499,9 @@ async function initBuilderProfile() {
         roleEl.textContent = displayRole;
         if (!data.in_guild && Array.isArray(data.roles)) {
           console.warn("Discord role lookup: not in guild", data);
+          if (typeof data.discord_status === "number") {
+            console.warn("Discord API status:", data.discord_status);
+          }
         } else if (Array.isArray(data.roles) && !data.roles.length) {
           console.warn("Discord role lookup: no roles returned", data);
         }
