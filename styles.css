@@ -1059,13 +1059,18 @@ body.admin-body {
 
 .admin-announcement-form {
   align-items: center;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  display: grid;
+  justify-items: stretch;
 }
 
 .admin-section-title {
   width: 100%;
   max-width: 640px;
   margin: 1rem auto 0.4rem;
-  text-align: left;
+  text-align: center;
   font-size: 1rem;
   letter-spacing: 0.02em;
   color: var(--text);
@@ -1076,7 +1081,7 @@ body.admin-body {
   max-width: 640px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   gap: 0.6rem;
 }
 
@@ -1091,7 +1096,7 @@ body.admin-body {
 .admin-focus-row {
   display: grid;
   gap: 0.6rem;
-  grid-template-columns: 1.2fr 1fr 1.2fr auto auto;
+  grid-template-columns: 1fr;
 }
 
 .admin-focus-row input[type="text"],
@@ -1103,7 +1108,8 @@ body.admin-body {
   color: var(--text);
 }
 
-.admin-focus-row .cta-btn {
+.admin-focus-row .cta-btn,
+.admin-focus-upload .cta-btn {
   margin-top: 0;
   align-self: center;
   justify-self: stretch;
