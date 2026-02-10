@@ -506,7 +506,7 @@
       const path = `${prefix}${Date.now()}_${safeName}`;
 
       try {
-        await uploadWithProgress(file, `${BUILDER_AREAS_BUCKET}/${path}`, accessToken);
+        await uploadWithProgress(BUILDER_AREAS_BUCKET, file, path, accessToken);
       } catch (err) {
         if (builderAreasStatus) builderAreasStatus.textContent = `Upload failed: ${err.message}`;
         return "";
@@ -675,11 +675,11 @@
       return data.session;
     }
 
-  async function uploadWithProgress(file, path, accessToken) {
+  async function uploadWithProgress(bucket, file, path, accessToken) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       const safePath = path.split("/").map(encodeURIComponent).join("/");
-      xhr.open("POST", `${ADMIN_SUPABASE_URL}/storage/v1/object/${SUPABASE_BUCKET}/${safePath}`);
+      xhr.open("POST", `${ADMIN_SUPABASE_URL}/storage/v1/object/${bucket}/${safePath}`);
       xhr.setRequestHeader("Authorization", `Bearer ${accessToken}`);
       xhr.setRequestHeader("apikey", ADMIN_SUPABASE_ANON_KEY);
       xhr.setRequestHeader("x-upsert", "false");
@@ -932,7 +932,7 @@
     const path = `${prefix}${Date.now()}_${safeName}`;
 
     try {
-      await uploadWithProgress(file, path, accessToken);
+      await uploadWithProgress(SUPABASE_BUCKET, file, path, accessToken);
     } catch (err) {
       status.textContent = `Upload failed: ${err.message}`;
       return;
