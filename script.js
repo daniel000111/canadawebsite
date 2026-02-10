@@ -469,9 +469,30 @@ async function initBuilderProfile() {
   if (roleEl) {
     roleEl.textContent = "Builder";
     try {
-      const { data, error } = await client.functions.invoke("discord-guild-role", {
-        body: {}
-      });
+      let data = null;
+      let error = null;
+      const accessToken = session?.access_token || "";
+      const fnUrl = `${SUPABASE_URL}/functions/v1/discord-guild-role`;
+
+      if (accessToken) {
+        const res = await fetch(fnUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+            apikey: SUPABASE_ANON_KEY
+          },
+          body: JSON.stringify({})
+        });
+        if (res.ok) {
+          data = await res.json();
+        } else {
+          error = new Error(`Function failed (${res.status})`);
+        }
+      } else {
+        error = new Error("Missing session access token");
+      }
+
       if (!error && data?.role) {
         const displayRole = data.is_engineer ? `${data.role} (Engineer)` : data.role;
         roleEl.textContent = displayRole;
