@@ -467,7 +467,7 @@ async function initBuilderProfile() {
   }
 
   if (roleEl) {
-    roleEl.textContent = "Builder";
+    roleEl.textContent = "No role";
     try {
       let data = null;
       let error = null;
@@ -520,9 +520,11 @@ async function initBuilderProfile() {
           gate.setAttribute("aria-hidden", "false");
           document.body.style.overflow = "hidden";
         }
+      } else if (roleEl) {
+        roleEl.textContent = "No role";
       }
     } catch (_err) {
-      // keep default role
+      if (roleEl) roleEl.textContent = "No role";
     }
   }
 }
