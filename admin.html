@@ -89,6 +89,7 @@
           <div class="admin-actions">
             <button class="cta-btn admin-action" type="button" data-modal-target="screenshotModal" data-min-role="staff">Screenshot Manager</button>
             <button class="cta-btn ghost admin-action" type="button" data-modal-target="announcementModal" data-min-role="staff">Edit Announcement</button>
+            <button class="cta-btn ghost admin-action" type="button" data-modal-target="builderAreasModal" data-min-role="staff">Edit Builder Areas</button>
             <a class="cta-btn ghost admin-action" href="#" aria-disabled="true" data-min-role="developer">Docs Editor (coming soon)</a>
             <button class="cta-btn ghost admin-action" type="button" data-modal-target="staffManagerModal" data-min-role="admin">Staff Manager</button>
           </div>
@@ -157,6 +158,29 @@
           </div>
         </div>
         <p class="docs-note" id="announcementStatus"></p>
+      </section>
+    </div>
+  </div>
+
+  <div class="admin-modal" id="builderAreasModal" aria-hidden="true">
+    <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="builderAreasModalTitle">
+      <div class="admin-modal-header">
+        <h2 id="builderAreasModalTitle">Edit Builder Areas</h2>
+        <button class="admin-modal-close" type="button" data-modal-close>Close</button>
+      </div>
+      <section class="docs-card admin-announcement-card">
+        <p class="section-text">Update the current event and focus areas shown in the builder panel.</p>
+        <div class="docs-form admin-announcement-form">
+          <input type="text" id="eventAreaInput" placeholder="Event area (e.g. Moncton, NB)" />
+          <input type="text" id="eventWarpInput" placeholder="Event warp command (e.g. /warp event)" />
+          <input type="text" id="eventImageInput" placeholder="Event image URL (optional)" />
+          <div class="admin-focus-list" id="focusAreasList"></div>
+          <button class="cta-btn ghost" id="focusAddBtn" type="button">Add Focus Area</button>
+          <div class="admin-announcement-actions">
+            <button class="cta-btn admin-btn" id="builderAreasSave" type="button">Update Builder Areas</button>
+          </div>
+        </div>
+        <p class="docs-note" id="builderAreasStatus"></p>
       </section>
     </div>
   </div>
@@ -237,6 +261,14 @@
     const staffStatus = document.getElementById("staffStatus");
     const staffListEl = document.getElementById("staffList");
     const staffModal = document.getElementById("staffManagerModal");
+    const builderModal = document.getElementById("builderAreasModal");
+    const eventAreaInput = document.getElementById("eventAreaInput");
+    const eventWarpInput = document.getElementById("eventWarpInput");
+    const eventImageInput = document.getElementById("eventImageInput");
+    const focusAreasList = document.getElementById("focusAreasList");
+    const focusAddBtn = document.getElementById("focusAddBtn");
+    const builderAreasSave = document.getElementById("builderAreasSave");
+    const builderAreasStatus = document.getElementById("builderAreasStatus");
 
     function initAdminModals() {
       const openers = document.querySelectorAll("[data-modal-target]");
@@ -252,6 +284,9 @@
           document.body.style.overflow = "hidden";
           if (modal === staffModal) {
             loadStaffList();
+          }
+          if (modal === builderModal) {
+            loadBuilderAreas();
           }
         });
       });
@@ -373,6 +408,64 @@
         return;
       }
       renderStaffList(data || []);
+    }
+
+    function createFocusRow(item = {}) {
+      if (!focusAreasList) return;
+      const row = document.createElement("div");
+      row.className = "admin-focus-row";
+      row.innerHTML = `
+        <input type="text" placeholder="Area (e.g. Toronto)" data-focus-field="area" />
+        <input type="text" placeholder="/warp command" data-focus-field="warp" />
+        <input type="text" placeholder="Image URL (optional)" data-focus-field="image" />
+        <button class="cta-btn ghost" type="button" data-focus-remove>Remove</button>
+      `;
+      row.querySelector('[data-focus-field="area"]').value = item.area || "";
+      row.querySelector('[data-focus-field="warp"]').value = item.warp || "";
+      row.querySelector('[data-focus-field="image"]').value = item.image || "";
+
+      row.querySelector("[data-focus-remove]").addEventListener("click", () => {
+        row.remove();
+      });
+      focusAreasList.appendChild(row);
+    }
+
+    function getFocusAreasFromRows() {
+      if (!focusAreasList) return [];
+      const rows = Array.from(focusAreasList.querySelectorAll(".admin-focus-row"));
+      return rows
+        .map((row) => {
+          const area = row.querySelector('[data-focus-field="area"]').value.trim();
+          const warp = row.querySelector('[data-focus-field="warp"]').value.trim();
+          const image = row.querySelector('[data-focus-field="image"]').value.trim();
+          return { area, warp, image };
+        })
+        .filter((item) => item.area || item.warp || item.image);
+    }
+
+    async function loadBuilderAreas() {
+      if (!eventAreaInput || !eventWarpInput || !focusAreasList) return;
+      if (builderAreasStatus) builderAreasStatus.textContent = "Loading...";
+      const { data, error } = await sbClient
+        .from("builder_areas")
+        .select("event_area,event_warp,event_image,focus_areas")
+        .eq("id", 1)
+        .maybeSingle();
+      if (error) {
+        if (builderAreasStatus) builderAreasStatus.textContent = `Failed to load: ${error.message}`;
+        return;
+      }
+      eventAreaInput.value = data?.event_area || "";
+      eventWarpInput.value = data?.event_warp || "";
+      eventImageInput.value = data?.event_image || "";
+      focusAreasList.innerHTML = "";
+      const focusItems = Array.isArray(data?.focus_areas) ? data.focus_areas : [];
+      if (focusItems.length) {
+        focusItems.forEach((item) => createFocusRow(item || {}));
+      } else {
+        createFocusRow();
+      }
+      if (builderAreasStatus) builderAreasStatus.textContent = "";
     }
 
     function renderStaffList(rows) {
@@ -720,6 +813,31 @@
         staffStatus.textContent = "User added.";
         staffForm.reset();
         loadStaffList();
+      });
+    }
+
+    if (builderAreasSave) {
+      builderAreasSave.addEventListener("click", async () => {
+        const event_area = eventAreaInput.value.trim();
+        const event_warp = eventWarpInput.value.trim();
+        const event_image = eventImageInput.value.trim();
+        const focus_areas = getFocusAreasFromRows();
+
+        if (builderAreasStatus) builderAreasStatus.textContent = "Saving...";
+        const { error } = await sbClient
+          .from("builder_areas")
+          .upsert({ id: 1, event_area, event_warp, event_image, focus_areas }, { onConflict: "id" });
+        if (error) {
+          if (builderAreasStatus) builderAreasStatus.textContent = `Save failed: ${error.message}`;
+          return;
+        }
+        if (builderAreasStatus) builderAreasStatus.textContent = "Builder areas updated.";
+      });
+    }
+
+    if (focusAddBtn) {
+      focusAddBtn.addEventListener("click", () => {
+        createFocusRow();
       });
     }
 

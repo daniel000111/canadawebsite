@@ -337,6 +337,93 @@ async function initAnnouncementBar() {
   setNavAnnouncement(message);
 }
 
+async function fetchBuilderAreas() {
+  const client = getSupabaseClient();
+  if (client) {
+    const { data, error } = await client
+      .from("builder_areas")
+      .select("event_area,event_warp,event_image,focus_areas")
+      .eq("id", 1)
+      .maybeSingle();
+    if (error) return null;
+    return data || null;
+  }
+
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/builder_areas?id=eq.1&select=event_area,event_warp,event_image,focus_areas`;
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return rows?.[0] || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function normalizeFocusAreas(list) {
+  if (!Array.isArray(list)) return [];
+  return list
+    .map((item) => ({
+      area: String(item?.area || "").trim(),
+      warp: String(item?.warp || "").trim(),
+      image: String(item?.image || "").trim()
+    }))
+    .filter((item) => item.area || item.warp || item.image);
+}
+
+async function initBuilderAreas() {
+  const eventTitle = document.getElementById("eventTitle");
+  const eventCommand = document.getElementById("eventCommand");
+  const eventImage = document.getElementById("eventImage");
+  const focusList = document.getElementById("focusList");
+  if (!eventTitle && !eventCommand && !eventImage && !focusList) return;
+
+  const data = await fetchBuilderAreas();
+  if (!data) return;
+
+  if (eventTitle && data.event_area) {
+    eventTitle.textContent = data.event_area;
+  }
+  if (eventCommand && data.event_warp) {
+    const code = eventCommand.querySelector("code");
+    if (code) {
+      code.textContent = data.event_warp;
+    } else {
+      eventCommand.textContent = data.event_warp;
+    }
+  }
+  if (eventImage && data.event_image) {
+    eventImage.src = data.event_image;
+    eventImage.alt = data.event_area || "Current event highlight";
+  }
+
+  const focusAreas = normalizeFocusAreas(data.focus_areas);
+  if (focusList && focusAreas.length) {
+    focusList.innerHTML = "";
+    focusAreas.forEach((item) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "panel-focus-item";
+      if (item.area) btn.setAttribute("data-area", item.area);
+      if (item.image) btn.setAttribute("data-image", item.image);
+
+      const name = document.createElement("span");
+      name.textContent = item.area || "Focus area";
+      const warp = document.createElement("code");
+      warp.textContent = item.warp || "";
+
+      btn.appendChild(name);
+      btn.appendChild(warp);
+      focusList.appendChild(btn);
+    });
+  }
+}
+
 function initAdminAnnouncement() {
   const input = document.getElementById("announcementInput");
   const saveBtn = document.getElementById("announcementSave");
@@ -518,6 +605,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSettingsMenu();
   initAnnouncementBar();
   initAdminAnnouncement();
+  initBuilderAreas();
   initSettingsProfile();
   initAdminLink();
   initLogoutButton();
