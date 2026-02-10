@@ -1061,6 +1061,71 @@ body.admin-body {
   align-items: center;
 }
 
+.admin-section-title {
+  width: 100%;
+  max-width: 640px;
+  margin: 1rem auto 0.4rem;
+  text-align: left;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.admin-focus-upload {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+}
+
+.admin-focus-list {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.admin-focus-row {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: 1.2fr 1fr 1.2fr auto auto;
+}
+
+.admin-focus-row input[type="text"],
+.admin-focus-row input[type="file"] {
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+}
+
+.admin-focus-row .cta-btn {
+  margin-top: 0;
+  align-self: center;
+  justify-self: stretch;
+}
+
+.admin-focus-row input[type="file"] {
+  padding: 0.35rem 0.5rem;
+}
+
+.admin-focus-row input[type="file"]::file-selector-button {
+  margin-right: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  padding: 0.35rem 0.55rem;
+}
+
+.admin-focus-row input[type="file"]::file-selector-button:hover {
+  border-color: var(--red);
+}
+
 .admin-announcement-form textarea {
   max-width: 640px;
   margin: 0 auto;
@@ -1075,6 +1140,14 @@ body.admin-body {
 }
 
 @media (max-width: 720px) {
+  .admin-focus-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-focus-upload {
+    grid-template-columns: 1fr;
+  }
+
   .admin-item{
     grid-template-columns: 1fr;
   }
