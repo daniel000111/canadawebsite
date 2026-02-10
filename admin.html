@@ -174,6 +174,10 @@
           <input type="text" id="eventAreaInput" placeholder="Event area (e.g. Moncton, NB)" />
           <input type="text" id="eventWarpInput" placeholder="Event warp command (e.g. /warp event)" />
           <input type="text" id="eventImageInput" placeholder="Event image URL (optional)" />
+          <div class="admin-focus-upload">
+            <input type="file" id="eventImageFile" accept="image/*" />
+            <button class="cta-btn ghost" id="eventImageUpload" type="button">Upload Event Image</button>
+          </div>
           <div class="admin-focus-list" id="focusAreasList"></div>
           <button class="cta-btn ghost" id="focusAddBtn" type="button">Add Focus Area</button>
           <div class="admin-announcement-actions">
@@ -236,6 +240,7 @@
     const ADMIN_SUPABASE_ANON_KEY = supabaseConfig.key;
     const sbClient = window.APP_SUPABASE_CLIENT || window.supabase.createClient(ADMIN_SUPABASE_URL, ADMIN_SUPABASE_ANON_KEY);
     const SUPABASE_BUCKET = "screenshots";
+    const BUILDER_AREAS_BUCKET = "builder-areas";
 
     const ALLOWED_DISCORD_IDS = [
       "617699025973542930",
@@ -265,6 +270,8 @@
     const eventAreaInput = document.getElementById("eventAreaInput");
     const eventWarpInput = document.getElementById("eventWarpInput");
     const eventImageInput = document.getElementById("eventImageInput");
+    const eventImageFile = document.getElementById("eventImageFile");
+    const eventImageUpload = document.getElementById("eventImageUpload");
     const focusAreasList = document.getElementById("focusAreasList");
     const focusAddBtn = document.getElementById("focusAddBtn");
     const builderAreasSave = document.getElementById("builderAreasSave");
@@ -418,11 +425,27 @@
         <input type="text" placeholder="Area (e.g. Toronto)" data-focus-field="area" />
         <input type="text" placeholder="/warp command" data-focus-field="warp" />
         <input type="text" placeholder="Image URL (optional)" data-focus-field="image" />
+        <input type="file" accept="image/*" data-focus-field="file" />
+        <button class="cta-btn ghost" type="button" data-focus-upload>Upload</button>
         <button class="cta-btn ghost" type="button" data-focus-remove>Remove</button>
       `;
       row.querySelector('[data-focus-field="area"]').value = item.area || "";
       row.querySelector('[data-focus-field="warp"]').value = item.warp || "";
       row.querySelector('[data-focus-field="image"]').value = item.image || "";
+
+      row.querySelector("[data-focus-upload]").addEventListener("click", async () => {
+        const fileInput = row.querySelector('[data-focus-field="file"]');
+        const file = fileInput?.files?.[0];
+        if (!file) {
+          if (builderAreasStatus) builderAreasStatus.textContent = "Select an image file first.";
+          return;
+        }
+        const url = await uploadBuilderImage(file, "builder-focus");
+        if (url) {
+          row.querySelector('[data-focus-field="image"]').value = url;
+          if (builderAreasStatus) builderAreasStatus.textContent = "Image uploaded.";
+        }
+      });
 
       row.querySelector("[data-focus-remove]").addEventListener("click", () => {
         row.remove();
@@ -466,6 +489,28 @@
         createFocusRow();
       }
       if (builderAreasStatus) builderAreasStatus.textContent = "";
+    }
+
+    async function uploadBuilderImage(file, folder) {
+      const { data } = await sbClient.auth.getSession();
+      const accessToken = data.session?.access_token;
+      if (!accessToken) {
+        if (builderAreasStatus) builderAreasStatus.textContent = "Session expired. Please log in again.";
+        return "";
+      }
+
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const prefix = folder ? `${folder.replace(/[^a-zA-Z0-9/_-]/g, "")}/` : "";
+      const path = `${prefix}${Date.now()}_${safeName}`;
+
+      try {
+        await uploadWithProgress(file, `${BUILDER_AREAS_BUCKET}/${path}`, accessToken);
+      } catch (err) {
+        if (builderAreasStatus) builderAreasStatus.textContent = `Upload failed: ${err.message}`;
+        return "";
+      }
+
+      return `${ADMIN_SUPABASE_URL}/storage/v1/object/public/${BUILDER_AREAS_BUCKET}/${path}`;
     }
 
     function renderStaffList(rows) {
@@ -832,6 +877,21 @@
           return;
         }
         if (builderAreasStatus) builderAreasStatus.textContent = "Builder areas updated.";
+      });
+    }
+
+    if (eventImageUpload) {
+      eventImageUpload.addEventListener("click", async () => {
+        const file = eventImageFile?.files?.[0];
+        if (!file) {
+          if (builderAreasStatus) builderAreasStatus.textContent = "Select an event image first.";
+          return;
+        }
+        const url = await uploadBuilderImage(file, "builder-event");
+        if (url) {
+          eventImageInput.value = url;
+          if (builderAreasStatus) builderAreasStatus.textContent = "Event image uploaded.";
+        }
       });
     }
 
