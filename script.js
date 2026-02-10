@@ -487,7 +487,8 @@ async function initBuilderProfile() {
         if (res.ok) {
           data = await res.json();
         } else {
-          error = new Error(`Function failed (${res.status})`);
+          const text = await res.text();
+          error = new Error(`Function failed (${res.status}): ${text}`);
         }
       } else {
         error = new Error("Missing session access token");
@@ -496,6 +497,11 @@ async function initBuilderProfile() {
       if (!error && data?.role) {
         const displayRole = data.is_engineer ? `${data.role} (Engineer)` : data.role;
         roleEl.textContent = displayRole;
+        if (!data.in_guild && Array.isArray(data.roles)) {
+          console.warn("Discord role lookup: not in guild", data);
+        } else if (Array.isArray(data.roles) && !data.roles.length) {
+          console.warn("Discord role lookup: no roles returned", data);
+        }
 
         if (data.in_guild === false && gate) {
           if (gateTitle) gateTitle.textContent = "Join the Discord server";
@@ -522,6 +528,9 @@ async function initBuilderProfile() {
         }
       } else if (roleEl) {
         roleEl.textContent = "No role";
+        if (error) {
+          console.warn("Discord role lookup failed:", error.message || error);
+        }
       }
     } catch (_err) {
       if (roleEl) roleEl.textContent = "No role";
