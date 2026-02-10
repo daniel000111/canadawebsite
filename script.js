@@ -424,6 +424,87 @@ async function initBuilderAreas() {
   }
 }
 
+function getDiscordNameFromSession(session) {
+  const meta = session?.user?.user_metadata || {};
+  return meta.full_name
+    || meta.name
+    || meta.preferred_username
+    || meta.global_name
+    || meta.custom_claims?.global_name
+    || meta.username
+    || session?.user?.email
+    || "Builder";
+}
+
+function getMcAccountFromSession(session) {
+  const meta = session?.user?.user_metadata || {};
+  return meta.mc_username || meta.minecraft_username || meta.mc || "";
+}
+
+async function initBuilderProfile() {
+  const nameEl = document.getElementById("builderWelcomeName");
+  const roleEl = document.getElementById("builderRole");
+  const mcEl = document.getElementById("builderMcAccount");
+  const gate = document.getElementById("builderGate");
+  const gateTitle = document.getElementById("builderGateTitle");
+  const gateMessage = document.getElementById("builderGateMessage");
+  const gateAction = document.getElementById("builderGateAction");
+  const gateAlt = document.getElementById("builderGateAlt");
+  if (!nameEl && !roleEl && !mcEl) return;
+
+  const client = getSupabaseClient();
+  if (!client) return;
+
+  const { data } = await client.auth.getSession();
+  const session = data.session;
+  if (!session) return;
+
+  if (nameEl) nameEl.textContent = getDiscordNameFromSession(session);
+
+  const mc = getMcAccountFromSession(session);
+  if (mcEl && mc) {
+    mcEl.textContent = mc;
+  }
+
+  if (roleEl) {
+    roleEl.textContent = "Builder";
+    try {
+      const { data, error } = await client.functions.invoke("discord-guild-role", {
+        body: {}
+      });
+      if (!error && data?.role) {
+        const displayRole = data.is_engineer ? `${data.role} (Engineer)` : data.role;
+        roleEl.textContent = displayRole;
+
+        if (data.in_guild === false && gate) {
+          if (gateTitle) gateTitle.textContent = "Join the Discord server";
+          if (gateMessage) gateMessage.textContent = "You must be in the BTE Canada Discord server to access the builder panel.";
+          if (gateAction) {
+            gateAction.textContent = "Join Discord";
+            gateAction.setAttribute("href", "https://discord.gg/pnPSvpfhAs");
+          }
+          if (gateAlt) gateAlt.textContent = "Back Home";
+          gate.classList.add("show");
+          gate.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        } else if (String(data.role).toLowerCase() === "trial builder" && gate) {
+          if (gateTitle) gateTitle.textContent = "Complete your trial build";
+          if (gateMessage) gateMessage.textContent = "Trial builders must visit the Build page and complete the trial process before accessing the builder panel.";
+          if (gateAction) {
+            gateAction.textContent = "Go to Build page";
+            gateAction.setAttribute("href", "build.html");
+          }
+          if (gateAlt) gateAlt.textContent = "Back Home";
+          gate.classList.add("show");
+          gate.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        }
+      }
+    } catch (_err) {
+      // keep default role
+    }
+  }
+}
 function initAdminAnnouncement() {
   const input = document.getElementById("announcementInput");
   const saveBtn = document.getElementById("announcementSave");
@@ -606,6 +687,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initAnnouncementBar();
   initAdminAnnouncement();
   initBuilderAreas();
+  initBuilderProfile();
   initSettingsProfile();
   initAdminLink();
   initLogoutButton();

@@ -76,8 +76,12 @@
       <div class="panel-hero-left">
         <img class="panel-avatar" src="assets/logo-square.png" alt="Builder avatar" />
         <div>
-          <h1>Welcome, Builder</h1>
-          <p class="panel-subline">Current role: <strong>Builder</strong> · Next rank: <strong>Senior Builder</strong></p>
+          <h1>Welcome, <span id="builderWelcomeName">Builder</span></h1>
+          <p class="panel-subline panel-subline-meta">
+            Connected MC account:
+            <strong id="builderMcAccount">Not linked</strong>
+          </p>
+          <p class="panel-subline">Current role: <strong id="builderRole">Builder</strong> · Next rank: <strong>Senior Builder</strong></p>
         </div>
       </div>
       <div class="panel-hero-right">
@@ -214,6 +218,17 @@
       </div>
     </section>
   </main>
+
+  <div class="builder-gate" id="builderGate" aria-hidden="true">
+    <div class="builder-gate-card" role="dialog" aria-modal="true" aria-labelledby="builderGateTitle">
+      <h2 id="builderGateTitle">Access restricted</h2>
+      <p class="section-text" id="builderGateMessage"></p>
+      <div class="builder-gate-actions">
+        <a class="cta-btn admin-btn" id="builderGateAction" href="build.html">Go to Build page</a>
+        <a class="cta-btn ghost" id="builderGateAlt" href="index.html">Back Home</a>
+      </div>
+    </div>
+  </div>
 
   <footer class="footer">
     2026 BTE Canada · Not affiliated with Mojang
