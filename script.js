@@ -444,8 +444,17 @@ function getMcAccountFromSession(session) {
 function hidePanelLoader() {
   const loader = document.getElementById("panelLoader");
   if (!loader) return;
-  loader.classList.add("is-hidden");
-  loader.setAttribute("aria-hidden", "true");
+  if (loader.classList.contains("is-hidden") || loader.dataset.hiding === "1") return;
+  const startedAt = Number(loader.dataset.loaderStart || Date.now());
+  loader.dataset.loaderStart = String(startedAt);
+  loader.dataset.hiding = "1";
+
+  const elapsed = Date.now() - startedAt;
+  const remaining = Math.max(1000 - elapsed, 0);
+  window.setTimeout(() => {
+    loader.classList.add("is-hidden");
+    loader.setAttribute("aria-hidden", "true");
+  }, remaining);
 }
 
 async function initBuilderProfile() {

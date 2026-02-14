@@ -288,8 +288,17 @@
 
     function hidePanelLoader() {
       if (!panelLoader) return;
-      panelLoader.classList.add("is-hidden");
-      panelLoader.setAttribute("aria-hidden", "true");
+      if (panelLoader.classList.contains("is-hidden") || panelLoader.dataset.hiding === "1") return;
+      const startedAt = Number(panelLoader.dataset.loaderStart || Date.now());
+      panelLoader.dataset.loaderStart = String(startedAt);
+      panelLoader.dataset.hiding = "1";
+
+      const elapsed = Date.now() - startedAt;
+      const remaining = Math.max(1000 - elapsed, 0);
+      window.setTimeout(() => {
+        panelLoader.classList.add("is-hidden");
+        panelLoader.setAttribute("aria-hidden", "true");
+      }, remaining);
     }
 
     function initAdminModals() {
