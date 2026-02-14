@@ -441,6 +441,13 @@ function getMcAccountFromSession(session) {
   return meta.mc_username || meta.minecraft_username || meta.mc || "";
 }
 
+function hidePanelLoader() {
+  const loader = document.getElementById("panelLoader");
+  if (!loader) return;
+  loader.classList.add("is-hidden");
+  loader.setAttribute("aria-hidden", "true");
+}
+
 async function initBuilderProfile() {
   const nameEl = document.getElementById("builderWelcomeName");
   const roleEl = document.getElementById("builderRole");
@@ -450,94 +457,98 @@ async function initBuilderProfile() {
   const gateMessage = document.getElementById("builderGateMessage");
   const gateAction = document.getElementById("builderGateAction");
   const gateAlt = document.getElementById("builderGateAlt");
-  if (!nameEl && !roleEl && !mcEl) return;
+  try {
+    if (!nameEl && !roleEl && !mcEl) return;
 
-  const client = getSupabaseClient();
-  if (!client) return;
+    const client = getSupabaseClient();
+    if (!client) return;
 
-  const { data } = await client.auth.getSession();
-  const session = data.session;
-  if (!session) return;
+    const { data } = await client.auth.getSession();
+    const session = data.session;
+    if (!session) return;
 
-  if (nameEl) nameEl.textContent = getDiscordNameFromSession(session);
+    if (nameEl) nameEl.textContent = getDiscordNameFromSession(session);
 
-  const mc = getMcAccountFromSession(session);
-  if (mcEl && mc) {
-    mcEl.textContent = mc;
-  }
-
-  if (roleEl) {
-    roleEl.textContent = "No role";
-    try {
-      let data = null;
-      let error = null;
-      const accessToken = session?.access_token || "";
-      const fnUrl = `${SUPABASE_URL}/functions/v1/discord-guild-role`;
-
-      if (accessToken) {
-        const res = await fetch(fnUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-            apikey: SUPABASE_ANON_KEY
-          },
-          body: JSON.stringify({})
-        });
-        if (res.ok) {
-          data = await res.json();
-        } else {
-          const text = await res.text();
-          error = new Error(`Function failed (${res.status}): ${text}`);
-        }
-      } else {
-        error = new Error("Missing session access token");
-      }
-
-      if (!error && data?.role) {
-        const displayRole = data.is_engineer ? `${data.role} (Engineer)` : data.role;
-        roleEl.textContent = displayRole;
-        if (!data.in_guild && Array.isArray(data.roles)) {
-          console.warn("Discord role lookup: not in guild", data);
-          if (typeof data.discord_status === "number") {
-            console.warn("Discord API status:", data.discord_status);
-          }
-        } else if (Array.isArray(data.roles) && !data.roles.length) {
-          console.warn("Discord role lookup: no roles returned", data);
-        }
-
-        if (data.in_guild === false && gate) {
-          if (gateTitle) gateTitle.textContent = "Join the Discord server";
-          if (gateMessage) gateMessage.textContent = "You must be in the BTE Canada Discord server to access the builder panel.";
-          if (gateAction) {
-            gateAction.textContent = "Join Discord";
-            gateAction.setAttribute("href", "https://discord.gg/pnPSvpfhAs");
-          }
-          if (gateAlt) gateAlt.textContent = "Back Home";
-          gate.classList.add("show");
-          gate.setAttribute("aria-hidden", "false");
-          document.body.style.overflow = "hidden";
-        } else if (String(data.role).toLowerCase() === "trial builder" && gate) {
-          if (gateTitle) gateTitle.textContent = "Complete your trial build";
-          if (gateMessage) gateMessage.textContent = "Trial builders must visit the Build page and complete the trial process before accessing the builder panel.";
-          if (gateAction) {
-            gateAction.textContent = "Go to Build page";
-            gateAction.setAttribute("href", "build.html");
-          }
-          if (gateAlt) gateAlt.textContent = "Back Home";
-          gate.classList.add("show");
-          gate.setAttribute("aria-hidden", "false");
-          document.body.style.overflow = "hidden";
-        }
-      } else if (roleEl) {
-        roleEl.textContent = "No role";
-        if (error) {
-          console.warn("Discord role lookup failed:", error.message || error);
-        }
-      }
-    } catch (_err) {
-      if (roleEl) roleEl.textContent = "No role";
+    const mc = getMcAccountFromSession(session);
+    if (mcEl && mc) {
+      mcEl.textContent = mc;
     }
+
+    if (roleEl) {
+      roleEl.textContent = "No role";
+      try {
+        let data = null;
+        let error = null;
+        const accessToken = session?.access_token || "";
+        const fnUrl = `${SUPABASE_URL}/functions/v1/discord-guild-role`;
+
+        if (accessToken) {
+          const res = await fetch(fnUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+              apikey: SUPABASE_ANON_KEY
+            },
+            body: JSON.stringify({})
+          });
+          if (res.ok) {
+            data = await res.json();
+          } else {
+            const text = await res.text();
+            error = new Error(`Function failed (${res.status}): ${text}`);
+          }
+        } else {
+          error = new Error("Missing session access token");
+        }
+
+        if (!error && data?.role) {
+          const displayRole = data.is_engineer ? `${data.role} (Engineer)` : data.role;
+          roleEl.textContent = displayRole;
+          if (!data.in_guild && Array.isArray(data.roles)) {
+            console.warn("Discord role lookup: not in guild", data);
+            if (typeof data.discord_status === "number") {
+              console.warn("Discord API status:", data.discord_status);
+            }
+          } else if (Array.isArray(data.roles) && !data.roles.length) {
+            console.warn("Discord role lookup: no roles returned", data);
+          }
+
+          if (data.in_guild === false && gate) {
+            if (gateTitle) gateTitle.textContent = "Join the Discord server";
+            if (gateMessage) gateMessage.textContent = "You must be in the BTE Canada Discord server to access the builder panel.";
+            if (gateAction) {
+              gateAction.textContent = "Join Discord";
+              gateAction.setAttribute("href", "https://discord.gg/pnPSvpfhAs");
+            }
+            if (gateAlt) gateAlt.textContent = "Back Home";
+            gate.classList.add("show");
+            gate.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+          } else if (String(data.role).toLowerCase() === "trial builder" && gate) {
+            if (gateTitle) gateTitle.textContent = "Complete your trial build";
+            if (gateMessage) gateMessage.textContent = "Trial builders must visit the Build page and complete the trial process before accessing the builder panel.";
+            if (gateAction) {
+              gateAction.textContent = "Go to Build page";
+              gateAction.setAttribute("href", "build.html");
+            }
+            if (gateAlt) gateAlt.textContent = "Back Home";
+            gate.classList.add("show");
+            gate.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+          }
+        } else if (roleEl) {
+          roleEl.textContent = "No role";
+          if (error) {
+            console.warn("Discord role lookup failed:", error.message || error);
+          }
+        }
+      } catch (_err) {
+        if (roleEl) roleEl.textContent = "No role";
+      }
+    }
+  } finally {
+    hidePanelLoader();
   }
 }
 function initAdminAnnouncement() {

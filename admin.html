@@ -8,6 +8,12 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="admin-body">
+  <div class="panel-loader" id="panelLoader" aria-live="polite">
+    <div class="panel-loader-card">
+      <div class="panel-loader-spinner" aria-hidden="true"></div>
+      <p>Loading admin panel...</p>
+    </div>
+  </div>
   <!-- NAVBAR -->
   <header class="nav-wrap">
     <nav class="nav">
@@ -255,6 +261,7 @@
     const gate = document.getElementById("adminGate");
     const gateStatus = document.getElementById("adminGateStatus");
     const content = document.getElementById("adminContent");
+    const panelLoader = document.getElementById("panelLoader");
     const form = document.getElementById("uploadForm");
     const status = document.getElementById("uploadStatus");
     const welcomeText = document.getElementById("welcomeText");
@@ -278,6 +285,12 @@
     const focusAddBtn = document.getElementById("focusAddBtn");
     const builderAreasSave = document.getElementById("builderAreasSave");
     const builderAreasStatus = document.getElementById("builderAreasStatus");
+
+    function hidePanelLoader() {
+      if (!panelLoader) return;
+      panelLoader.classList.add("is-hidden");
+      panelLoader.setAttribute("aria-hidden", "true");
+    }
 
     function initAdminModals() {
       const openers = document.querySelectorAll("[data-modal-target]");
@@ -633,6 +646,7 @@
       if (!data.session) {
         if (gate) gate.hidden = false;
         if (content) content.style.display = "none";
+        hidePanelLoader();
         window.location.href = "login.html";
         return null;
       }
@@ -655,6 +669,7 @@
         if (gateStatus) gateStatus.textContent = "Not authorized. Please contact an admin for access.";
         if (content) content.style.display = "none";
         form.querySelectorAll("input,button").forEach((el) => (el.disabled = true));
+        hidePanelLoader();
         return null;
       }
       if (gate) gate.hidden = true;
@@ -672,6 +687,7 @@
           avatarHero.style.display = "block";
         }
       }
+      hidePanelLoader();
       return data.session;
     }
 
@@ -826,10 +842,14 @@
     }
 
     (async () => {
-      const session = await requireSession();
-      if (!session) return;
-      await loadAdminList();
-      initAdminModals();
+      try {
+        const session = await requireSession();
+        if (!session) return;
+        await loadAdminList();
+        initAdminModals();
+      } finally {
+        hidePanelLoader();
+      }
     })();
 
     if (staffForm) {
