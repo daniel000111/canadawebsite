@@ -56,16 +56,95 @@ function closeMobileNav() {
 }
 
 function initMobileNavDrawer() {
-  const drawer = document.getElementById("mobileNavDrawer");
-  if (!drawer) return;
+  const nav = document.querySelector(".nav");
+  const navRight = nav?.querySelector(".nav-right");
+  if (!nav || !navRight) return;
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeMobileNav();
+  let toggle = document.getElementById("mobileNavToggle");
+  if (!toggle) {
+    toggle = document.createElement("button");
+    toggle.id = "mobileNavToggle";
+    toggle.className = "mobile-nav-toggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-label", "Open navigation menu");
+    toggle.setAttribute("aria-controls", "mobileNavDrawer");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.innerHTML = `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    `;
+    navRight.appendChild(toggle);
+  }
+
+  let backdrop = document.getElementById("mobileNavBackdrop");
+  if (!backdrop) {
+    backdrop = document.createElement("button");
+    backdrop.id = "mobileNavBackdrop";
+    backdrop.className = "mobile-nav-backdrop";
+    backdrop.type = "button";
+    backdrop.hidden = true;
+    backdrop.setAttribute("aria-label", "Close navigation menu");
+    document.body.appendChild(backdrop);
+  }
+
+  let drawer = document.getElementById("mobileNavDrawer");
+  if (!drawer) {
+    drawer = document.createElement("aside");
+    drawer.id = "mobileNavDrawer";
+    drawer.className = "mobile-nav-drawer";
+    drawer.setAttribute("aria-hidden", "true");
+    drawer.innerHTML = `
+      <div class="mobile-nav-head">
+        <strong>Menu</strong>
+        <button type="button" class="mobile-nav-close" aria-label="Close navigation menu">×</button>
+      </div>
+      <nav class="mobile-nav-links" aria-label="Mobile">
+        <a href="index.html">Home</a>
+        <a href="showcase.html">Showcase</a>
+        <a href="visit.html">Visit</a>
+        <a href="build.html">Build</a>
+        <a href="docs.html">Docs</a>
+        <a href="map.html">Map</a>
+      </nav>
+      <div class="mobile-nav-socials" aria-label="Social links">
+        <a href="https://discord.gg/pnPSvpfhAs" target="_blank" rel="noopener">Discord</a>
+        <a href="https://www.instagram.com/bte.canada/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.tiktok.com/@btecanada" target="_blank" rel="noopener">TikTok</a>
+      </div>
+    `;
+    document.body.appendChild(drawer);
+  }
+
+  if (toggle.dataset.bound !== "1") {
+    toggle.addEventListener("click", toggleMobileNav);
+    toggle.dataset.bound = "1";
+  }
+  if (backdrop.dataset.bound !== "1") {
+    backdrop.addEventListener("click", closeMobileNav);
+    backdrop.dataset.bound = "1";
+  }
+  const closeBtn = drawer.querySelector(".mobile-nav-close");
+  if (closeBtn && closeBtn.dataset.bound !== "1") {
+    closeBtn.addEventListener("click", closeMobileNav);
+    closeBtn.dataset.bound = "1";
+  }
+  drawer.querySelectorAll("a").forEach((link) => {
+    if (link.dataset.bound === "1") return;
+    link.addEventListener("click", closeMobileNav);
+    link.dataset.bound = "1";
   });
 
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 980) closeMobileNav();
-  });
+  if (document.body.dataset.mobileNavInit !== "1") {
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMobileNav();
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 980) closeMobileNav();
+    });
+    document.body.dataset.mobileNavInit = "1";
+  }
 }
 
 document.addEventListener("click", (e) => {
@@ -807,16 +886,15 @@ function initHomeHeroNavGlass() {
   const hero = document.querySelector(".hero");
   if (!navWrap || !hero) return;
 
-  const HERO_FADE_DISTANCE = 220;
-
   const updateNavState = () => {
     const navHeight = navWrap.offsetHeight || 0;
     document.documentElement.style.setProperty("--home-nav-offset", `${navHeight}px`);
-    const heroBottom = hero.getBoundingClientRect().bottom;
-    const rawProgress = (heroBottom - navHeight) / HERO_FADE_DISTANCE;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const heroFadeDistance = Math.max(140, (hero.offsetHeight || 0) - navHeight);
+    const rawProgress = 1 - (scrollY / heroFadeDistance);
     const progress = Math.max(0, Math.min(1, rawProgress));
     navWrap.style.setProperty("--nav-hero-progress", progress.toFixed(3));
-    navWrap.classList.toggle("nav-over-hero", progress > 0);
+    navWrap.classList.toggle("nav-over-hero", progress > 0.01);
   };
 
   updateNavState();
