@@ -27,6 +27,47 @@ function toggleNav() {
   btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
 }
 
+function toggleMobileNav() {
+  const body = document.body;
+  const drawer = document.getElementById("mobileNavDrawer");
+  const backdrop = document.getElementById("mobileNavBackdrop");
+  const toggle = document.getElementById("mobileNavToggle");
+  if (!body || !drawer || !backdrop || !toggle) return;
+
+  const isOpen = body.classList.toggle("mobile-nav-open");
+  drawer.classList.toggle("open", isOpen);
+  drawer.setAttribute("aria-hidden", isOpen ? "false" : "true");
+  toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  backdrop.hidden = !isOpen;
+}
+
+function closeMobileNav() {
+  const body = document.body;
+  const drawer = document.getElementById("mobileNavDrawer");
+  const backdrop = document.getElementById("mobileNavBackdrop");
+  const toggle = document.getElementById("mobileNavToggle");
+  if (!body || !drawer || !backdrop || !toggle) return;
+
+  body.classList.remove("mobile-nav-open");
+  drawer.classList.remove("open");
+  drawer.setAttribute("aria-hidden", "true");
+  toggle.setAttribute("aria-expanded", "false");
+  backdrop.hidden = true;
+}
+
+function initMobileNavDrawer() {
+  const drawer = document.getElementById("mobileNavDrawer");
+  if (!drawer) return;
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMobileNav();
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 980) closeMobileNav();
+  });
+}
+
 document.addEventListener("click", (e) => {
   const menu = document.getElementById("navMenu");
   const btn = document.querySelector(".nav-toggle");
@@ -741,6 +782,7 @@ function getSupabaseClient() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  initMobileNavDrawer();
   initHomeHeroNavGlass();
   initShowcaseGrid();
   initHomeRandomSectionImages();
