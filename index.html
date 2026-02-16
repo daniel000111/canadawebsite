@@ -76,7 +76,6 @@
         aria-label="Open navigation menu"
         aria-controls="mobileNavDrawer"
         aria-expanded="false"
-        onclick="toggleMobileNav()"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -86,19 +85,19 @@
   </nav>
 </header>
 
-<button id="mobileNavBackdrop" class="mobile-nav-backdrop" type="button" hidden aria-label="Close navigation menu" onclick="closeMobileNav()"></button>
+<button id="mobileNavBackdrop" class="mobile-nav-backdrop" type="button" hidden aria-label="Close navigation menu"></button>
 <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-hidden="true">
   <div class="mobile-nav-head">
     <strong>Menu</strong>
-    <button type="button" class="mobile-nav-close" aria-label="Close navigation menu" onclick="closeMobileNav()">×</button>
+    <button type="button" class="mobile-nav-close" aria-label="Close navigation menu">×</button>
   </div>
   <nav class="mobile-nav-links" aria-label="Mobile">
-    <a href="index.html" onclick="closeMobileNav()">Home</a>
-    <a href="showcase.html" onclick="closeMobileNav()">Showcase</a>
-    <a href="visit.html" onclick="closeMobileNav()">Visit</a>
-    <a href="build.html" onclick="closeMobileNav()">Build</a>
-    <a href="docs.html" onclick="closeMobileNav()">Docs</a>
-    <a href="map.html" onclick="closeMobileNav()">Map</a>
+    <a href="index.html">Home</a>
+    <a href="showcase.html">Showcase</a>
+    <a href="visit.html">Visit</a>
+    <a href="build.html">Build</a>
+    <a href="docs.html">Docs</a>
+    <a href="map.html">Map</a>
   </nav>
   <div class="mobile-nav-socials" aria-label="Social links">
     <a href="https://discord.gg/pnPSvpfhAs" target="_blank" rel="noopener">Discord</a>
