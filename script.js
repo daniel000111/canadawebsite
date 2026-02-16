@@ -41,7 +41,11 @@ document.addEventListener("click", (e) => {
 
 (function initTheme() {
   const saved = localStorage.getItem("theme");
-  if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  if (saved === "light") {
+    document.documentElement.removeAttribute("data-theme");
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+  }
   updateThemeToggleLabel();
 })();
 
@@ -267,17 +271,20 @@ function ensureNavAnnouncement() {
 }
 
 function setNavAnnouncement(message) {
+  const text = (message || "").trim();
   document.querySelectorAll(".nav-announcement").forEach((bar) => {
-    const text = (message || "").trim();
+    const wrap = bar.closest(".nav-wrap");
     if (!text) {
       bar.textContent = "";
       bar.classList.remove("show");
+      if (wrap) wrap.classList.remove("has-announcement");
       document.body.classList.remove("announcement-active");
       syncMapAnnouncementOffset();
       return;
     }
     bar.textContent = text;
     bar.classList.add("show");
+    if (wrap) wrap.classList.add("has-announcement");
     document.body.classList.add("announcement-active");
     syncMapAnnouncementOffset();
   });
@@ -734,7 +741,9 @@ function getSupabaseClient() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  initHomeHeroNavGlass();
   initShowcaseGrid();
+  initHomeRandomSectionImages();
   initStaffGrid();
   initDocsGate();
   initLightboxZoom();
@@ -746,9 +755,107 @@ document.addEventListener("DOMContentLoaded", () => {
   initSettingsProfile();
   initAdminLink();
   initLogoutButton();
+  initAutoRevealForContentPages();
   initStatCounters();
   initScrollReveal();
 });
+
+function initHomeHeroNavGlass() {
+  const navWrap = document.querySelector(".nav-wrap");
+  const hero = document.querySelector(".hero");
+  if (!navWrap || !hero) return;
+
+  const HERO_FADE_DISTANCE = 220;
+
+  const updateNavState = () => {
+    const navHeight = navWrap.offsetHeight || 0;
+    document.documentElement.style.setProperty("--home-nav-offset", `${navHeight}px`);
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    const rawProgress = (heroBottom - navHeight) / HERO_FADE_DISTANCE;
+    const progress = Math.max(0, Math.min(1, rawProgress));
+    navWrap.style.setProperty("--nav-hero-progress", progress.toFixed(3));
+    navWrap.classList.toggle("nav-over-hero", progress > 0);
+  };
+
+  updateNavState();
+  window.addEventListener("scroll", updateNavState, { passive: true });
+  window.addEventListener("resize", updateNavState);
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(updateNavState);
+    observer.observe(navWrap);
+    observer.observe(hero);
+  }
+}
+
+function initAutoRevealForContentPages() {
+  const selectors = [];
+
+  if (document.querySelector(".showcase-page")) {
+    selectors.push(".showcase-page > *");
+  }
+
+  if (document.querySelector(".visit-page")) {
+    selectors.push(
+      ".visit-page > *",
+      ".visit-grid > *",
+      ".visit-details > *",
+      ".visit-list li"
+    );
+  }
+
+  if (document.querySelector(".builder-page")) {
+    selectors.push(
+      ".builder-page > *",
+      ".builder-grid > *",
+      ".builder-card > *",
+      ".steps li",
+      ".team-list li"
+    );
+  }
+
+  if (!selectors.length) return;
+
+  document.querySelectorAll(selectors.join(",")).forEach((el) => {
+    if (!el.classList.contains("reveal-on-scroll")) {
+      el.classList.add("reveal-on-scroll");
+    }
+  });
+}
+
+async function initHomeRandomSectionImages() {
+  const aboutImg = document.getElementById("aboutRandomImage");
+  const buildImg = document.getElementById("buildRandomImage");
+  const aboutCaption = document.getElementById("aboutRandomCaption");
+  const buildCaption = document.getElementById("buildRandomCaption");
+  if (!aboutImg && !buildImg && !aboutCaption && !buildCaption) return;
+
+  try {
+    const shots = await loadShots();
+    const entries = (Array.isArray(shots) ? shots : []).filter((shot) => String(shot?.file || "").trim());
+
+    if (!entries.length) return;
+    const picks = shuffleArray(entries).slice(0, Math.min(2, entries.length));
+    const first = picks[0] || null;
+    const second = picks[1] || first;
+
+    if (aboutImg && first?.file) aboutImg.src = first.file;
+    if (buildImg && second?.file) buildImg.src = second.file;
+    if (aboutCaption) aboutCaption.textContent = formatShotCaption(first);
+    if (buildCaption) buildCaption.textContent = formatShotCaption(second);
+  } catch (err) {
+    console.warn("Random home images unavailable", err);
+  }
+}
+
+function formatShotCaption(shot) {
+  const place = String(shot?.place || "").trim();
+  const prov = String(shot?.prov || "").trim();
+  if (place && prov) return `${place}, ${prov}`;
+  if (place) return place;
+  if (prov) return prov;
+  return "Random screenshot from our showcase";
+}
 
 async function fetchStaffMembers() {
   const client = getSupabaseClient();
@@ -839,7 +946,7 @@ async function initShowcaseGrid() {
     grid.innerHTML = "";
     SHOTS.forEach((s, i) => {
       const card = document.createElement("div");
-      card.className = "shot-card";
+      card.className = "shot-card reveal-on-scroll";
       card.style.cursor = "zoom-in";
 
       const prov = escapeHtml(s.prov || "");
@@ -858,6 +965,7 @@ async function initShowcaseGrid() {
       card.addEventListener("click", () => openLightbox(i));
       grid.appendChild(card);
     });
+    initScrollReveal();
   } catch (err) {
     console.error(err);
     grid.innerHTML = `<p style="color:var(--muted);">Couldn’t load screenshots.</p>`;
@@ -1205,4 +1313,3 @@ function shuffleArray(arr) {
 document.addEventListener("DOMContentLoaded", () => {
   initShotCarousel();
 });
-

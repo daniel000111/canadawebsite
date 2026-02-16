@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body>
+<body class="home-page">
 
 <!-- NAVBAR -->
 <header class="nav-wrap">
@@ -78,11 +78,6 @@
   <div class="hero-overlay"></div>
 
   <div class="hero-content fade-in fade-delay-2">
-    <div class="logo-reveal logo-reveal--hero">
-      <img src="assets/logo-square.gif" alt="BTE Canada Logo" class="hero-logo" />
-      <div class="pixel-overlay"></div>
-    </div>
-
     <h1>We're recreating <span>Canada <img src="assets/canadaflag.png" alt="Canada flag" class="flag-icon" /></span> in minecraft.</h1>
   </div>
 
@@ -106,7 +101,8 @@
       <a class="cta-btn reveal-on-scroll" href="visit.html">Join Now</a>
     </div>
     <div class="about-media reveal-on-scroll">
-      <img src="assets/hero.jpg" alt="BTE Canada builds" loading="lazy" />
+      <img id="aboutRandomImage" src="assets/hero.jpg" alt="BTE Canada builds" loading="lazy" />
+      <p id="aboutRandomCaption" class="section-image-caption"></p>
     </div>
   </div>
 </section>
@@ -148,7 +144,8 @@
 <section class="build-with-us reveal-on-scroll">
   <div class="build-with-us-inner">
     <div class="build-with-us-media reveal-on-scroll">
-      <img src="assets/hero.jpg" alt="BTE Canada builders at work" loading="lazy" />
+      <img id="buildRandomImage" src="assets/hero.jpg" alt="BTE Canada builders at work" loading="lazy" />
+      <p id="buildRandomCaption" class="section-image-caption"></p>
     </div>
     <div class="build-with-us-copy">
       <h2 class="section-title reveal-on-scroll">Ready to Build?</h2>
@@ -156,7 +153,7 @@
         Be part of a growing online community recreating Canada in Minecraft. Learn good build practices, earn points, and
         help us shape every part of Canada block by block. Don't stress, our trial process is easy, anyone can build!
       </p>
-      <a class="cta-btn reveal-on-scroll" href="visit.html">Build With Us</a>
+      <a class="cta-btn reveal-on-scroll" href="build.html">Build With Us</a>
     </div>
   </div>
 </section>
