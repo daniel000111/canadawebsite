@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BTE Canada - Link Account</title>
+  <script>
+    document.documentElement.setAttribute("data-theme", "dark");
+  </script>
+  <link rel="icon" href="assets/logo-square.png" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    @keyframes linkFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .link-page {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 2rem 1rem;
+      background:
+        linear-gradient(180deg, rgba(8, 10, 14, 0.58), rgba(8, 10, 14, 0.68)),
+        url("assets/hero.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .link-card {
+      width: min(600px, 93vw);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
+      display: grid;
+      gap: 0.9rem;
+      animation: linkFadeUp 0.45s ease both;
+    }
+
+    .link-kicker {
+      margin: 0;
+      font-size: 0.74rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .link-title {
+      margin: 0;
+      text-align: center;
+      font-size: clamp(1.45rem, 3.2vw, 2rem);
+    }
+
+    .link-subtext {
+      margin: 0;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .link-step {
+      border: 0;
+      border-radius: 0;
+      padding: 0.25rem 0;
+      display: grid;
+      gap: 0.75rem;
+      background: transparent;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .link-step + .link-step {
+      border-top: 1px solid var(--border);
+      padding-top: 0.95rem;
+      margin-top: 0.15rem;
+    }
+
+    #discordStep {
+      border-top: 0;
+      padding-top: 0.25rem;
+      margin-top: 0;
+    }
+
+    #discordStep p {
+      text-align: center;
+    }
+
+    #codeStep {
+      border-top: 0;
+      padding-top: 0.25rem;
+      margin-top: 0;
+    }
+
+    #codeStep p {
+      text-align: center;
+    }
+
+    #doneStep {
+      border-top: 0;
+      padding-top: 0.25rem;
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .verify-summary {
+      margin: 0.5rem auto 0.2rem;
+      width: min(520px, 100%);
+      display: grid;
+      gap: 0.45rem;
+      text-align: left;
+    }
+
+    .verify-summary p {
+      margin: 0;
+    }
+
+    .verify-footnote {
+      margin-top: 0.25rem;
+      color: var(--muted);
+    }
+
+    .link-step h2 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .link-step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .link-step[hidden] {
+      display: none;
+    }
+
+    .link-step.is-active {
+      animation: linkFadeUp 0.25s ease both;
+    }
+
+    .code-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-top: 0.2rem;
+    }
+
+    .code-box {
+      width: 60px;
+      height: 66px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      text-align: center;
+      font-size: 1.9rem;
+      font-weight: 700;
+      line-height: 1;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    .code-box:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(214, 40, 40, 0.18);
+      transform: translateY(-1px);
+    }
+
+    .link-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .link-actions .cta-btn {
+      transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .link-actions .cta-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .link-status {
+      margin: 0;
+      min-height: 1.2rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .link-login-subtitle {
+      margin: 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+      .link-card {
+        padding: 1rem;
+        border-radius: 14px;
+      }
+
+      .link-step {
+        padding: 0.2rem 0;
+      }
+
+      .code-box {
+        width: 54px;
+        height: 60px;
+        font-size: 1.7rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .link-card,
+      .link-step.is-active {
+        animation: none;
+      }
+
+      .link-step,
+      .code-box,
+      .link-actions .cta-btn {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="link-page">
+    <section class="link-card" aria-label="Link Discord and Minecraft">
+      <p class="link-kicker">SERVER VERIFICATION</p>
+      <h1 class="link-title">Verify Your Account</h1>
+      <p id="loginSubtitle" class="link-login-subtitle">You must first link your Discord to continue.</p>
+      <section id="loginStep" class="link-step">
+        <div class="link-actions">
+          <button id="stepDiscordLogin" class="cta-btn discord-btn" type="button">
+            <svg class="discord-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.249a18.27 18.27 0 0 0-5.487 0c-.164-.385-.397-.874-.608-1.249a.077.077 0 0 0-.079-.037A19.736 19.791 0 0 0 3.683 4.37a.07.07 0 0 0-.032.027C.533 9.045-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.461-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.371-.291a.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.099.245.197.372.291a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.106c.36.699.772 1.364 1.225 1.994a.076.076 0 0 0 .084.028 19.9 19.9 0 0 0 5.994-3.03.077.077 0 0 0 .03-.056c.5-5.177-.838-9.673-3.548-13.66a.061.061 0 0 0-.031-.03z"/>
+            </svg>
+            <span>Continue with Discord</span>
+          </button>
+          <button id="loginBypassBtn" class="cta-btn ghost" type="button">Bypass Login (Demo)</button>
+        </div>
+        <p id="loginStatus" class="link-status"></p>
+      </section>
+
+      <section id="discordStep" class="link-step" hidden>
+        <p>Demo behavior: this step always appears. In production, this would block until guild membership is verified.</p>
+        <div class="link-actions">
+          <a class="cta-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" rel="noopener">Join Discord</a>
+          <button id="discordContinueBtn" class="cta-btn ghost" type="button">I joined, continue</button>
+          <button id="discordBypassBtn" class="cta-btn ghost" type="button">Bypass (Demo)</button>
+        </div>
+      </section>
+
+      <section id="codeStep" class="link-step" hidden>
+        <p>Enter the 4-digit Code given in minecraft.</p>
+
+        <div class="code-row" aria-label="4-digit verification code">
+          <input class="code-box" type="text" inputmode="numeric" maxlength="1" aria-label="Code digit 1" />
+          <input class="code-box" type="text" inputmode="numeric" maxlength="1" aria-label="Code digit 2" />
+          <input class="code-box" type="text" inputmode="numeric" maxlength="1" aria-label="Code digit 3" />
+          <input class="code-box" type="text" inputmode="numeric" maxlength="1" aria-label="Code digit 4" />
+        </div>
+
+        <div class="link-actions">
+          <button id="submitCodeBtn" class="cta-btn" type="button">Verify Code</button>
+        </div>
+        <p id="codeStatus" class="link-status"></p>
+      </section>
+
+      <section id="doneStep" class="link-step" hidden>
+        <p>You can now close this window.</p>
+
+        <div class="verify-summary">
+          <p>Discord Username: <code id="verifiedDiscordUser">N/A</code></p>
+          <p>Minecraft Username: <code id="verifiedMinecraftUser">N/A</code></p>
+        </div>
+
+        <p class="verify-footnote">
+          To unlink your account at any time, you can do <code>/accountunlink</code>.
+        </p>
+
+        <div class="link-actions">
+          <a class="cta-btn" href="index.html">Go to Home</a>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (function () {
+      const loginStep = document.getElementById("loginStep");
+      const discordStep = document.getElementById("discordStep");
+      const codeStep = document.getElementById("codeStep");
+      const doneStep = document.getElementById("doneStep");
+      const mainTitle = document.querySelector(".link-title");
+      const stepDiscordLogin = document.getElementById("stepDiscordLogin");
+      const loginBypassBtn = document.getElementById("loginBypassBtn");
+      const discordContinueBtn = document.getElementById("discordContinueBtn");
+      const discordBypassBtn = document.getElementById("discordBypassBtn");
+      const submitCodeBtn = document.getElementById("submitCodeBtn");
+      const codeStatus = document.getElementById("codeStatus");
+      const loginStatus = document.getElementById("loginStatus");
+      const verifiedDiscordUser = document.getElementById("verifiedDiscordUser");
+      const verifiedMinecraftUser = document.getElementById("verifiedMinecraftUser");
+      const boxes = Array.from(document.querySelectorAll(".code-box"));
+
+      const SUPABASE_URL = "https://ggrszibzbsvqrsowuctg.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdncnN6aWJ6YnN2cXJzb3d1Y3RnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjY4ODEsImV4cCI6MjA4NTkwMjg4MX0.GKsex6OlVv9Wtzkr4c1DmhpHsv_8l2I-6l0mmDtl0qc";
+      const sbClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      function showStep(step) {
+        loginStep.hidden = step !== "login";
+        discordStep.hidden = step !== "discord";
+        codeStep.hidden = step !== "code";
+        doneStep.hidden = step !== "done";
+        if (mainTitle) {
+          mainTitle.textContent = step === "done" ? "Verified!" : "Verify Your Account";
+        }
+        const subtitle = document.getElementById("loginSubtitle");
+        if (subtitle) subtitle.hidden = step !== "login";
+        [loginStep, discordStep, codeStep, doneStep].forEach((el) => el.classList.remove("is-active"));
+        const active = step === "login"
+          ? loginStep
+          : step === "discord"
+            ? discordStep
+            : step === "code"
+              ? codeStep
+              : doneStep;
+        active.classList.add("is-active");
+      }
+
+      function resolveDiscordUsername(session) {
+        return session?.user?.user_metadata?.preferred_username
+          || session?.user?.user_metadata?.full_name
+          || session?.user?.user_metadata?.name
+          || session?.user?.email
+          || "N/A";
+      }
+
+      function resolveMinecraftUsername(session) {
+        return session?.user?.user_metadata?.mc_username
+          || session?.user?.user_metadata?.minecraft_username
+          || "N/A";
+      }
+
+      async function startDiscordLogin() {
+        if (!sbClient) {
+          if (loginStatus) loginStatus.textContent = "Login service unavailable. Please refresh.";
+          return;
+        }
+        if (loginStatus) loginStatus.textContent = "Redirecting to Discord...";
+        const redirectTo = `${window.location.origin}${window.location.pathname}`;
+        const { error } = await sbClient.auth.signInWithOAuth({
+          provider: "discord",
+          options: { redirectTo }
+        });
+        if (error && loginStatus) {
+          loginStatus.textContent = `Login failed: ${error.message}`;
+        }
+      }
+
+      stepDiscordLogin?.addEventListener("click", startDiscordLogin);
+      loginBypassBtn?.addEventListener("click", () => {
+        showStep("discord");
+      });
+
+      discordContinueBtn.addEventListener("click", () => {
+        showStep("code");
+        boxes[0].focus();
+      });
+
+      discordBypassBtn?.addEventListener("click", () => {
+        showStep("code");
+        boxes[0].focus();
+      });
+
+      boxes.forEach((input, idx) => {
+        input.addEventListener("input", () => {
+          input.value = input.value.replace(/\D/g, "").slice(0, 1);
+          if (input.value && idx < boxes.length - 1) {
+            boxes[idx + 1].focus();
+          }
+        });
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace" && !input.value && idx > 0) {
+            boxes[idx - 1].focus();
+          }
+        });
+
+        input.addEventListener("paste", (e) => {
+          e.preventDefault();
+          const digits = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 4).split("");
+          if (!digits.length) return;
+          boxes.forEach((b, i) => {
+            b.value = digits[i] || "";
+          });
+          const next = Math.min(digits.length, boxes.length - 1);
+          boxes[next].focus();
+        });
+      });
+
+      submitCodeBtn.addEventListener("click", () => {
+        const code = boxes.map((b) => b.value).join("");
+        if (code.length < 4) {
+          codeStatus.textContent = "Please enter all 4 digits.";
+          return;
+        }
+        codeStatus.textContent = "";
+        showStep("done");
+      });
+
+      async function initAuthStep() {
+        if (!sbClient) {
+          showStep("login");
+          return;
+        }
+        const { data } = await sbClient.auth.getSession();
+        const session = data?.session || null;
+        verifiedDiscordUser.textContent = resolveDiscordUsername(session);
+        verifiedMinecraftUser.textContent = resolveMinecraftUsername(session);
+        if (session) {
+          showStep("discord");
+        } else {
+          showStep("login");
+        }
+      }
+
+      initAuthStep();
+    })();
+  </script>
+</body>
+</html>
