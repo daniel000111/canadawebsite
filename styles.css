@@ -1418,10 +1418,41 @@ body.admin-body {
   color: var(--text);
 }
 
-.admin-focus-upload {
+.admin-builder-section {
   width: 100%;
   max-width: 640px;
-  margin: 0 auto;
+  margin: 0.25rem auto 0.5rem;
+  padding: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 92%, #000 8%);
+  box-sizing: border-box;
+}
+
+.admin-builder-section .admin-section-title {
+  max-width: none;
+  margin: 0 0 0.55rem;
+  text-align: left;
+}
+
+.admin-builder-row {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.admin-builder-row input[type="text"],
+.admin-builder-row input[type="file"] {
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.admin-focus-upload {
+  width: 100%;
+  max-width: none;
+  margin: 0;
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.6rem;
@@ -1429,8 +1460,8 @@ body.admin-body {
 
 .admin-focus-list {
   width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   display: grid;
   gap: 0.75rem;
 }
@@ -1439,6 +1470,10 @@ body.admin-body {
   display: grid;
   gap: 0.6rem;
   grid-template-columns: 1fr;
+  padding: 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
 }
 
 .admin-focus-row input[type="text"],
@@ -1481,6 +1516,11 @@ body.admin-body {
 
 .admin-announcement-actions {
   justify-content: center;
+}
+
+#focusAddBtn {
+  width: 100%;
+  margin-top: 0.65rem;
 }
 
 .admin-item .cta-btn{
@@ -4073,6 +4113,47 @@ button, input, textarea, select {
   justify-content: flex-end;
   gap: 0.6rem;
   flex-wrap: wrap;
+}
+
+.admin-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 270;
+  display: none;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(6, 8, 12, 0.68);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.admin-confirm-overlay.show {
+  display: grid;
+}
+
+.admin-confirm-card {
+  width: min(520px, 94vw);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+}
+
+.admin-confirm-card h3 {
+  margin: 0 0 0.35rem;
+}
+
+.admin-confirm-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.admin-confirm-actions {
+  margin-top: 0.95rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
 }
 
 @media (max-width: 720px) {

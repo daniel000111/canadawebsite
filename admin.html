@@ -177,16 +177,23 @@
       <section class="docs-card admin-announcement-card">
         <p class="section-text">Update the current event and focus areas shown in the builder panel.</p>
         <div class="docs-form admin-announcement-form">
-          <h3 class="admin-section-title">Event Area</h3>
-          <input type="text" id="eventAreaInput" placeholder="Event area (e.g. Moncton, NB)" />
-          <input type="text" id="eventWarpInput" placeholder="Event warp command (e.g. /warp event)" />
-          <div class="admin-focus-upload">
-            <input type="file" id="eventImageFile" accept="image/*" />
-            <button class="cta-btn ghost" id="eventImageUpload" type="button">Upload Event Image</button>
+          <div class="admin-builder-section">
+            <h3 class="admin-section-title">Event Area</h3>
+            <div class="admin-builder-row">
+              <input type="text" id="eventAreaInput" placeholder="Event area (e.g. Moncton, NB)" />
+              <input type="text" id="eventWarpInput" placeholder="Event warp command (e.g. /warp event)" />
+              <div class="admin-focus-upload">
+                <input type="file" id="eventImageFile" accept="image/*" />
+              </div>
+            </div>
           </div>
-          <h3 class="admin-section-title">Focus Areas</h3>
-          <div class="admin-focus-list" id="focusAreasList"></div>
-          <button class="cta-btn ghost" id="focusAddBtn" type="button">Add Focus Area</button>
+
+          <div class="admin-builder-section">
+            <h3 class="admin-section-title">Focus Areas</h3>
+            <div class="admin-focus-list" id="focusAreasList"></div>
+            <button class="cta-btn ghost" id="focusAddBtn" type="button">Add Focus Area</button>
+          </div>
+
           <div class="admin-announcement-actions">
             <button class="cta-btn admin-btn" id="builderAreasSave" type="button">Update Builder Areas</button>
           </div>
@@ -265,6 +272,17 @@
     </div>
   </div>
 
+  <div class="admin-confirm-overlay" id="uploadConfirmOverlay" hidden aria-hidden="true">
+    <div class="admin-confirm-card" role="dialog" aria-modal="true" aria-labelledby="uploadConfirmTitle">
+      <h3 id="uploadConfirmTitle">Confirm Upload</h3>
+      <p>This will replace the current image. Continue?</p>
+      <div class="admin-confirm-actions">
+        <button class="cta-btn ghost" type="button" id="uploadConfirmCancel">Cancel</button>
+        <button class="cta-btn admin-btn" type="button" id="uploadConfirmYes">Yes, Upload</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     2026 BTE Canada · Not affiliated with Mojang
   </footer>
@@ -309,7 +327,6 @@
     const eventAreaInput = document.getElementById("eventAreaInput");
     const eventWarpInput = document.getElementById("eventWarpInput");
     const eventImageFile = document.getElementById("eventImageFile");
-    const eventImageUpload = document.getElementById("eventImageUpload");
     const focusAreasList = document.getElementById("focusAreasList");
     const focusAddBtn = document.getElementById("focusAddBtn");
     const builderAreasSave = document.getElementById("builderAreasSave");
@@ -322,7 +339,11 @@
     const cropResetBtn = document.getElementById("cropResetBtn");
     const cropCancelBtn = document.getElementById("cropCancelBtn");
     const cropApplyBtn = document.getElementById("cropApplyBtn");
+    const uploadConfirmOverlay = document.getElementById("uploadConfirmOverlay");
+    const uploadConfirmCancel = document.getElementById("uploadConfirmCancel");
+    const uploadConfirmYes = document.getElementById("uploadConfirmYes");
     let cropperSession = null;
+    let confirmSession = null;
     let eventImageValue = "";
 
     function hidePanelLoader() {
@@ -383,6 +404,7 @@
       document.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
         if (cropperOverlay?.classList.contains("show")) return;
+        if (uploadConfirmOverlay?.classList.contains("show")) return;
         const modal = document.querySelector(".admin-modal.show");
         if (modal) closeModal(modal);
       });
@@ -489,26 +511,27 @@
         <input type="text" placeholder="Area (e.g. Toronto)" data-focus-field="area" />
         <input type="text" placeholder="/warp command" data-focus-field="warp" />
         <input type="file" accept="image/*" data-focus-field="file" />
-        <button class="cta-btn ghost" type="button" data-focus-upload>Upload</button>
         <button class="cta-btn ghost" type="button" data-focus-remove>Remove</button>
       `;
       row.querySelector('[data-focus-field="area"]').value = item.area || "";
       row.querySelector('[data-focus-field="warp"]').value = item.warp || "";
       row.dataset.imageUrl = item.image || "";
 
-      row.querySelector("[data-focus-upload]").addEventListener("click", async () => {
-        const fileInput = row.querySelector('[data-focus-field="file"]');
+      const fileInput = row.querySelector('[data-focus-field="file"]');
+      if (fileInput) {
+        fileInput.addEventListener("change", async () => {
         const file = fileInput?.files?.[0];
         if (!file) {
-          if (builderAreasStatus) builderAreasStatus.textContent = "Select an image file first.";
           return;
         }
         const url = await uploadBuilderImage(file, "builder-focus");
         if (url) {
           row.dataset.imageUrl = url;
           if (builderAreasStatus) builderAreasStatus.textContent = "Image uploaded.";
+          fileInput.value = "";
         }
-      });
+        });
+      }
 
       row.querySelector("[data-focus-remove]").addEventListener("click", () => {
         row.remove();
@@ -555,7 +578,7 @@
     }
 
     async function uploadBuilderImage(file, folder) {
-      const confirmed = window.confirm("Are you sure you want to upload and replace this image?");
+      const confirmed = await openUploadConfirmDialog();
       if (!confirmed) return "";
 
       const processedFile = await openBuilderImageCropper(file, 16 / 9);
@@ -583,6 +606,29 @@
       }
 
       return `${ADMIN_SUPABASE_URL}/storage/v1/object/public/${BUILDER_AREAS_BUCKET}/${path}`;
+    }
+
+    function openUploadConfirmDialog() {
+      if (!uploadConfirmOverlay || !uploadConfirmCancel || !uploadConfirmYes) {
+        return Promise.resolve(true);
+      }
+
+      return new Promise((resolve) => {
+        confirmSession = { resolve };
+        uploadConfirmOverlay.hidden = false;
+        uploadConfirmOverlay.classList.add("show");
+        uploadConfirmOverlay.setAttribute("aria-hidden", "false");
+      });
+    }
+
+    function closeUploadConfirmDialog(confirmed) {
+      if (!confirmSession) return;
+      const { resolve } = confirmSession;
+      confirmSession = null;
+      uploadConfirmOverlay.classList.remove("show");
+      uploadConfirmOverlay.setAttribute("aria-hidden", "true");
+      uploadConfirmOverlay.hidden = true;
+      resolve(confirmed);
     }
 
     function openBuilderImageCropper(file, aspectRatio = 16 / 9) {
@@ -776,6 +822,26 @@
       event.preventDefault();
       event.stopPropagation();
       closeCropperOverlay(null);
+    });
+
+    if (uploadConfirmCancel) {
+      uploadConfirmCancel.addEventListener("click", () => closeUploadConfirmDialog(false));
+    }
+    if (uploadConfirmYes) {
+      uploadConfirmYes.addEventListener("click", () => closeUploadConfirmDialog(true));
+    }
+    if (uploadConfirmOverlay) {
+      uploadConfirmOverlay.addEventListener("click", (event) => {
+        if (event.target !== uploadConfirmOverlay) return;
+        closeUploadConfirmDialog(false);
+      });
+    }
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      if (!uploadConfirmOverlay || !uploadConfirmOverlay.classList.contains("show")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      closeUploadConfirmDialog(false);
     });
 
     function renderStaffList(rows) {
@@ -1152,17 +1218,17 @@
       });
     }
 
-    if (eventImageUpload) {
-      eventImageUpload.addEventListener("click", async () => {
+    if (eventImageFile) {
+      eventImageFile.addEventListener("change", async () => {
         const file = eventImageFile?.files?.[0];
         if (!file) {
-          if (builderAreasStatus) builderAreasStatus.textContent = "Select an event image first.";
           return;
         }
         const url = await uploadBuilderImage(file, "builder-event");
         if (url) {
           eventImageValue = url;
           if (builderAreasStatus) builderAreasStatus.textContent = "Event image uploaded.";
+          eventImageFile.value = "";
         }
       });
     }
