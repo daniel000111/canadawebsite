@@ -1411,7 +1411,8 @@ body.admin-body {
   width: min(420px, 86vw);
   display: grid;
   justify-items: center;
-  gap: 0.85rem;
+  align-items: center;
+  gap: 0;
 }
 
 .login-session-flow[hidden] {
@@ -1488,25 +1489,12 @@ body.admin-body {
   font-weight: 700;
   letter-spacing: 0.015em;
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-}
-
-.login-session-admin {
-  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
-  box-shadow: 0 10px 24px rgba(88, 101, 242, 0.32);
-}
-
-.login-session-admin:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(88, 101, 242, 0.4);
-  filter: brightness(1.02);
-}
-
-.login-session-home {
   background: linear-gradient(135deg, #d62828 0%, #b41f1f 100%);
   box-shadow: 0 10px 24px rgba(214, 40, 40, 0.26);
+  color: #fff;
 }
 
-.login-session-home:hover {
+.login-session-actions .cta-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 30px rgba(214, 40, 40, 0.34);
   filter: brightness(1.02);

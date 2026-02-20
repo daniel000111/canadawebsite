@@ -40,7 +40,7 @@
           </div>
           <section class="login-session-card" id="loginSessionCard" hidden aria-live="polite">
             <img id="loginSessionAvatar" class="login-session-avatar" src="" alt="Profile picture" />
-            <h3 id="loginSessionTitle">You're already logged in.</h3>
+            <h3 id="loginSessionTitle">Welcome, Builder.</h3>
             <p id="loginSessionSub" class="section-text">Choose where you want to go next.</p>
             <div class="login-session-actions">
               <a id="openAdminPanelBtn" class="cta-btn login-session-admin" href="admin.html" hidden>Open Admin Panel</a>
@@ -151,7 +151,7 @@
           sessionAvatar.alt = `${displayName} profile picture`;
         }
         if (sessionTitle) {
-          sessionTitle.textContent = `You're already logged in, ${displayName}.`;
+          sessionTitle.textContent = `Welcome, ${displayName}.`;
         }
         if (sessionSub) {
           sessionSub.textContent = hasAdminAccess
@@ -173,6 +173,10 @@
         sessionFlow.hidden = false;
         await playLoggedInAnimation();
         await showLoggedInState(session);
+        if (loginVerifyAnimation) {
+          loginVerifyAnimation.hidden = true;
+          loginVerifyAnimation.classList.remove("is-visible", "is-success");
+        }
         sessionCard.hidden = false;
       }
 
@@ -183,7 +187,7 @@
         }
         btn.disabled = true;
         status.textContent = "Redirecting to Discord...";
-        const redirectTo = "https://www.btecanada.net/admin.html";
+        const redirectTo = `${window.location.origin}${window.location.pathname}`;
         const { error } = await sbClient.auth.signInWithOAuth({
           provider: "discord",
           options: { redirectTo }
