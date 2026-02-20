@@ -4035,7 +4035,8 @@ button, input, textarea, select {
 }
 
 .admin-cropper-preview-wrap {
-  width: 100%;
+  width: min(100%, 640px);
+  margin: 0 auto;
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--border);

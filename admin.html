@@ -180,7 +180,6 @@
           <h3 class="admin-section-title">Event Area</h3>
           <input type="text" id="eventAreaInput" placeholder="Event area (e.g. Moncton, NB)" />
           <input type="text" id="eventWarpInput" placeholder="Event warp command (e.g. /warp event)" />
-          <input type="text" id="eventImageInput" placeholder="Event image URL (optional)" />
           <div class="admin-focus-upload">
             <input type="file" id="eventImageFile" accept="image/*" />
             <button class="cta-btn ghost" id="eventImageUpload" type="button">Upload Event Image</button>
@@ -309,7 +308,6 @@
     const builderModal = document.getElementById("builderAreasModal");
     const eventAreaInput = document.getElementById("eventAreaInput");
     const eventWarpInput = document.getElementById("eventWarpInput");
-    const eventImageInput = document.getElementById("eventImageInput");
     const eventImageFile = document.getElementById("eventImageFile");
     const eventImageUpload = document.getElementById("eventImageUpload");
     const focusAreasList = document.getElementById("focusAreasList");
@@ -325,6 +323,7 @@
     const cropCancelBtn = document.getElementById("cropCancelBtn");
     const cropApplyBtn = document.getElementById("cropApplyBtn");
     let cropperSession = null;
+    let eventImageValue = "";
 
     function hidePanelLoader() {
       if (!panelLoader) return;
@@ -489,14 +488,13 @@
       row.innerHTML = `
         <input type="text" placeholder="Area (e.g. Toronto)" data-focus-field="area" />
         <input type="text" placeholder="/warp command" data-focus-field="warp" />
-        <input type="text" placeholder="Image URL (optional)" data-focus-field="image" />
         <input type="file" accept="image/*" data-focus-field="file" />
         <button class="cta-btn ghost" type="button" data-focus-upload>Upload</button>
         <button class="cta-btn ghost" type="button" data-focus-remove>Remove</button>
       `;
       row.querySelector('[data-focus-field="area"]').value = item.area || "";
       row.querySelector('[data-focus-field="warp"]').value = item.warp || "";
-      row.querySelector('[data-focus-field="image"]').value = item.image || "";
+      row.dataset.imageUrl = item.image || "";
 
       row.querySelector("[data-focus-upload]").addEventListener("click", async () => {
         const fileInput = row.querySelector('[data-focus-field="file"]');
@@ -507,7 +505,7 @@
         }
         const url = await uploadBuilderImage(file, "builder-focus");
         if (url) {
-          row.querySelector('[data-focus-field="image"]').value = url;
+          row.dataset.imageUrl = url;
           if (builderAreasStatus) builderAreasStatus.textContent = "Image uploaded.";
         }
       });
@@ -525,7 +523,7 @@
         .map((row) => {
           const area = row.querySelector('[data-focus-field="area"]').value.trim();
           const warp = row.querySelector('[data-focus-field="warp"]').value.trim();
-          const image = row.querySelector('[data-focus-field="image"]').value.trim();
+          const image = String(row.dataset.imageUrl || "").trim();
           return { area, warp, image };
         })
         .filter((item) => item.area || item.warp || item.image);
@@ -545,7 +543,7 @@
       }
       eventAreaInput.value = data?.event_area || "";
       eventWarpInput.value = data?.event_warp || "";
-      eventImageInput.value = data?.event_image || "";
+      eventImageValue = data?.event_image || "";
       focusAreasList.innerHTML = "";
       const focusItems = Array.isArray(data?.focus_areas) ? data.focus_areas : [];
       if (focusItems.length) {
@@ -557,6 +555,9 @@
     }
 
     async function uploadBuilderImage(file, folder) {
+      const confirmed = window.confirm("Are you sure you want to upload and replace this image?");
+      if (!confirmed) return "";
+
       const processedFile = await openBuilderImageCropper(file, 16 / 9);
       if (!processedFile) {
         if (builderAreasStatus) builderAreasStatus.textContent = "Image upload cancelled.";
@@ -1136,7 +1137,7 @@
       builderAreasSave.addEventListener("click", async () => {
         const event_area = eventAreaInput.value.trim();
         const event_warp = eventWarpInput.value.trim();
-        const event_image = eventImageInput.value.trim();
+        const event_image = eventImageValue.trim();
         const focus_areas = getFocusAreasFromRows();
 
         if (builderAreasStatus) builderAreasStatus.textContent = "Saving...";
@@ -1160,7 +1161,7 @@
         }
         const url = await uploadBuilderImage(file, "builder-event");
         if (url) {
-          eventImageInput.value = url;
+          eventImageValue = url;
           if (builderAreasStatus) builderAreasStatus.textContent = "Event image uploaded.";
         }
       });
