@@ -24,8 +24,7 @@
           <span class="brand-text">BTE CANADA</span>
         </a>
       </div>
-
-      <!-- CENTER: Links -->
+<!-- CENTER: Links -->
       <div class="nav-center fade-in fade-delay-2">
         <a href="index.html">Home</a>
         <a href="showcase.html">Showcase</a>
@@ -34,8 +33,7 @@
         <a href="docs.html">Docs</a>
         <a href="map.html">Map</a>
       </div>
-
-      <!-- RIGHT: Socials -->
+<!-- RIGHT: Socials -->
       <div class="nav-right fade-in fade-delay-3">
         <a class="icon-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" aria-label="Discord">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -76,8 +74,7 @@
       </div>
     </nav>
   </header>
-
-  <main class="builder-panel">
+<main class="builder-panel">
     <section class="builder-hero panel-hero reveal-on-scroll">
       <div class="panel-hero-left">
         <img class="panel-avatar" src="assets/logo-square.png" alt="Builder avatar" />
@@ -113,8 +110,7 @@
         </div>
       </div>
     </section>
-
-    <section class="panel-grid">
+<section class="panel-grid">
       <div class="panel-card panel-event-card reveal-on-scroll">
         <div class="panel-event-media">
           <div class="panel-event-head-inline panel-card-head">
@@ -128,8 +124,7 @@
           </div>
         </div>
       </div>
-
-      <div class="panel-card panel-focus-card reveal-on-scroll">
+<div class="panel-card panel-focus-card reveal-on-scroll">
         <div class="panel-card-head">
           <h2>Current focus areas</h2>
           <span class="panel-subtext">Earn a 1.5x point bonus in these areas:</span>
@@ -161,8 +156,7 @@
           </div>
         </div>
       </div>
-
-      <div class="panel-card panel-card-wide reveal-on-scroll">
+<div class="panel-card panel-card-wide reveal-on-scroll">
         <div class="panel-card-head">
           <h2>Points leaderboard</h2>
           <span class="panel-subtext">Top builders this month</span>
@@ -195,8 +189,7 @@
           </div>
         </div>
       </div>
-
-      <div class="panel-card panel-card-wide reveal-on-scroll">
+<div class="panel-card panel-card-wide reveal-on-scroll">
         <div class="panel-card-head">
           <h2>Recent builds</h2>
           <span class="panel-subtext">Recently accepted builds</span>
@@ -227,8 +220,7 @@
       </div>
     </section>
   </main>
-
-  <div class="builder-gate" id="builderGate" aria-hidden="true">
+<div class="builder-gate" id="builderGate" aria-hidden="true">
     <div class="builder-gate-card" role="dialog" aria-modal="true" aria-labelledby="builderGateTitle">
       <h2 id="builderGateTitle">Access restricted</h2>
       <p class="section-text" id="builderGateMessage"></p>
@@ -238,11 +230,6 @@
       </div>
     </div>
   </div>
-
-  <footer class="footer">
-    2026 BTE Canada · Not affiliated with Mojang
-  </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
   <script>
@@ -254,8 +241,7 @@
       const image = document.getElementById("focusImage");
       const back = document.getElementById("focusBack");
       if (!list || !preview || !title || !warp || !image || !back) return;
-
-      const preloadedImages = new Set();
+const preloadedImages = new Set();
       const preloadFocusImages = () => {
         list.querySelectorAll(".panel-focus-item[data-image]").forEach((item) => {
           const src = String(item.getAttribute("data-image") || "").trim();
@@ -266,8 +252,7 @@
           preloadedImages.add(src);
         });
       };
-
-      const openPreview = (area, warpText, src) => {
+const openPreview = (area, warpText, src) => {
         title.textContent = area || "Focus area";
         const warpCode = document.createElement("code");
         warpCode.textContent = warpText || "/warp";
@@ -277,12 +262,10 @@
         preview.classList.add("is-open");
         preview.setAttribute("aria-hidden", "false");
       };
-
-      preloadFocusImages();
+preloadFocusImages();
       const listObserver = new MutationObserver(preloadFocusImages);
       listObserver.observe(list, { childList: true, subtree: true });
-
-      list.addEventListener("click", (event) => {
+list.addEventListener("click", (event) => {
         const btn = event.target.closest(".panel-focus-item");
         if (!btn) return;
         const area = btn.getAttribute("data-area") || "Focus area";
@@ -290,19 +273,16 @@
         const img = btn.getAttribute("data-image") || "assets/hero.jpg";
         openPreview(area, warpText, img);
       });
-
-      back.addEventListener("click", () => {
+back.addEventListener("click", () => {
         preview.classList.remove("is-open");
         preview.setAttribute("aria-hidden", "true");
       });
-
-      preview.addEventListener("click", (event) => {
+preview.addEventListener("click", (event) => {
         if (event.target !== preview) return;
         preview.classList.remove("is-open");
         preview.setAttribute("aria-hidden", "true");
       });
-
-      document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", (event) => {
         if (event.key !== "Escape" || preview.getAttribute("aria-hidden") === "true") return;
         preview.classList.remove("is-open");
         preview.setAttribute("aria-hidden", "true");
@@ -311,3 +291,4 @@
   </script>
 </body>
 </html>
+

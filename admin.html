@@ -20,8 +20,7 @@
       <span class="brand-text">BTE CANADA</span>
     </a>
   </header>
-
-  <main class="admin-page">
+<main class="admin-page">
     <section class="docs-card admin-gate" id="adminGate">
       <a class="panel-card-back-btn" href="panel.html" aria-label="Back to panel">
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -33,8 +32,7 @@
       <a class="cta-btn admin-btn" href="login.html">Retry Login</a>
       <p class="docs-note" id="adminGateStatus"></p>
     </section>
-
-    <div id="adminContent" style="display:none;">
+<div id="adminContent" style="display:none;">
       <section class="admin-hero-panel">
         <div class="admin-card">
           <a class="panel-card-back-btn" href="panel.html" aria-label="Back to panel">
@@ -60,19 +58,16 @@
       </section>
     </div>
   </main>
-
-  <div class="admin-modal" id="screenshotModal" aria-hidden="true">
+<div class="admin-modal" id="screenshotModal" aria-hidden="true">
     <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="screenshotModalTitle">
       <div class="admin-modal-header">
         <h2 id="screenshotModalTitle">Screenshot Manager</h2>
         <button class="admin-modal-close" type="button" data-modal-close>Close</button>
       </div>
-
-      <section class="docs-card" id="admin-upload">
+<section class="docs-card" id="admin-upload">
         <h2>Screenshot Uploader</h2>
         <p class="section-text">Upload a screenshot and add the details.</p>
-
-        <form id="uploadForm" class="docs-form">
+<form id="uploadForm" class="docs-form">
           <input type="file" id="imageFile" accept="image/*" required />
           <input type="text" id="placeInput" placeholder="Place name" required />
           <input type="text" id="provInput" placeholder="Province (e.g. ON)" />
@@ -80,19 +75,16 @@
           <input type="text" id="folderInput" placeholder="Optional folder (e.g. toronto)" />
           <button class="cta-btn" type="submit">Upload</button>
         </form>
-
-        <div class="admin-preview">
+<div class="admin-preview">
           <img id="imagePreview" alt="Preview" />
           <div class="admin-progress">
             <progress id="uploadProgress" max="100" value="0"></progress>
             <span id="uploadProgressText">0%</span>
           </div>
         </div>
-
-        <p class="docs-note" id="uploadStatus"></p>
+<p class="docs-note" id="uploadStatus"></p>
       </section>
-
-      <section class="docs-card admin-list-card" id="admin-manage">
+<section class="docs-card admin-list-card" id="admin-manage">
         <div class="admin-list-header">
           <div>
             <h2>Manage Screenshots</h2>
@@ -104,8 +96,7 @@
       </section>
     </div>
   </div>
-
-  <div class="admin-modal" id="announcementModal" aria-hidden="true">
+<div class="admin-modal" id="announcementModal" aria-hidden="true">
     <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="announcementModalTitle">
       <div class="admin-modal-header">
         <h2 id="announcementModalTitle">Edit Announcement</h2>
@@ -124,8 +115,7 @@
       </section>
     </div>
   </div>
-
-  <div class="admin-modal" id="builderAreasModal" aria-hidden="true">
+<div class="admin-modal" id="builderAreasModal" aria-hidden="true">
     <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="builderAreasModalTitle">
       <div class="admin-modal-header">
         <h2 id="builderAreasModalTitle">Edit Builder Areas</h2>
@@ -144,14 +134,12 @@
               </div>
             </div>
           </div>
-
-          <div class="admin-builder-section">
+<div class="admin-builder-section">
             <h3 class="admin-section-title">Focus Areas</h3>
             <div class="admin-focus-list" id="focusAreasList"></div>
             <button class="cta-btn ghost" id="focusAddBtn" type="button">Add Focus Area</button>
           </div>
-
-          <div class="admin-announcement-actions">
+<div class="admin-announcement-actions">
             <button class="cta-btn admin-btn" id="builderAreasSave" type="button">Update Builder Areas</button>
           </div>
         </div>
@@ -159,8 +147,7 @@
       </section>
     </div>
   </div>
-
-  <div class="admin-modal" id="staffManagerModal" aria-hidden="true">
+<div class="admin-modal" id="staffManagerModal" aria-hidden="true">
     <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="staffManagerModalTitle">
       <div class="admin-modal-header">
         <h2 id="staffManagerModalTitle">Staff Manager</h2>
@@ -172,8 +159,7 @@
             <h3>Add Staff Member</h3>
             <p class="section-text">Add members and set permission levels.</p>
           </div>
-
-          <form id="staffAddForm" class="docs-form staff-form">
+<form id="staffAddForm" class="docs-form staff-form">
             <input type="text" id="staffMcInput" placeholder="Minecraft username" required />
             <input type="text" id="staffDiscordInput" placeholder="Discord ID" required />
             <input type="text" id="staffTitleInput" placeholder="Official title (e.g. Team Owner)" />
@@ -189,16 +175,13 @@
             </label>
             <button class="cta-btn admin-btn" type="submit">Add User</button>
           </form>
-
-          <p class="docs-note" id="staffStatus"></p>
-
-          <div class="staff-list" id="staffList"></div>
+<p class="docs-note" id="staffStatus"></p>
+<div class="staff-list" id="staffList"></div>
         </div>
       </section>
     </div>
   </div>
-
-  <div class="admin-cropper-overlay" id="imageCropperOverlay" hidden aria-hidden="true">
+<div class="admin-cropper-overlay" id="imageCropperOverlay" hidden aria-hidden="true">
     <div class="admin-cropper-card" role="dialog" aria-modal="true" aria-labelledby="imageCropperTitle">
       <div class="admin-cropper-head">
         <h3 id="imageCropperTitle">Crop Builder Image</h3>
@@ -228,8 +211,7 @@
       </div>
     </div>
   </div>
-
-  <div class="admin-confirm-overlay" id="uploadConfirmOverlay" hidden aria-hidden="true">
+<div class="admin-confirm-overlay" id="uploadConfirmOverlay" hidden aria-hidden="true">
     <div class="admin-confirm-card" role="dialog" aria-modal="true" aria-labelledby="uploadConfirmTitle">
       <h3 id="uploadConfirmTitle">Confirm Upload</h3>
       <p>This will replace the current image. Continue?</p>
@@ -239,11 +221,6 @@
       </div>
     </div>
   </div>
-
-  <footer class="footer">
-    2026 BTE Canada · Not affiliated with Mojang
-  </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
   <script>
@@ -254,16 +231,14 @@
     const sbClient = window.APP_SUPABASE_CLIENT || window.supabase.createClient(ADMIN_SUPABASE_URL, ADMIN_SUPABASE_ANON_KEY);
     const SUPABASE_BUCKET = "screenshots";
     const BUILDER_AREAS_BUCKET = "builder-areas";
-
-    const ALLOWED_DISCORD_IDS = [
+const ALLOWED_DISCORD_IDS = [
       "617699025973542930",
       "451804972728975371",
       "808025660425371718",
       "292688678789054465",
       "440983805487218698"
     ];
-
-    const gate = document.getElementById("adminGate");
+const gate = document.getElementById("adminGate");
     const gateStatus = document.getElementById("adminGateStatus");
     const content = document.getElementById("adminContent");
     const panelLoader = document.getElementById("panelLoader");
@@ -302,27 +277,23 @@
     let cropperSession = null;
     let confirmSession = null;
     let eventImageValue = "";
-
-    function hidePanelLoader() {
+function hidePanelLoader() {
       if (!panelLoader) return;
       if (panelLoader.classList.contains("is-hidden") || panelLoader.dataset.hiding === "1") return;
       const startedAt = Number(panelLoader.dataset.loaderStart || Date.now());
       panelLoader.dataset.loaderStart = String(startedAt);
       panelLoader.dataset.hiding = "1";
-
-      const elapsed = Date.now() - startedAt;
+const elapsed = Date.now() - startedAt;
       const remaining = Math.max(1000 - elapsed, 0);
       window.setTimeout(() => {
         panelLoader.classList.add("is-hidden");
         panelLoader.setAttribute("aria-hidden", "true");
       }, remaining);
     }
-
-    function initAdminModals() {
+function initAdminModals() {
       const openers = document.querySelectorAll("[data-modal-target]");
       const closers = document.querySelectorAll("[data-modal-close]");
-
-      openers.forEach((btn) => {
+openers.forEach((btn) => {
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-modal-target");
           const modal = document.getElementById(id);
@@ -338,27 +309,23 @@
           }
         });
       });
-
-      function closeModal(modal) {
+function closeModal(modal) {
         modal.classList.remove("show");
         modal.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
       }
-
-      closers.forEach((btn) => {
+closers.forEach((btn) => {
         btn.addEventListener("click", () => {
           const modal = btn.closest(".admin-modal");
           if (modal) closeModal(modal);
         });
       });
-
-      document.querySelectorAll(".admin-modal").forEach((modal) => {
+document.querySelectorAll(".admin-modal").forEach((modal) => {
         modal.addEventListener("click", (event) => {
           if (event.target === modal) closeModal(modal);
         });
       });
-
-      document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
         if (cropperOverlay?.classList.contains("show")) return;
         if (uploadConfirmOverlay?.classList.contains("show")) return;
@@ -366,8 +333,7 @@
         if (modal) closeModal(modal);
       });
     }
-
-    async function fetchStaffRole(discordId) {
+async function fetchStaffRole(discordId) {
       if (!discordId) return null;
       try {
         const { data } = await sbClient
@@ -380,8 +346,7 @@
         return null;
       }
     }
-
-    function applyRoleAccess(role) {
+function applyRoleAccess(role) {
       const roleRank = {
         none: 0,
         staff: 1,
@@ -407,15 +372,13 @@
         }
       });
     }
-
-    async function fetchDiscordProfile(discordId) {
+async function fetchDiscordProfile(discordId) {
       try {
         const { data, error } = await sbClient.functions.invoke("discord-profile", {
           body: { discord_id: discordId }
         });
         if (!error) return data || null;
-
-        const status = error?.context?.status || error?.status || "";
+const status = error?.context?.status || error?.status || "";
         const msg = error?.message || error?.context?.body || String(error);
         if (staffStatus) staffStatus.textContent = `Discord lookup failed (${status}): ${msg}`;
         console.error("Discord lookup failed via invoke:", error);
@@ -423,8 +386,7 @@
         if (staffStatus) staffStatus.textContent = `Discord lookup failed: ${err.message || err}`;
         console.error("Discord lookup failed via invoke:", err);
       }
-
-      try {
+try {
         const fnUrl = `${supabaseConfig.url}/functions/v1/discord-profile`;
         const res = await fetch(fnUrl, {
           method: "POST",
@@ -446,8 +408,7 @@
         return null;
       }
     }
-
-    async function loadStaffList() {
+async function loadStaffList() {
       if (!staffListEl) return;
       const { data, error } = await sbClient
         .from("staff_members")
@@ -459,8 +420,7 @@
       }
       renderStaffList(data || []);
     }
-
-    function createFocusRow(item = {}) {
+function createFocusRow(item = {}) {
       if (!focusAreasList) return;
       const row = document.createElement("div");
       row.className = "admin-focus-row";
@@ -473,8 +433,7 @@
       row.querySelector('[data-focus-field="area"]').value = item.area || "";
       row.querySelector('[data-focus-field="warp"]').value = item.warp || "";
       row.dataset.imageUrl = item.image || "";
-
-      const fileInput = row.querySelector('[data-focus-field="file"]');
+const fileInput = row.querySelector('[data-focus-field="file"]');
       if (fileInput) {
         fileInput.addEventListener("change", async () => {
         const file = fileInput?.files?.[0];
@@ -489,14 +448,12 @@
         }
         });
       }
-
-      row.querySelector("[data-focus-remove]").addEventListener("click", () => {
+row.querySelector("[data-focus-remove]").addEventListener("click", () => {
         row.remove();
       });
       focusAreasList.appendChild(row);
     }
-
-    function getFocusAreasFromRows() {
+function getFocusAreasFromRows() {
       if (!focusAreasList) return [];
       const rows = Array.from(focusAreasList.querySelectorAll(".admin-focus-row"));
       return rows
@@ -508,8 +465,7 @@
         })
         .filter((item) => item.area || item.warp || item.image);
     }
-
-    async function loadBuilderAreas() {
+async function loadBuilderAreas() {
       if (!eventAreaInput || !eventWarpInput || !focusAreasList) return;
       if (builderAreasStatus) builderAreasStatus.textContent = "Loading...";
       const { data, error } = await sbClient
@@ -533,52 +489,43 @@
       }
       if (builderAreasStatus) builderAreasStatus.textContent = "";
     }
-
-    async function uploadBuilderImage(file, folder) {
+async function uploadBuilderImage(file, folder) {
       const confirmed = await openUploadConfirmDialog();
       if (!confirmed) return "";
-
-      const processedFile = await openBuilderImageCropper(file, 16 / 9);
+const processedFile = await openBuilderImageCropper(file, 16 / 9);
       if (!processedFile) {
         if (builderAreasStatus) builderAreasStatus.textContent = "Image upload cancelled.";
         return "";
       }
-
-      const { data } = await sbClient.auth.getSession();
+const { data } = await sbClient.auth.getSession();
       const accessToken = data.session?.access_token;
       if (!accessToken) {
         if (builderAreasStatus) builderAreasStatus.textContent = "Session expired. Please log in again.";
         return "";
       }
-
-      const safeName = processedFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+const safeName = processedFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
       const prefix = folder ? `${folder.replace(/[^a-zA-Z0-9/_-]/g, "")}/` : "";
       const path = `${prefix}${Date.now()}_${safeName}`;
-
-      try {
+try {
         await uploadWithProgress(BUILDER_AREAS_BUCKET, processedFile, path, accessToken);
       } catch (err) {
         if (builderAreasStatus) builderAreasStatus.textContent = `Upload failed: ${err.message}`;
         return "";
       }
-
-      return `${ADMIN_SUPABASE_URL}/storage/v1/object/public/${BUILDER_AREAS_BUCKET}/${path}`;
+return `${ADMIN_SUPABASE_URL}/storage/v1/object/public/${BUILDER_AREAS_BUCKET}/${path}`;
     }
-
-    function openUploadConfirmDialog() {
+function openUploadConfirmDialog() {
       if (!uploadConfirmOverlay || !uploadConfirmCancel || !uploadConfirmYes) {
         return Promise.resolve(true);
       }
-
-      return new Promise((resolve) => {
+return new Promise((resolve) => {
         confirmSession = { resolve };
         uploadConfirmOverlay.hidden = false;
         uploadConfirmOverlay.classList.add("show");
         uploadConfirmOverlay.setAttribute("aria-hidden", "false");
       });
     }
-
-    function closeUploadConfirmDialog(confirmed) {
+function closeUploadConfirmDialog(confirmed) {
       if (!confirmSession) return;
       const { resolve } = confirmSession;
       confirmSession = null;
@@ -587,13 +534,11 @@
       uploadConfirmOverlay.hidden = true;
       resolve(confirmed);
     }
-
-    function openBuilderImageCropper(file, aspectRatio = 16 / 9) {
+function openBuilderImageCropper(file, aspectRatio = 16 / 9) {
       if (!cropperOverlay || !cropperCanvas || !cropZoomInput || !cropXInput || !cropYInput || !cropApplyBtn || !cropCancelBtn || !cropResetBtn) {
         return Promise.resolve(file);
       }
-
-      return new Promise((resolve) => {
+return new Promise((resolve) => {
         const url = URL.createObjectURL(file);
         const img = new Image();
         img.onload = () => {
@@ -618,14 +563,12 @@
         img.src = url;
       });
     }
-
-    function showCropperOverlay() {
+function showCropperOverlay() {
       cropperOverlay.hidden = false;
       cropperOverlay.classList.add("show");
       cropperOverlay.setAttribute("aria-hidden", "false");
     }
-
-    function closeCropperOverlay(resultFile = null) {
+function closeCropperOverlay(resultFile = null) {
       if (!cropperSession) return;
       const { resolve, url } = cropperSession;
       cropperSession = null;
@@ -635,56 +578,47 @@
       if (url) URL.revokeObjectURL(url);
       resolve(resultFile);
     }
-
-    function getCropRectForSession() {
+function getCropRectForSession() {
       if (!cropperSession) return null;
       const { img, aspectRatio } = cropperSession;
       const srcWidth = img.naturalWidth;
       const srcHeight = img.naturalHeight;
       const sourceRatio = srcWidth / srcHeight;
-
-      let baseWidth = srcWidth;
+let baseWidth = srcWidth;
       let baseHeight = srcHeight;
       if (sourceRatio > aspectRatio) {
         baseWidth = srcHeight * aspectRatio;
       } else if (sourceRatio < aspectRatio) {
         baseHeight = srcWidth / aspectRatio;
       }
-
-      const zoom = Math.max(1, Number(cropZoomInput.value || 100) / 100);
+const zoom = Math.max(1, Number(cropZoomInput.value || 100) / 100);
       const cropWidth = baseWidth / zoom;
       const cropHeight = baseHeight / zoom;
       const maxOffsetX = Math.max(0, (srcWidth - cropWidth) / 2);
       const maxOffsetY = Math.max(0, (srcHeight - cropHeight) / 2);
       const offsetX = (Number(cropXInput.value || 0) / 100) * maxOffsetX;
       const offsetY = (Number(cropYInput.value || 0) / 100) * maxOffsetY;
-
-      const centerX = srcWidth / 2 + offsetX;
+const centerX = srcWidth / 2 + offsetX;
       const centerY = srcHeight / 2 + offsetY;
       const x = Math.max(0, Math.min(srcWidth - cropWidth, centerX - cropWidth / 2));
       const y = Math.max(0, Math.min(srcHeight - cropHeight, centerY - cropHeight / 2));
-
-      return { x, y, width: cropWidth, height: cropHeight };
+return { x, y, width: cropWidth, height: cropHeight };
     }
-
-    function drawCropperPreview() {
+function drawCropperPreview() {
       if (!cropperSession) return;
       const ctx = cropperCanvas.getContext("2d");
       if (!ctx) return;
-
-      const rect = getCropRectForSession();
+const rect = getCropRectForSession();
       if (!rect) return;
       cropperSession.rect = rect;
       const { img } = cropperSession;
-
-      ctx.clearRect(0, 0, cropperCanvas.width, cropperCanvas.height);
+ctx.clearRect(0, 0, cropperCanvas.width, cropperCanvas.height);
       ctx.drawImage(
         img,
         rect.x, rect.y, rect.width, rect.height,
         0, 0, cropperCanvas.width, cropperCanvas.height
       );
-
-      ctx.save();
+ctx.save();
       ctx.strokeStyle = "rgba(255,255,255,0.35)";
       ctx.lineWidth = 1;
       for (let i = 1; i <= 2; i += 1) {
@@ -701,14 +635,12 @@
       }
       ctx.restore();
     }
-
-    async function applyCropperResult() {
+async function applyCropperResult() {
       if (!cropperSession || !cropperSession.rect) {
         closeCropperOverlay(null);
         return;
       }
-
-      const { file, img, rect, aspectRatio } = cropperSession;
+const { file, img, rect, aspectRatio } = cropperSession;
       const outputWidth = Math.min(1920, Math.round(rect.width));
       const outputHeight = Math.round(outputWidth / aspectRatio);
       const canvas = document.createElement("canvas");
@@ -719,33 +651,27 @@
         closeCropperOverlay(file);
         return;
       }
-
-      ctx.drawImage(
+ctx.drawImage(
         img,
         rect.x, rect.y, rect.width, rect.height,
         0, 0, outputWidth, outputHeight
       );
-
-      const outputType = file.type && file.type.startsWith("image/") ? file.type : "image/jpeg";
+const outputType = file.type && file.type.startsWith("image/") ? file.type : "image/jpeg";
       const blob = await new Promise((resolve) => {
         canvas.toBlob((b) => resolve(b), outputType, 0.92);
       });
-
-      if (!blob) {
+if (!blob) {
         closeCropperOverlay(file);
         return;
       }
-
-      const cropped = new File([blob], file.name, { type: outputType, lastModified: Date.now() });
+const cropped = new File([blob], file.name, { type: outputType, lastModified: Date.now() });
       closeCropperOverlay(cropped);
     }
-
-    [cropZoomInput, cropXInput, cropYInput].forEach((input) => {
+[cropZoomInput, cropXInput, cropYInput].forEach((input) => {
       if (!input) return;
       input.addEventListener("input", drawCropperPreview);
     });
-
-    if (cropResetBtn) {
+if (cropResetBtn) {
       cropResetBtn.addEventListener("click", () => {
         cropZoomInput.value = "100";
         cropXInput.value = "0";
@@ -753,35 +679,30 @@
         drawCropperPreview();
       });
     }
-
-    if (cropCancelBtn) {
+if (cropCancelBtn) {
       cropCancelBtn.addEventListener("click", () => {
         closeCropperOverlay(null);
       });
     }
-
-    if (cropApplyBtn) {
+if (cropApplyBtn) {
       cropApplyBtn.addEventListener("click", () => {
         applyCropperResult();
       });
     }
-
-    if (cropperOverlay) {
+if (cropperOverlay) {
       cropperOverlay.addEventListener("click", (event) => {
         if (event.target !== cropperOverlay) return;
         closeCropperOverlay(null);
       });
     }
-
-    document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
       if (!cropperOverlay || !cropperOverlay.classList.contains("show")) return;
       event.preventDefault();
       event.stopPropagation();
       closeCropperOverlay(null);
     });
-
-    if (uploadConfirmCancel) {
+if (uploadConfirmCancel) {
       uploadConfirmCancel.addEventListener("click", () => closeUploadConfirmDialog(false));
     }
     if (uploadConfirmYes) {
@@ -800,8 +721,7 @@
       event.stopPropagation();
       closeUploadConfirmDialog(false);
     });
-
-    function renderStaffList(rows) {
+function renderStaffList(rows) {
       if (!staffListEl) return;
       staffListEl.innerHTML = "";
       if (!rows.length) {
@@ -837,8 +757,7 @@
         `;
         const roleSelect = card.querySelector("[data-field=\"role\"]");
         roleSelect.value = row.role || "None";
-
-        card.querySelector(".admin-save").addEventListener("click", async () => {
+card.querySelector(".admin-save").addEventListener("click", async () => {
           const mc_username = card.querySelector("[data-field=\"mc_username\"]").value.trim();
           const discord_id = card.querySelector("[data-field=\"discord_id\"]").value.trim();
           const avatar_url_field = card.querySelector("[data-field=\"avatar_url\"]");
@@ -846,29 +765,24 @@
           const official_title = card.querySelector("[data-field=\"official_title\"]").value.trim();
           const role = card.querySelector("[data-field=\"role\"]").value;
           const show_on_front = card.querySelector("[data-field=\"show_on_front\"]").checked;
-
-          let avatar_url = avatar_url_field?.value?.trim() || "";
+let avatar_url = avatar_url_field?.value?.trim() || "";
           let discord_username = discord_username_field?.value?.trim() || "";
-
-          if (discord_id && (!discord_username || !avatar_url)) {
+if (discord_id && (!discord_username || !avatar_url)) {
             const profile = await fetchDiscordProfile(discord_id);
             if (profile?.avatar_url) avatar_url = profile.avatar_url;
             if (profile?.username) discord_username = profile.username;
           }
-
-          const { error: updateError } = await sbClient
+const { error: updateError } = await sbClient
             .from("staff_members")
             .update({ mc_username, discord_id, discord_username, avatar_url, official_title, role, show_on_front })
             .eq("id", row.id);
-
-          if (updateError) {
+if (updateError) {
             staffStatus.textContent = `Update failed: ${updateError.message}`;
           } else {
             staffStatus.textContent = "Updated successfully.";
           }
         });
-
-        card.querySelector(".admin-refresh").addEventListener("click", async () => {
+card.querySelector(".admin-refresh").addEventListener("click", async () => {
           const discord_id = card.querySelector("[data-field=\"discord_id\"]").value.trim();
           if (!discord_id) {
             staffStatus.textContent = "Add a Discord ID before refreshing.";
@@ -895,8 +809,7 @@
             loadStaffList();
           }
         });
-
-        card.querySelector(".admin-delete").addEventListener("click", async () => {
+card.querySelector(".admin-delete").addEventListener("click", async () => {
           if (!confirm("Delete this staff member?")) return;
           const { error: deleteError } = await sbClient
             .from("staff_members")
@@ -909,12 +822,10 @@
           staffStatus.textContent = "Deleted.";
           loadStaffList();
         });
-
-        staffListEl.appendChild(card);
+staffListEl.appendChild(card);
       });
     }
-
-    async function requireSession() {
+async function requireSession() {
       const { data } = await sbClient.auth.getSession();
       if (!data.session) {
         if (gate) gate.hidden = false;
@@ -936,8 +847,7 @@
       const staffRole = await fetchStaffRole(discordId);
       const isAdminAllowlist = ALLOWED_DISCORD_IDS.length && ALLOWED_DISCORD_IDS.includes(discordId);
       const resolvedRole = isAdminAllowlist ? "Admin" : (staffRole || "None");
-
-      if (!isAdminAllowlist && (!staffRole || staffRole === "None")) {
+if (!isAdminAllowlist && (!staffRole || staffRole === "None")) {
         if (gate) gate.hidden = false;
         if (gateStatus) gateStatus.textContent = "Not authorized. Please contact an admin for access.";
         if (content) content.style.display = "none";
@@ -963,8 +873,7 @@
       hidePanelLoader();
       return data.session;
     }
-
-  async function uploadWithProgress(bucket, file, path, accessToken) {
+async function uploadWithProgress(bucket, file, path, accessToken) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       const safePath = path.split("/").map(encodeURIComponent).join("/");
@@ -972,43 +881,36 @@
       xhr.setRequestHeader("Authorization", `Bearer ${accessToken}`);
       xhr.setRequestHeader("apikey", ADMIN_SUPABASE_ANON_KEY);
       xhr.setRequestHeader("x-upsert", "false");
-
-      xhr.upload.onprogress = (e) => {
+xhr.upload.onprogress = (e) => {
         if (!e.lengthComputable) return;
         const pct = Math.round((e.loaded / e.total) * 100);
         progress.value = pct;
         progressText.textContent = `${pct}%`;
       };
-
-      xhr.onload = () => {
+xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           resolve();
         } else {
           reject(new Error(xhr.responseText || "Upload failed"));
         }
       };
-
-      xhr.onerror = () => reject(new Error("Network error"));
+xhr.onerror = () => reject(new Error("Network error"));
       xhr.send(file);
     });
   }
-
-    let ADMIN_ROWS = [];
-
-    function renderAdminList(rows) {
+let ADMIN_ROWS = [];
+function renderAdminList(rows) {
       listEl.innerHTML = "";
       if (!rows.length) {
         listEl.innerHTML = `<p class="section-text">No screenshots match your search.</p>`;
         return;
       }
-
-      rows.forEach((row) => {
+rows.forEach((row) => {
         const card = document.createElement("div");
         card.className = "admin-item";
         const imgUrl = `${ADMIN_SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${row.image_path}`;
         const builders = Array.isArray(row.builders) ? row.builders.join(", ") : "";
-
-        card.innerHTML = `
+card.innerHTML = `
           <img src="${imgUrl}" alt="${row.place || "Screenshot"}" />
           <div class="admin-item-body">
             <input type="text" value="${row.place || ""}" data-field="place" />
@@ -1020,19 +922,16 @@
             </div>
           </div>
         `;
-
-        card.querySelector(".admin-save").addEventListener("click", async () => {
+card.querySelector(".admin-save").addEventListener("click", async () => {
           const place = card.querySelector("[data-field=\"place\"]").value.trim();
           const prov = card.querySelector("[data-field=\"prov\"]").value.trim();
           const buildersRaw = card.querySelector("[data-field=\"builders\"]").value.trim();
           const buildersList = buildersRaw ? buildersRaw.split(",").map(s => s.trim()).filter(Boolean) : [];
-
-          const { error: updateError } = await sbClient
+const { error: updateError } = await sbClient
             .from("screenshots")
             .update({ place, prov, builders: buildersList })
             .eq("id", row.id);
-
-          if (updateError) {
+if (updateError) {
             status.textContent = `Update failed: ${updateError.message}`;
           } else {
             status.textContent = "Updated successfully!";
@@ -1041,30 +940,25 @@
             row.builders = buildersList;
           }
         });
-
-        card.querySelector(".admin-delete").addEventListener("click", async () => {
+card.querySelector(".admin-delete").addEventListener("click", async () => {
           if (!confirm("Delete this screenshot?")) return;
           const { error: deleteError } = await sbClient
             .from("screenshots")
             .delete()
             .eq("id", row.id);
-
-          if (deleteError) {
+if (deleteError) {
             status.textContent = `Delete failed: ${deleteError.message}`;
             return;
           }
-
-          await sbClient.storage.from(SUPABASE_BUCKET).remove([row.image_path]);
+await sbClient.storage.from(SUPABASE_BUCKET).remove([row.image_path]);
           status.textContent = "Deleted.";
           ADMIN_ROWS = ADMIN_ROWS.filter((r) => r.id !== row.id);
           renderAdminList(filterRows(searchInput?.value || ""));
         });
-
-        listEl.appendChild(card);
+listEl.appendChild(card);
       });
     }
-
-    function filterRows(term) {
+function filterRows(term) {
       const q = term.toLowerCase().trim();
       if (!q) return ADMIN_ROWS;
       return ADMIN_ROWS.filter((row) => {
@@ -1072,27 +966,23 @@
           || (row.prov || "").toLowerCase().includes(q);
       });
     }
-
-    async function loadAdminList() {
+async function loadAdminList() {
       const { data, error } = await sbClient
         .from("screenshots")
         .select("id,image_path,place,prov,builders,created_at")
         .order("created_at", { ascending: false });
-
-      if (error) {
+if (error) {
         listEl.textContent = `Failed to load list: ${error.message}`;
         return;
       }
-
-      ADMIN_ROWS = data || [];
+ADMIN_ROWS = data || [];
       if (!ADMIN_ROWS.length) {
         listEl.innerHTML = `<p class="section-text">No screenshots yet.</p>`;
         return;
       }
       renderAdminList(ADMIN_ROWS);
     }
-
-  document.getElementById("imageFile").addEventListener("change", (e) => {
+document.getElementById("imageFile").addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) {
       preview.removeAttribute("src");
@@ -1100,21 +990,18 @@
     }
     preview.src = URL.createObjectURL(file);
   });
-
-    if (logoutBtn) {
+if (logoutBtn) {
       logoutBtn.addEventListener("click", async () => {
         await sbClient.auth.signOut();
         window.location.href = "login.html";
       });
     }
-
-    if (searchInput) {
+if (searchInput) {
       searchInput.addEventListener("input", () => {
         renderAdminList(filterRows(searchInput.value));
       });
     }
-
-    (async () => {
+(async () => {
       try {
         const session = await requireSession();
         if (!session) return;
@@ -1124,8 +1011,7 @@
         hidePanelLoader();
       }
     })();
-
-    if (staffForm) {
+if (staffForm) {
       staffForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const mc_username = document.getElementById("staffMcInput").value.trim();
@@ -1133,8 +1019,7 @@
         const official_title = document.getElementById("staffTitleInput").value.trim();
         const role = document.getElementById("staffRoleInput").value;
         const show_on_front = document.getElementById("staffShowInput").checked;
-
-        if (!mc_username || !discord_id) {
+if (!mc_username || !discord_id) {
           staffStatus.textContent = "Please add Minecraft username and Discord ID.";
           return;
         }
@@ -1155,15 +1040,13 @@
         loadStaffList();
       });
     }
-
-    if (builderAreasSave) {
+if (builderAreasSave) {
       builderAreasSave.addEventListener("click", async () => {
         const event_area = eventAreaInput.value.trim();
         const event_warp = eventWarpInput.value.trim();
         const event_image = eventImageValue.trim();
         const focus_areas = getFocusAreasFromRows();
-
-        if (builderAreasStatus) builderAreasStatus.textContent = "Saving...";
+if (builderAreasStatus) builderAreasStatus.textContent = "Saving...";
         const { error } = await sbClient
           .from("builder_areas")
           .upsert({ id: 1, event_area, event_warp, event_image, focus_areas }, { onConflict: "id" });
@@ -1174,8 +1057,7 @@
         if (builderAreasStatus) builderAreasStatus.textContent = "Builder areas updated.";
       });
     }
-
-    if (eventImageFile) {
+if (eventImageFile) {
       eventImageFile.addEventListener("change", async () => {
         const file = eventImageFile?.files?.[0];
         if (!file) {
@@ -1189,62 +1071,51 @@
         }
       });
     }
-
-    if (focusAddBtn) {
+if (focusAddBtn) {
       focusAddBtn.addEventListener("click", () => {
         createFocusRow();
       });
     }
-
-  form.addEventListener("submit", async (e) => {
+form.addEventListener("submit", async (e) => {
     e.preventDefault();
     status.textContent = "Uploading...";
     progress.value = 0;
     progressText.textContent = "0%";
-
-    const file = document.getElementById("imageFile").files[0];
+const file = document.getElementById("imageFile").files[0];
     const place = document.getElementById("placeInput").value.trim();
     const prov = document.getElementById("provInput").value.trim();
     const buildersRaw = document.getElementById("buildersInput").value.trim();
     const folder = document.getElementById("folderInput").value.trim();
-
-    if (!file || !place) {
+if (!file || !place) {
       status.textContent = "Please add a file and place name.";
       return;
     }
-
-      const { data } = await sbClient.auth.getSession();
+const { data } = await sbClient.auth.getSession();
       const accessToken = data.session?.access_token;
     if (!accessToken) {
       status.textContent = "Session expired. Please log in again.";
       return;
     }
-
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
     const prefix = folder ? `${folder.replace(/[^a-zA-Z0-9/_-]/g, "")}/` : "";
     const path = `${prefix}${Date.now()}_${safeName}`;
-
-    try {
+try {
       await uploadWithProgress(SUPABASE_BUCKET, file, path, accessToken);
     } catch (err) {
       status.textContent = `Upload failed: ${err.message}`;
       return;
     }
-
-    const builders = buildersRaw
+const builders = buildersRaw
       ? buildersRaw.split(",").map(s => s.trim()).filter(Boolean)
       : [];
-
-      const { error: insertError } = await sbClient
+const { error: insertError } = await sbClient
         .from("screenshots")
         .insert([{ image_path: path, place, prov, builders }]);
-
-    if (insertError) {
+if (insertError) {
       status.textContent = `Database error: ${insertError.message}`;
       return;
     }
-
-    status.textContent = "Uploaded successfully!";
+status.textContent = "Uploaded successfully!";
     form.reset();
     preview.removeAttribute("src");
     await loadAdminList();
@@ -1253,3 +1124,4 @@
 </script>
 </body>
 </html>
+

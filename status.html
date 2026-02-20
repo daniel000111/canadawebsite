@@ -7,9 +7,7 @@
   <link rel="icon" href="assets/logo-square.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-
 <!-- NAVBAR -->
 <header class="nav-wrap">
   <nav class="nav">
@@ -20,8 +18,7 @@
         <span class="brand-text">BTE CANADA</span>
       </a>
     </div>
-
-    <!-- CENTER: Links -->
+<!-- CENTER: Links -->
     <div class="nav-center fade-in fade-delay-2">
       <a href="index.html">Home</a>
       <a href="showcase.html">Showcase</a>
@@ -30,8 +27,7 @@
       <a href="docs.html">Docs</a>
       <a href="map.html">Map</a>
     </div>
-
-    <!-- RIGHT: Socials -->
+<!-- RIGHT: Socials -->
     <div class="nav-right fade-in fade-delay-3">
       <a class="icon-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" aria-label="Discord">
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -72,13 +68,11 @@
     </div>
   </nav>
 </header>
-
 <main class="status-page">
   <section class="builder-hero status-hero">
     <h1>Server Status</h1>
   </section>
-
-  <section class="status-panel">
+<section class="status-panel">
     <div class="status-card">
       <div class="status-head">
         <div class="status-title-group">
@@ -97,8 +91,7 @@
         </div>
       </div>
     </div>
-
-    <div class="status-grid">
+<div class="status-grid">
       <div class="status-item">
         <h3>Players</h3>
         <p id="statusPlayers">--</p>
@@ -118,11 +111,6 @@
     </div>
   </section>
 </main>
-
-<footer class="footer">
-  (c) 2026 BTE Canada � Not affiliated with Mojang
-</footer>
-
 <script src="script.js"></script>
 <script>
   (function initStatus() {
@@ -131,8 +119,7 @@
     const address = host;
     const apiUrl = `https://api.mcsrvstat.us/2/${host}`;
     const fallbackUrl = `https://api.mcstatus.io/v2/status/java/${host}:${port}`;
-
-    const addressEl = document.getElementById("statusAddress");
+const addressEl = document.getElementById("statusAddress");
     const statusEl = document.getElementById("statusState");
     const playersEl = document.getElementById("statusPlayers");
     const versionEl = document.getElementById("statusVersion");
@@ -140,10 +127,8 @@
     const checkedEl = document.getElementById("statusChecked");
     const iconEl = document.getElementById("statusIcon");
     const copyBtn = document.getElementById("copyAddress");
-
-    if (addressEl) addressEl.textContent = address;
-
-    function setState(isOnline) {
+if (addressEl) addressEl.textContent = address;
+function setState(isOnline) {
       if (!statusEl) return;
       statusEl.classList.remove("online", "offline");
       if (isOnline) {
@@ -154,18 +139,15 @@
         statusEl.textContent = "Offline";
       }
     }
-
-    function setChecked() {
+function setChecked() {
       if (!checkedEl) return;
       checkedEl.textContent = new Date().toLocaleString();
     }
-
-    function setMotd(text) {
+function setMotd(text) {
       if (!motdEl) return;
       motdEl.textContent = text || "No MOTD available.";
     }
-
-    function setIcon(iconData) {
+function setIcon(iconData) {
       if (!iconEl) return;
       if (!iconData) {
         iconEl.style.display = "none";
@@ -174,8 +156,7 @@
       iconEl.src = iconData;
       iconEl.style.display = "block";
     }
-
-    function setCopy() {
+function setCopy() {
       if (!copyBtn) return;
       copyBtn.addEventListener("click", () => {
         navigator.clipboard.writeText(address);
@@ -185,27 +166,22 @@
         }, 1600);
       });
     }
-
-    setCopy();
-
-    const controller = new AbortController();
+setCopy();
+const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 7000);
-
-    function renderOnline(data) {
+function renderOnline(data) {
       setState(true);
       const playersOnline = data.players && typeof data.players.online === "number" ? data.players.online : null;
       const playersMax = data.players && typeof data.players.max === "number" ? data.players.max : null;
       playersEl.textContent = playersOnline === null ? "Unknown" : `${playersOnline} / ${playersMax ?? "?"}`;
       versionEl.textContent = data.version || "Unknown";
-
-      const motdClean = data.motd && Array.isArray(data.motd.clean) ? data.motd.clean.join("\n") : "";
+const motdClean = data.motd && Array.isArray(data.motd.clean) ? data.motd.clean.join("\n") : "";
       const motdRaw = data.motd && Array.isArray(data.motd.raw) ? data.motd.raw.join("\n") : "";
       setMotd(motdClean || motdRaw || "No MOTD available.");
       setIcon(data.icon || "");
       setChecked();
     }
-
-    function renderOffline(message) {
+function renderOffline(message) {
       setState(false);
       playersEl.textContent = "Offline";
       versionEl.textContent = "Offline";
@@ -213,8 +189,7 @@
       setIcon("");
       setChecked();
     }
-
-    fetch(apiUrl, { signal: controller.signal })
+fetch(apiUrl, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         clearTimeout(timeoutId);
@@ -223,8 +198,7 @@
           renderOnline(data);
           return;
         }
-
-        // Try fallback provider in case SRV routing isn't detected upstream
+// Try fallback provider in case SRV routing isn't detected upstream
         return fetch(fallbackUrl)
           .then((res) => res.ok ? res.json() : Promise.reject(res))
           .then((alt) => {
@@ -261,3 +235,4 @@
 </script>
 </body>
 </html>
+

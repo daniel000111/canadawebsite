@@ -7,9 +7,7 @@
   <link rel="icon" href="assets/logo-square.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-
 <!-- NAVBAR -->
 <header class="nav-wrap">
   <nav class="nav">
@@ -20,8 +18,7 @@
         <span class="brand-text">BTE CANADA</span>
       </a>
     </div>
-
-    <!-- CENTER: Links -->
+<!-- CENTER: Links -->
     <div class="nav-center fade-in fade-delay-2">
       <a href="index.html">Home</a>
       <a href="showcase.html">Showcase</a>
@@ -30,8 +27,7 @@
       <a href="docs.html">Docs</a>
       <a href="map.html">Map</a>
     </div>
-
-    <!-- RIGHT: Socials -->
+<!-- RIGHT: Socials -->
         <div class="nav-right fade-in fade-delay-3">
       <a class="icon-btn" href="https://discord.gg/pnPSvpfhAs" target="_blank" aria-label="Discord">
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -72,7 +68,6 @@
     </div>
   </nav>
 </header>
-
 <main class="visit-page">
   <section class="builder-hero visit-hero">
     <h1>Visit the Server</h1>
@@ -80,14 +75,12 @@
       Connect to our server and see what we've built so far!
     </p>
   </section>
-
-  <section class="visit-info">
+<section class="visit-info">
     <div class="visit-grid">
       <div class="visit-media">
         <img id="visitScreenshot" src="assets/hero.jpg" alt="BTE Canada build screenshot" loading="lazy" />
       </div>
-
-      <div class="visit-details">
+<div class="visit-details">
         <div class="visit-card">
           <h2>Server Info</h2>
           <ul class="visit-list">
@@ -106,8 +99,7 @@
             first to verify your Minecraft account.
           </p>
         </div>
-
-        <div class="visit-card">
+<div class="visit-card">
           <h2>Useful Commands</h2>
           <ul class="visit-list">
             <li><code>/map</code>: Teleports to a map full of locations.</li>
@@ -115,8 +107,7 @@
             <li><code>/tpll [coordinates]</code>: Teleports to a specific location. Use Google Maps web version and right click on a location to copy coordinates.</li>
           </ul>
         </div>
-
-        <div class="visit-card">
+<div class="visit-card">
           <h2>Recommended Mods</h2>
           <ul class="visit-list">
             <li><strong>WorldEdit CUI:</strong> Allows you to see your WorldEdit selection.</li>
@@ -128,8 +119,7 @@
       </div>
     </div>
   </section>
-
-  <section class="builder-help">
+<section class="builder-help">
     <h2>Want to build?</h2>
     <p class="section-text">
       Learn how to apply and start building with BTE Canada.
@@ -137,23 +127,15 @@
     <a class="cta-btn" href="build.html">Become a Builder</a>
   </section>
 </main>
-
-<footer class="footer">
-  © 2026 BTE Canada · Not affiliated with Mojang
-</footer>
-
 <script src="script.js"></script>
 <script>
   (function loadVisitScreenshot() {
     const img = document.getElementById("visitScreenshot");
     if (!img) return;
-
-    const shotId = "060be5b7-4062-4ac1-a300-f9395f9f25de";
+const shotId = "060be5b7-4062-4ac1-a300-f9395f9f25de";
     if (!window.APP_SUPABASE) return;
-
-    const url = `${window.APP_SUPABASE.url}/rest/v1/screenshots?id=eq.${shotId}&select=image_path,place,prov,builders`;
-
-    fetch(url, {
+const url = `${window.APP_SUPABASE.url}/rest/v1/screenshots?id=eq.${shotId}&select=image_path,place,prov,builders`;
+fetch(url, {
       headers: {
         apikey: window.APP_SUPABASE.key,
         Authorization: `Bearer ${window.APP_SUPABASE.key}`
@@ -179,39 +161,32 @@
     const versionEl = document.getElementById("visitStatusVersion");
     const statusEl = document.getElementById("visitStatusState");
     const playersEl = document.getElementById("visitStatusPlayers");
-
-    if (!versionEl || !statusEl || !playersEl) return;
-
-    const host = "btecanada.net";
+if (!versionEl || !statusEl || !playersEl) return;
+const host = "btecanada.net";
     const port = 25565;
     const apiUrl = `https://api.mcsrvstat.us/2/${host}`;
     const fallbackUrl = `https://api.mcstatus.io/v2/status/java/${host}:${port}`;
-
-    function setDot(state) {
+function setDot(state) {
       const dot = document.getElementById("visitStatusDot");
       if (!dot) return;
       dot.classList.remove("online", "offline", "neutral");
       dot.classList.add(state);
     }
-
-    function setState(online) {
+function setState(online) {
       statusEl.textContent = online ? "Online" : "Unavailable";
       setDot(online ? "online" : "offline");
     }
-
-    function setPlayers(online, max) {
+function setPlayers(online, max) {
       if (typeof online === "number") {
         playersEl.textContent = `${online} / ${typeof max === "number" ? max : "?"}`;
       } else {
         playersEl.textContent = "Unknown";
       }
     }
-
-    function setVersion(version) {
+function setVersion(version) {
       versionEl.textContent = version ? `Java ${version}` : "Java Unknown";
     }
-
-    fetch(apiUrl)
+fetch(apiUrl)
       .then((res) => res.json())
       .then((data) => {
         if (data && data.online) {
@@ -249,9 +224,4 @@
 </script>
 </body>
 </html>
-
-
-
-
-
 
