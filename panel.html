@@ -7,13 +7,12 @@
   <link rel="icon" href="assets/logo-square.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="login-body">
+<body class="admin-body">
   <header class="panel-topbar panel-topbar-admin">
-    <a class="panel-back-btn" href="index.html" aria-label="Go back home">
+    <a class="panel-back-btn" href="index.html" aria-label="Go home">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
-      <span>Back</span>
     </a>
     <a href="index.html" class="brand panel-topbar-brand" aria-label="BTE Canada home">
       <img src="assets/logo-square.png" alt="BTE Canada Logo" class="nav-logo" />
@@ -21,18 +20,18 @@
     </a>
   </header>
 
-  <main class="login-page">
-    <section class="login-hero">
-      <div class="login-panel-wrap session-active">
-        <section class="login-session-card" id="panelCard" hidden aria-live="polite">
-          <img id="panelAvatar" class="login-session-avatar" src="" alt="Profile picture" />
-          <h3 id="panelTitle">Welcome, Builder.</h3>
-          <div class="login-session-actions">
-            <a id="openAdminPanelBtn" class="cta-btn login-session-admin" href="admin.html" hidden>Open Admin Panel</a>
-            <a class="cta-btn login-session-builder" href="coming-soon.html">Builder Panel</a>
-            <a class="cta-btn login-session-home" href="index.html">Go Home</a>
-          </div>
-        </section>
+  <main class="admin-page">
+    <section class="admin-hero-panel">
+      <div class="admin-card" id="panelCard" hidden aria-live="polite">
+        <div class="admin-card-header">
+          <img id="panelAvatar" class="admin-avatar admin-avatar-lg" src="" alt="Profile picture" />
+          <h1 id="panelTitle">Welcome, Builder.</h1>
+        </div>
+        <div class="admin-actions">
+          <a id="openAdminPanelBtn" class="cta-btn admin-action" href="admin.html" hidden>Open Admin Panel</a>
+          <a class="cta-btn admin-action" href="coming-soon.html">Builder Panel</a>
+          <a class="cta-btn admin-action" href="index.html">Go Home</a>
+        </div>
       </div>
     </section>
   </main>
