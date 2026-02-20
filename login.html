@@ -41,9 +41,9 @@
           <section class="login-session-card" id="loginSessionCard" hidden aria-live="polite">
             <img id="loginSessionAvatar" class="login-session-avatar" src="" alt="Profile picture" />
             <h3 id="loginSessionTitle">Welcome, Builder.</h3>
-            <p id="loginSessionSub" class="section-text">Choose where you want to go next.</p>
             <div class="login-session-actions">
               <a id="openAdminPanelBtn" class="cta-btn login-session-admin" href="admin.html" hidden>Open Admin Panel</a>
+              <a class="cta-btn login-session-builder" href="coming-soon.html">Builder Panel</a>
               <a class="cta-btn login-session-home" href="index.html">Go Home</a>
             </div>
           </section>
@@ -68,12 +68,12 @@
 
       const btn = document.getElementById("discordLogin");
       const status = document.getElementById("loginStatus");
+      const loginPanelWrap = document.querySelector(".login-panel-wrap");
       const loginPanel = document.querySelector(".login-panel");
       const sessionFlow = document.getElementById("loginSessionFlow");
       const sessionCard = document.getElementById("loginSessionCard");
       const sessionAvatar = document.getElementById("loginSessionAvatar");
       const sessionTitle = document.getElementById("loginSessionTitle");
-      const sessionSub = document.getElementById("loginSessionSub");
       const openAdminPanelBtn = document.getElementById("openAdminPanelBtn");
       const loginVerifyAnimation = document.getElementById("loginVerifyAnimation");
 
@@ -153,11 +153,6 @@
         if (sessionTitle) {
           sessionTitle.textContent = `Welcome, ${displayName}.`;
         }
-        if (sessionSub) {
-          sessionSub.textContent = hasAdminAccess
-            ? "You can open the admin panel or go back home."
-            : "You do not currently have admin panel access. You can go back home.";
-        }
         if (openAdminPanelBtn) {
           openAdminPanelBtn.hidden = !hasAdminAccess;
         }
@@ -170,6 +165,7 @@
         if (!session) return;
 
         loginPanel.classList.add("is-hidden");
+        loginPanelWrap?.classList.add("session-active");
         sessionFlow.hidden = false;
         await playLoggedInAnimation();
         await showLoggedInState(session);
