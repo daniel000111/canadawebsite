@@ -113,16 +113,58 @@
       text-align: center;
     }
 
-    .verify-summary {
-      margin: 0.5rem auto 0.2rem;
+    .link-identity {
+      margin: 0.6rem auto 0.25rem;
       width: min(520px, 100%);
       display: grid;
-      gap: 0.45rem;
-      text-align: left;
+      grid-template-columns: auto minmax(56px, 140px) auto;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
     }
 
-    .verify-summary p {
+    .identity-node {
+      display: grid;
+      justify-items: center;
+      gap: 0.38rem;
+      min-width: 90px;
+    }
+
+    .identity-avatar {
+      width: 74px;
+      height: 74px;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+    }
+
+    .identity-avatar.discord {
+      border-radius: 999px;
+    }
+
+    .identity-avatar.minecraft {
+      border-radius: 10px;
+      image-rendering: pixelated;
+    }
+
+    .identity-label {
       margin: 0;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .identity-connector {
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(178, 183, 194, 0.55), rgba(178, 183, 194, 0.55));
+      transition: background 0.25s ease;
+    }
+
+    .link-identity.is-linked .identity-connector {
+      background: linear-gradient(90deg, #51c980, #35b86c);
     }
 
     .verify-footnote {
@@ -193,11 +235,105 @@
       filter: brightness(1.03);
     }
 
+    .link-actions .cta-btn.is-gone {
+      display: none !important;
+    }
+
     .link-status {
       margin: 0;
       min-height: 1.2rem;
       color: var(--muted);
       font-size: 0.92rem;
+    }
+
+    .verify-animation {
+      margin: 0;
+      display: inline-grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      color: var(--muted);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+      pointer-events: none;
+    }
+
+    .verify-animation[hidden] {
+      display: none !important;
+    }
+
+    .verify-animation.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .verify-spinner {
+      grid-area: 1 / 1;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, 0.16);
+      border-top-color: var(--red);
+      animation: verifySpin 0.8s linear infinite;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .verify-check {
+      grid-area: 1 / 1;
+      width: 38px;
+      height: 38px;
+      display: block;
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .verify-check circle {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+    }
+
+    .verify-check path {
+      stroke-dasharray: 26;
+      stroke-dashoffset: 26;
+    }
+
+    .verify-animation.is-success .verify-spinner {
+      opacity: 0;
+      transform: scale(0.7);
+      animation: none;
+    }
+
+    .verify-animation.is-success .verify-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .verify-animation.is-success .verify-check circle {
+      animation: verifyDrawCircle 0.34s ease forwards;
+    }
+
+    .verify-animation.is-success .verify-check path {
+      animation: verifyDrawCheck 0.25s ease 0.2s forwards;
+    }
+
+    @keyframes verifySpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes verifyDrawCircle {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes verifyDrawCheck {
+      to {
+        stroke-dashoffset: 0;
+      }
     }
 
     .link-login-subtitle {
@@ -222,6 +358,15 @@
         height: 60px;
         font-size: 1.7rem;
       }
+
+      .identity-avatar {
+        width: 62px;
+        height: 62px;
+      }
+
+      .link-identity {
+        grid-template-columns: auto minmax(42px, 82px) auto;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -232,8 +377,17 @@
 
       .link-step,
       .code-box,
-      .link-actions .cta-btn {
+      .link-actions .cta-btn,
+      .verify-animation,
+      .verify-spinner,
+      .verify-check {
         transition: none;
+      }
+
+      .verify-spinner,
+      .verify-animation.is-success .verify-check circle,
+      .verify-animation.is-success .verify-check path {
+        animation: none;
       }
     }
   </style>
@@ -278,6 +432,13 @@
 
         <div class="link-actions">
           <button id="submitCodeBtn" class="cta-btn" type="button">Verify Code</button>
+          <div id="verifyAnimation" class="verify-animation" aria-live="polite" hidden>
+            <span class="verify-spinner" aria-hidden="true"></span>
+            <svg class="verify-check" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" fill="none" stroke="#3bc26d" stroke-width="2.5"></circle>
+              <path d="M7.5 12.3l3.1 3.2 6-6.2" fill="none" stroke="#3bc26d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
         </div>
         <p id="codeStatus" class="link-status"></p>
       </section>
@@ -285,13 +446,20 @@
       <section id="doneStep" class="link-step" hidden>
         <p>You can now close this window.</p>
 
-        <div class="verify-summary">
-          <p>Discord Username: <code id="verifiedDiscordUser">N/A</code></p>
-          <p>Minecraft Username: <code id="verifiedMinecraftUser">N/A</code></p>
+        <div id="linkIdentity" class="link-identity" aria-label="Linked Discord and Minecraft accounts">
+          <div class="identity-node">
+            <img id="discordAvatar" class="identity-avatar discord" src="" alt="Discord profile avatar" />
+            <p id="discordDisplayName" class="identity-label">Discord</p>
+          </div>
+          <div class="identity-connector" aria-hidden="true"></div>
+          <div class="identity-node">
+            <img id="minecraftHead" class="identity-avatar minecraft" src="" alt="Minecraft head" />
+            <p id="minecraftDisplayName" class="identity-label">Minecraft</p>
+          </div>
         </div>
 
         <p class="verify-footnote">
-          To unlink your account at any time, you can do <code>/accountunlink</code>.
+          <em>To unlink your account in the future, contact a staff member.</em>
         </p>
 
         <div class="link-actions">
@@ -316,9 +484,14 @@
       const submitCodeBtn = document.getElementById("submitCodeBtn");
       const codeStatus = document.getElementById("codeStatus");
       const loginStatus = document.getElementById("loginStatus");
-      const verifiedDiscordUser = document.getElementById("verifiedDiscordUser");
-      const verifiedMinecraftUser = document.getElementById("verifiedMinecraftUser");
+      const linkIdentity = document.getElementById("linkIdentity");
+      const discordAvatar = document.getElementById("discordAvatar");
+      const minecraftHead = document.getElementById("minecraftHead");
+      const discordDisplayName = document.getElementById("discordDisplayName");
+      const minecraftDisplayName = document.getElementById("minecraftDisplayName");
       const boxes = Array.from(document.querySelectorAll(".code-box"));
+      const verifyAnimation = document.getElementById("verifyAnimation");
+      let verifyInFlight = false;
 
       const SUPABASE_URL = "https://ggrszibzbsvqrsowuctg.supabase.co";
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdncnN6aWJ6YnN2cXJzb3d1Y3RnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjY4ODEsImV4cCI6MjA4NTkwMjg4MX0.GKsex6OlVv9Wtzkr4c1DmhpHsv_8l2I-6l0mmDtl0qc";
@@ -334,6 +507,12 @@
         }
         const subtitle = document.getElementById("loginSubtitle");
         if (subtitle) subtitle.hidden = step !== "login";
+        if (step === "code" && verifyAnimation && !verifyInFlight) {
+          verifyAnimation.hidden = true;
+          verifyAnimation.classList.remove("is-visible", "is-success");
+          setCodeDisabled(false);
+          submitCodeBtn?.classList.remove("is-gone");
+        }
         [loginStep, discordStep, codeStep, doneStep].forEach((el) => el.classList.remove("is-active"));
         const active = step === "login"
           ? loginStep
@@ -357,6 +536,91 @@
         return session?.user?.user_metadata?.mc_username
           || session?.user?.user_metadata?.minecraft_username
           || "N/A";
+      }
+
+      function resolveDiscordAvatar(session) {
+        const metadata = session?.user?.user_metadata || {};
+        return metadata.avatar_url
+          || metadata.picture
+          || metadata.avatar
+          || "";
+      }
+
+      function getInitials(value) {
+        const raw = (value || "").trim();
+        if (!raw || raw === "N/A") return "Discord";
+        const parts = raw.split(/\s+/).filter(Boolean);
+        return parts.length > 1
+          ? `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+          : raw.slice(0, 2).toUpperCase();
+      }
+
+      function setLinkedIdentity(session) {
+        const discordName = resolveDiscordUsername(session);
+        const minecraftName = resolveMinecraftUsername(session);
+        const discordAvatarUrl = resolveDiscordAvatar(session);
+        const hasMinecraft = Boolean(minecraftName && minecraftName !== "N/A");
+
+        if (discordDisplayName) discordDisplayName.textContent = discordName === "N/A" ? "Discord" : discordName;
+        if (minecraftDisplayName) minecraftDisplayName.textContent = hasMinecraft ? minecraftName : "Minecraft";
+
+        if (discordAvatar) {
+          discordAvatar.src = discordAvatarUrl
+            || `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(getInitials(discordName))}&radius=50`;
+          discordAvatar.alt = `${discordName === "N/A" ? "Discord" : discordName} profile avatar`;
+        }
+
+        if (minecraftHead) {
+          const headName = hasMinecraft ? minecraftName : "Steve";
+          minecraftHead.src = `https://mc-heads.net/avatar/${encodeURIComponent(headName)}/96`;
+          minecraftHead.alt = `${hasMinecraft ? minecraftName : "Minecraft"} head`;
+        }
+
+        linkIdentity?.classList.toggle("is-linked", Boolean(discordName !== "N/A" && hasMinecraft));
+      }
+
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      function getCode() {
+        return boxes.map((b) => b.value).join("");
+      }
+
+      function setCodeDisabled(disabled) {
+        boxes.forEach((b) => {
+          b.disabled = disabled;
+        });
+        if (submitCodeBtn) submitCodeBtn.disabled = disabled;
+      }
+
+      async function runCodeVerification() {
+        if (verifyInFlight) return;
+        const code = getCode();
+        if (code.length < 4) {
+          codeStatus.textContent = "Please enter all 4 digits.";
+          return;
+        }
+        verifyInFlight = true;
+        codeStatus.textContent = "";
+        setCodeDisabled(true);
+
+        if (verifyAnimation) {
+          verifyAnimation.hidden = false;
+          verifyAnimation.classList.add("is-visible");
+          verifyAnimation.classList.remove("is-success");
+        }
+        submitCodeBtn?.classList.add("is-gone");
+
+        await delay(1700);
+
+        if (verifyAnimation) {
+          verifyAnimation.classList.add("is-success");
+        }
+
+        await delay(1100);
+        verifyInFlight = false;
+        showStep("done");
       }
 
       async function startDiscordLogin() {
@@ -396,6 +660,9 @@
           if (input.value && idx < boxes.length - 1) {
             boxes[idx + 1].focus();
           }
+          if (getCode().length === 4) {
+            runCodeVerification();
+          }
         });
 
         input.addEventListener("keydown", (e) => {
@@ -416,25 +683,17 @@
         });
       });
 
-      submitCodeBtn.addEventListener("click", () => {
-        const code = boxes.map((b) => b.value).join("");
-        if (code.length < 4) {
-          codeStatus.textContent = "Please enter all 4 digits.";
-          return;
-        }
-        codeStatus.textContent = "";
-        showStep("done");
-      });
+      submitCodeBtn.addEventListener("click", runCodeVerification);
 
       async function initAuthStep() {
         if (!sbClient) {
+          setLinkedIdentity(null);
           showStep("login");
           return;
         }
         const { data } = await sbClient.auth.getSession();
         const session = data?.session || null;
-        verifiedDiscordUser.textContent = resolveDiscordUsername(session);
-        verifiedMinecraftUser.textContent = resolveMinecraftUsername(session);
+        setLinkedIdentity(session);
         if (session) {
           showStep("discord");
         } else {
