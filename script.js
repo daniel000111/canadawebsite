@@ -192,6 +192,11 @@ function updateThemeToggleLabel() {
     btn.setAttribute("aria-label", aria);
     btn.setAttribute("title", aria);
   });
+
+  document.querySelectorAll(".nav-theme-toggle").forEach((btn) => {
+    btn.setAttribute("aria-label", aria);
+    btn.setAttribute("title", aria);
+  });
 }
 
 function toggleSettingsMenu(event) {
@@ -231,6 +236,217 @@ function initSettingsMenu() {
     document.querySelectorAll(".settings-btn[aria-expanded=\"true\"]").forEach((btn) => {
       btn.setAttribute("aria-expanded", "false");
     });
+  });
+}
+
+function createNavIcon(name) {
+  if (name === "instagram") {
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10zm-5 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm4.75-.75a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5z"/></svg>`;
+  }
+  if (name === "tiktok") {
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3a5.5 5.5 0 0 0 4 1.8V8a8.4 8.4 0 0 1-4-1.1v6.6a6.5 6.5 0 1 1-6.5-6.5c.3 0 .6 0 .9.1V10a3.5 3.5 0 1 0 2.6 3.4V3h3z"/></svg>`;
+  }
+  if (name === "theme") {
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"></path></svg>`;
+  }
+  if (name === "login") {
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h-6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 12h11m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  }
+  if (name === "logout") {
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12H4m4-4-4 4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  }
+  return "";
+}
+
+function initUnifiedNavbar() {
+  const nav = document.querySelector(".nav");
+  const navCenter = nav?.querySelector(".nav-center");
+  const navRight = nav?.querySelector(".nav-right");
+  if (!nav || !navRight) return;
+
+  if (navCenter && !navCenter.querySelector(".nav-more-wrap")) {
+    const docsLink = navCenter.querySelector('a[href="docs.html"]');
+    const docsHref = docsLink?.getAttribute("href") || "docs.html";
+    if (docsLink) docsLink.remove();
+
+    const moreWrap = document.createElement("div");
+    moreWrap.className = "nav-more-wrap";
+    moreWrap.innerHTML = `
+      <button class="nav-more-toggle" type="button" aria-expanded="false" aria-label="Open more menu">
+        <span>More</span>
+        <svg class="nav-more-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+      <div class="nav-more-menu" aria-hidden="true">
+        <a href="${docsHref}">
+          <span class="nav-more-link-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span>Docs</span>
+        </a>
+        <a href="index.html#staff">
+          <span class="nav-more-link-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="8.5" cy="8.5" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="15.5" cy="8.5" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.8 18.5c0-2.6 2.1-4.3 4.7-4.3s4.7 1.7 4.7 4.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.8 18.5c0-2.6 2.1-4.3 4.7-4.3s4.7 1.7 4.7 4.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span>Staff Team</span>
+        </a>
+        <a href="coming-soon.html">
+          <span class="nav-more-link-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span>Contact</span>
+        </a>
+        <div class="nav-more-socials" aria-label="Social links">
+          <a class="icon-btn" href="https://www.instagram.com/bte.canada/" target="_blank" rel="noopener" aria-label="Instagram">${createNavIcon("instagram")}</a>
+          <a class="icon-btn" href="https://www.tiktok.com/@btecanada" target="_blank" rel="noopener" aria-label="TikTok">${createNavIcon("tiktok")}</a>
+        </div>
+      </div>
+    `;
+    navCenter.appendChild(moreWrap);
+
+    const toggle = moreWrap.querySelector(".nav-more-toggle");
+    const menu = moreWrap.querySelector(".nav-more-menu");
+    const closeMenu = () => {
+      moreWrap.classList.remove("is-open");
+      toggle?.setAttribute("aria-expanded", "false");
+      menu?.setAttribute("aria-hidden", "true");
+    };
+    if (toggle) {
+      toggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const isOpen = moreWrap.classList.contains("is-open");
+        if (isOpen) {
+          closeMenu();
+        } else {
+          moreWrap.classList.add("is-open");
+          toggle.setAttribute("aria-expanded", "true");
+          menu?.setAttribute("aria-hidden", "false");
+        }
+      });
+    }
+    menu?.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+    document.addEventListener("click", (event) => {
+      if (!moreWrap.contains(event.target)) closeMenu();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu();
+    });
+  }
+
+  navRight.querySelector('a[aria-label="Instagram"]')?.remove();
+  navRight.querySelector('a[aria-label="TikTok"]')?.remove();
+  navRight.querySelector(".settings-wrap")?.remove();
+
+  let quick = navRight.querySelector(".nav-quick");
+  if (!quick) {
+    quick = document.createElement("div");
+    quick.className = "nav-quick";
+    const mobileToggle = navRight.querySelector("#mobileNavToggle");
+    navRight.insertBefore(quick, mobileToggle || null);
+  }
+
+  let discord = navRight.querySelector('a[aria-label="Discord"]');
+  if (!discord) {
+    discord = document.createElement("a");
+    discord.className = "icon-btn";
+    discord.href = "https://discord.gg/pnPSvpfhAs";
+    discord.target = "_blank";
+    discord.rel = "noopener";
+    discord.setAttribute("aria-label", "Discord");
+    discord.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.249a18.27 18.27 0 0 0-5.487 0c-.164-.385-.397-.874-.608-1.249a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.683 4.37a.07.07 0 0 0-.032.027C.533 9.045-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.461-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.371-.291a.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.099.245.197.372.291a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.106c.36.699.772 1.364 1.225 1.994a.076.076 0 0 0 .084.028 19.9 19.9 0 0 0 5.994-3.03.077.077 0 0 0 .03-.056c.5-5.177-.838-9.673-3.548-13.66a.061.061 0 0 0-.031-.03z"/></svg>`;
+  }
+
+  let themeToggle = quick.querySelector("#navThemeToggle");
+  if (!themeToggle) {
+    themeToggle = document.createElement("button");
+    themeToggle.id = "navThemeToggle";
+    themeToggle.className = "icon-btn nav-theme-toggle";
+    themeToggle.type = "button";
+    themeToggle.innerHTML = createNavIcon("theme");
+    themeToggle.addEventListener("click", toggleTheme);
+  }
+
+  let authBtn = quick.querySelector("#navAuthBtn");
+  if (!authBtn) {
+    authBtn = document.createElement("button");
+    authBtn.id = "navAuthBtn";
+    authBtn.className = "icon-btn nav-auth-btn";
+    authBtn.type = "button";
+    authBtn.innerHTML = createNavIcon("login");
+  }
+
+  let avatar = quick.querySelector("#navProfileAvatar");
+  if (!avatar) {
+    avatar = document.createElement("img");
+    avatar.id = "navProfileAvatar";
+    avatar.className = "nav-profile-avatar";
+    avatar.alt = "";
+    avatar.hidden = true;
+  }
+
+  quick.append(discord, themeToggle, authBtn, avatar);
+}
+
+function setNavAuthControls(session) {
+  const authBtn = document.getElementById("navAuthBtn");
+  const avatar = document.getElementById("navProfileAvatar");
+  if (!authBtn) return;
+
+  const user = session?.user || null;
+  if (user) {
+    authBtn.innerHTML = createNavIcon("logout");
+    authBtn.setAttribute("aria-label", "Log out");
+    authBtn.setAttribute("title", "Log out");
+    authBtn.onclick = async () => {
+      const client = getSupabaseClient();
+      if (client) {
+        await client.auth.signOut();
+      } else {
+        clearSupabaseSession();
+      }
+      window.location.href = "index.html";
+    };
+
+    if (avatar) {
+      const avatarUrl = resolveDiscordAvatar(user);
+      if (avatarUrl) {
+        avatar.src = avatarUrl;
+        avatar.alt = "Discord profile picture";
+        avatar.hidden = false;
+      } else {
+        avatar.hidden = true;
+      }
+    }
+  } else {
+    authBtn.innerHTML = createNavIcon("login");
+    authBtn.setAttribute("aria-label", "Log in");
+    authBtn.setAttribute("title", "Log in");
+    authBtn.onclick = () => {
+      window.location.href = "login.html";
+    };
+    if (avatar) avatar.hidden = true;
+  }
+}
+
+function initNavAuthControls() {
+  if (!document.getElementById("navAuthBtn")) return;
+
+  const cached = getCachedSupabaseSession();
+  setNavAuthControls(cached ? { user: cached.user } : null);
+
+  if (!window.supabase) return;
+  const client = getSupabaseClient();
+  if (!client) return;
+
+  client.auth.getSession().then(({ data }) => {
+    setNavAuthControls(data.session || null);
+  });
+
+  client.auth.onAuthStateChange((_event, session) => {
+    setNavAuthControls(session || null);
   });
 }
 
@@ -862,6 +1078,8 @@ function getSupabaseClient() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  initUnifiedNavbar();
+  initNavAuthControls();
   initMobileNavDrawer();
   initHomeHeroNavGlass();
   initHeroLearnMoreLink();
