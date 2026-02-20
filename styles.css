@@ -1215,6 +1215,76 @@ body.admin-body {
   overflow: hidden;
 }
 
+.panel-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 140;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  padding: 0.95rem 1rem;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.panel-topbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 900;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+  pointer-events: auto;
+}
+
+.panel-topbar .panel-topbar-brand .nav-logo {
+  width: 34px;
+  height: 34px;
+}
+
+.panel-topbar-admin {
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.panel-topbar-admin .panel-topbar-brand {
+  grid-column: 2;
+}
+
+.panel-back-btn {
+  grid-column: 1;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 34px;
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(10, 12, 16, 0.35);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: auto;
+  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.panel-back-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(10, 12, 16, 0.52);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.panel-back-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
 .panel-loader {
   position: fixed;
   inset: 0;

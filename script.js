@@ -416,8 +416,13 @@ function setNavAuthControls(session) {
         avatar.src = avatarUrl;
         avatar.alt = "Discord profile picture";
         avatar.hidden = false;
+        avatar.style.cursor = "pointer";
+        avatar.onclick = () => {
+          window.location.href = "panel.html";
+        };
       } else {
         avatar.hidden = true;
+        avatar.onclick = null;
       }
     }
   } else {
@@ -427,7 +432,10 @@ function setNavAuthControls(session) {
     authBtn.onclick = () => {
       window.location.href = "login.html";
     };
-    if (avatar) avatar.hidden = true;
+    if (avatar) {
+      avatar.hidden = true;
+      avatar.onclick = null;
+    }
   }
 }
 
@@ -458,8 +466,8 @@ function initAdminLink() {
   function setAdminLink(isAuthed) {
     adminLinks.forEach((link) => {
       if (isAuthed) {
-        link.textContent = "Admin Panel";
-        link.setAttribute("href", "admin.html");
+        link.textContent = "Panel";
+        link.setAttribute("href", "panel.html");
       } else {
         link.textContent = "Login";
         link.setAttribute("href", "login.html");

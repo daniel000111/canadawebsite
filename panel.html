@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BTE Canada - Panel</title>
+  <link rel="icon" href="assets/logo-square.png" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="login-body">
+  <header class="panel-topbar panel-topbar-admin">
+    <a class="panel-back-btn" href="index.html" aria-label="Go back home">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span>Back</span>
+    </a>
+    <a href="index.html" class="brand panel-topbar-brand" aria-label="BTE Canada home">
+      <img src="assets/logo-square.png" alt="BTE Canada Logo" class="nav-logo" />
+      <span class="brand-text">BTE CANADA</span>
+    </a>
+  </header>
+
+  <main class="login-page">
+    <section class="login-hero">
+      <div class="login-panel-wrap session-active">
+        <section class="login-session-card" id="panelCard" hidden aria-live="polite">
+          <img id="panelAvatar" class="login-session-avatar" src="" alt="Profile picture" />
+          <h3 id="panelTitle">Welcome, Builder.</h3>
+          <div class="login-session-actions">
+            <a id="openAdminPanelBtn" class="cta-btn login-session-admin" href="admin.html" hidden>Open Admin Panel</a>
+            <a class="cta-btn login-session-builder" href="coming-soon.html">Builder Panel</a>
+            <a class="cta-btn login-session-home" href="index.html">Go Home</a>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    (function () {
+      const supabaseConfig = window.APP_SUPABASE || {};
+      const sbClient = window.APP_SUPABASE_CLIENT || window.supabase?.createClient(supabaseConfig.url, supabaseConfig.key);
+      const ALLOWED_DISCORD_IDS = [
+        "617699025973542930",
+        "451804972728975371",
+        "808025660425371718",
+        "292688678789054465",
+        "440983805487218698"
+      ];
+
+      const card = document.getElementById("panelCard");
+      const avatar = document.getElementById("panelAvatar");
+      const title = document.getElementById("panelTitle");
+      const openAdminPanelBtn = document.getElementById("openAdminPanelBtn");
+
+      function resolveDisplayName(user) {
+        const meta = user?.user_metadata || {};
+        return meta.full_name || meta.name || meta.preferred_username || user?.email || "Builder";
+      }
+
+      function resolveDiscordAvatar(user) {
+        const meta = user?.user_metadata || {};
+        if (meta.avatar_url || meta.picture) return meta.avatar_url || meta.picture;
+        const discordId = meta.provider_id || meta.sub;
+        const avatarHash = meta.avatar;
+        if (discordId && avatarHash) {
+          return `https://cdn.discordapp.com/avatars/${discordId}/${avatarHash}.png?size=128`;
+        }
+        return "";
+      }
+
+      function resolveDiscordId(user) {
+        const discordIdentity = user?.identities?.find((identity) => identity.provider === "discord");
+        return user?.user_metadata?.provider_id
+          || user?.user_metadata?.sub
+          || discordIdentity?.id
+          || "";
+      }
+
+      function getInitials(value) {
+        const name = (value || "").trim();
+        if (!name) return "B";
+        const parts = name.split(/\s+/).filter(Boolean);
+        if (parts.length > 1) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+        return name.slice(0, 2).toUpperCase();
+      }
+
+      async function fetchStaffRole(discordId) {
+        if (!sbClient || !discordId) return null;
+        try {
+          const { data } = await sbClient
+            .from("staff_members")
+            .select("role")
+            .eq("discord_id", discordId)
+            .maybeSingle();
+          return data?.role || null;
+        } catch (_err) {
+          return null;
+        }
+      }
+
+      async function initPanel() {
+        if (!sbClient || !card) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const { data } = await sbClient.auth.getSession();
+        const session = data?.session || null;
+        if (!session) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const user = session.user;
+        const displayName = resolveDisplayName(user);
+        const avatarUrl = resolveDiscordAvatar(user);
+        const discordId = resolveDiscordId(user);
+        const staffRole = await fetchStaffRole(discordId);
+        const isAllowlistedAdmin = ALLOWED_DISCORD_IDS.includes(discordId);
+        const hasAdminAccess = isAllowlistedAdmin || (staffRole && staffRole !== "None");
+
+        if (title) {
+          title.textContent = `Welcome, ${displayName}.`;
+        }
+        if (avatar) {
+          avatar.src = avatarUrl || `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(getInitials(displayName))}&radius=50`;
+          avatar.alt = `${displayName} profile picture`;
+        }
+        if (openAdminPanelBtn) {
+          openAdminPanelBtn.hidden = !hasAdminAccess;
+        }
+
+        card.hidden = false;
+      }
+
+      initPanel();
+    })();
+  </script>
+</body>
+</html>
