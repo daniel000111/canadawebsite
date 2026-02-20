@@ -537,6 +537,7 @@ async function initBuilderAreas() {
       btn.type = "button";
       btn.className = "panel-focus-item";
       if (item.area) btn.setAttribute("data-area", item.area);
+      if (item.warp) btn.setAttribute("data-warp", item.warp);
       if (item.image) btn.setAttribute("data-image", item.image);
 
       const name = document.createElement("span");

@@ -235,6 +235,37 @@
     </div>
   </div>
 
+  <div class="admin-cropper-overlay" id="imageCropperOverlay" hidden aria-hidden="true">
+    <div class="admin-cropper-card" role="dialog" aria-modal="true" aria-labelledby="imageCropperTitle">
+      <div class="admin-cropper-head">
+        <h3 id="imageCropperTitle">Crop Builder Image</h3>
+        <p>Adjust framing before upload.</p>
+      </div>
+      <div class="admin-cropper-preview-wrap">
+        <canvas id="imageCropperCanvas" width="960" height="540" aria-label="Crop preview"></canvas>
+      </div>
+      <div class="admin-cropper-controls">
+        <label>
+          Zoom
+          <input type="range" id="cropZoomInput" min="100" max="300" value="100" />
+        </label>
+        <label>
+          Horizontal
+          <input type="range" id="cropXInput" min="-100" max="100" value="0" />
+        </label>
+        <label>
+          Vertical
+          <input type="range" id="cropYInput" min="-100" max="100" value="0" />
+        </label>
+      </div>
+      <div class="admin-cropper-actions">
+        <button class="cta-btn ghost" type="button" id="cropResetBtn">Reset</button>
+        <button class="cta-btn ghost" type="button" id="cropCancelBtn">Cancel</button>
+        <button class="cta-btn admin-btn" type="button" id="cropApplyBtn">Apply Crop</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     2026 BTE Canada · Not affiliated with Mojang
   </footer>
@@ -285,6 +316,15 @@
     const focusAddBtn = document.getElementById("focusAddBtn");
     const builderAreasSave = document.getElementById("builderAreasSave");
     const builderAreasStatus = document.getElementById("builderAreasStatus");
+    const cropperOverlay = document.getElementById("imageCropperOverlay");
+    const cropperCanvas = document.getElementById("imageCropperCanvas");
+    const cropZoomInput = document.getElementById("cropZoomInput");
+    const cropXInput = document.getElementById("cropXInput");
+    const cropYInput = document.getElementById("cropYInput");
+    const cropResetBtn = document.getElementById("cropResetBtn");
+    const cropCancelBtn = document.getElementById("cropCancelBtn");
+    const cropApplyBtn = document.getElementById("cropApplyBtn");
+    let cropperSession = null;
 
     function hidePanelLoader() {
       if (!panelLoader) return;
@@ -343,6 +383,7 @@
 
       document.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
+        if (cropperOverlay?.classList.contains("show")) return;
         const modal = document.querySelector(".admin-modal.show");
         if (modal) closeModal(modal);
       });
@@ -516,6 +557,12 @@
     }
 
     async function uploadBuilderImage(file, folder) {
+      const processedFile = await openBuilderImageCropper(file, 16 / 9);
+      if (!processedFile) {
+        if (builderAreasStatus) builderAreasStatus.textContent = "Image upload cancelled.";
+        return "";
+      }
+
       const { data } = await sbClient.auth.getSession();
       const accessToken = data.session?.access_token;
       if (!accessToken) {
@@ -523,12 +570,12 @@
         return "";
       }
 
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const safeName = processedFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
       const prefix = folder ? `${folder.replace(/[^a-zA-Z0-9/_-]/g, "")}/` : "";
       const path = `${prefix}${Date.now()}_${safeName}`;
 
       try {
-        await uploadWithProgress(BUILDER_AREAS_BUCKET, file, path, accessToken);
+        await uploadWithProgress(BUILDER_AREAS_BUCKET, processedFile, path, accessToken);
       } catch (err) {
         if (builderAreasStatus) builderAreasStatus.textContent = `Upload failed: ${err.message}`;
         return "";
@@ -536,6 +583,199 @@
 
       return `${ADMIN_SUPABASE_URL}/storage/v1/object/public/${BUILDER_AREAS_BUCKET}/${path}`;
     }
+
+    function openBuilderImageCropper(file, aspectRatio = 16 / 9) {
+      if (!cropperOverlay || !cropperCanvas || !cropZoomInput || !cropXInput || !cropYInput || !cropApplyBtn || !cropCancelBtn || !cropResetBtn) {
+        return Promise.resolve(file);
+      }
+
+      return new Promise((resolve) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          cropperSession = {
+            resolve,
+            file,
+            url,
+            img,
+            aspectRatio,
+            rect: null
+          };
+          cropZoomInput.value = "100";
+          cropXInput.value = "0";
+          cropYInput.value = "0";
+          showCropperOverlay();
+          drawCropperPreview();
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          resolve(file);
+        };
+        img.src = url;
+      });
+    }
+
+    function showCropperOverlay() {
+      cropperOverlay.hidden = false;
+      cropperOverlay.classList.add("show");
+      cropperOverlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeCropperOverlay(resultFile = null) {
+      if (!cropperSession) return;
+      const { resolve, url } = cropperSession;
+      cropperSession = null;
+      cropperOverlay.classList.remove("show");
+      cropperOverlay.setAttribute("aria-hidden", "true");
+      cropperOverlay.hidden = true;
+      if (url) URL.revokeObjectURL(url);
+      resolve(resultFile);
+    }
+
+    function getCropRectForSession() {
+      if (!cropperSession) return null;
+      const { img, aspectRatio } = cropperSession;
+      const srcWidth = img.naturalWidth;
+      const srcHeight = img.naturalHeight;
+      const sourceRatio = srcWidth / srcHeight;
+
+      let baseWidth = srcWidth;
+      let baseHeight = srcHeight;
+      if (sourceRatio > aspectRatio) {
+        baseWidth = srcHeight * aspectRatio;
+      } else if (sourceRatio < aspectRatio) {
+        baseHeight = srcWidth / aspectRatio;
+      }
+
+      const zoom = Math.max(1, Number(cropZoomInput.value || 100) / 100);
+      const cropWidth = baseWidth / zoom;
+      const cropHeight = baseHeight / zoom;
+      const maxOffsetX = Math.max(0, (srcWidth - cropWidth) / 2);
+      const maxOffsetY = Math.max(0, (srcHeight - cropHeight) / 2);
+      const offsetX = (Number(cropXInput.value || 0) / 100) * maxOffsetX;
+      const offsetY = (Number(cropYInput.value || 0) / 100) * maxOffsetY;
+
+      const centerX = srcWidth / 2 + offsetX;
+      const centerY = srcHeight / 2 + offsetY;
+      const x = Math.max(0, Math.min(srcWidth - cropWidth, centerX - cropWidth / 2));
+      const y = Math.max(0, Math.min(srcHeight - cropHeight, centerY - cropHeight / 2));
+
+      return { x, y, width: cropWidth, height: cropHeight };
+    }
+
+    function drawCropperPreview() {
+      if (!cropperSession) return;
+      const ctx = cropperCanvas.getContext("2d");
+      if (!ctx) return;
+
+      const rect = getCropRectForSession();
+      if (!rect) return;
+      cropperSession.rect = rect;
+      const { img } = cropperSession;
+
+      ctx.clearRect(0, 0, cropperCanvas.width, cropperCanvas.height);
+      ctx.drawImage(
+        img,
+        rect.x, rect.y, rect.width, rect.height,
+        0, 0, cropperCanvas.width, cropperCanvas.height
+      );
+
+      ctx.save();
+      ctx.strokeStyle = "rgba(255,255,255,0.35)";
+      ctx.lineWidth = 1;
+      for (let i = 1; i <= 2; i += 1) {
+        const x = (cropperCanvas.width / 3) * i;
+        const y = (cropperCanvas.height / 3) * i;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, cropperCanvas.height);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(cropperCanvas.width, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    async function applyCropperResult() {
+      if (!cropperSession || !cropperSession.rect) {
+        closeCropperOverlay(null);
+        return;
+      }
+
+      const { file, img, rect, aspectRatio } = cropperSession;
+      const outputWidth = Math.min(1920, Math.round(rect.width));
+      const outputHeight = Math.round(outputWidth / aspectRatio);
+      const canvas = document.createElement("canvas");
+      canvas.width = outputWidth;
+      canvas.height = outputHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        closeCropperOverlay(file);
+        return;
+      }
+
+      ctx.drawImage(
+        img,
+        rect.x, rect.y, rect.width, rect.height,
+        0, 0, outputWidth, outputHeight
+      );
+
+      const outputType = file.type && file.type.startsWith("image/") ? file.type : "image/jpeg";
+      const blob = await new Promise((resolve) => {
+        canvas.toBlob((b) => resolve(b), outputType, 0.92);
+      });
+
+      if (!blob) {
+        closeCropperOverlay(file);
+        return;
+      }
+
+      const cropped = new File([blob], file.name, { type: outputType, lastModified: Date.now() });
+      closeCropperOverlay(cropped);
+    }
+
+    [cropZoomInput, cropXInput, cropYInput].forEach((input) => {
+      if (!input) return;
+      input.addEventListener("input", drawCropperPreview);
+    });
+
+    if (cropResetBtn) {
+      cropResetBtn.addEventListener("click", () => {
+        cropZoomInput.value = "100";
+        cropXInput.value = "0";
+        cropYInput.value = "0";
+        drawCropperPreview();
+      });
+    }
+
+    if (cropCancelBtn) {
+      cropCancelBtn.addEventListener("click", () => {
+        closeCropperOverlay(null);
+      });
+    }
+
+    if (cropApplyBtn) {
+      cropApplyBtn.addEventListener("click", () => {
+        applyCropperResult();
+      });
+    }
+
+    if (cropperOverlay) {
+      cropperOverlay.addEventListener("click", (event) => {
+        if (event.target !== cropperOverlay) return;
+        closeCropperOverlay(null);
+      });
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      if (!cropperOverlay || !cropperOverlay.classList.contains("show")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      closeCropperOverlay(null);
+    });
 
     function renderStaffList(rows) {
       if (!staffListEl) return;

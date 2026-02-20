@@ -115,16 +115,18 @@
     </section>
 
     <section class="panel-grid">
-      <div class="panel-card reveal-on-scroll">
-        <div class="panel-card-head">
-          <h2>Current event</h2>
-          <span class="panel-subtext">Earn a 2x point bonus in this area with no restrictions</span>
-        </div>
+      <div class="panel-card panel-event-card reveal-on-scroll">
         <div class="panel-event-media">
+          <div class="panel-event-head-inline panel-card-head">
+            <h2>Current event</h2>
+            <span class="panel-subtext">Earn a 2x point bonus in this area with no restrictions</span>
+          </div>
           <img id="eventImage" src="assets/hero.jpg" alt="Current event highlight" loading="lazy" />
+          <div class="panel-event-meta">
+            <p class="panel-event-title" id="eventTitle">Moncton, NB</p>
+            <p class="panel-event-command" id="eventCommand"><code>/warp event</code></p>
+          </div>
         </div>
-        <p class="panel-event-title" id="eventTitle">Moncton, NB</p>
-        <p class="panel-event-command" id="eventCommand"><code>/warp event</code></p>
       </div>
 
       <div class="panel-card panel-focus-card reveal-on-scroll">
@@ -133,27 +135,28 @@
           <span class="panel-subtext">Earn a 1.5x point bonus in these areas:</span>
         </div>
         <div class="panel-focus-list" id="focusList">
-          <button class="panel-focus-item" type="button" data-area="Toronto" data-image="assets/hero.jpg">
+          <button class="panel-focus-item" type="button" data-area="Toronto" data-warp="/warp toronto" data-image="assets/hero.jpg">
             <span>Toronto</span>
             <code>/warp toronto</code>
           </button>
-          <button class="panel-focus-item" type="button" data-area="Quebec City" data-image="assets/hero.jpg">
+          <button class="panel-focus-item" type="button" data-area="Quebec City" data-warp="/warp quebec" data-image="assets/hero.jpg">
             <span>Quebec City</span>
             <code>/warp quebec</code>
           </button>
-          <button class="panel-focus-item" type="button" data-area="Halifax" data-image="assets/hero.jpg">
+          <button class="panel-focus-item" type="button" data-area="Halifax" data-warp="/warp halifax" data-image="assets/hero.jpg">
             <span>Halifax</span>
             <code>/warp halifax</code>
           </button>
         </div>
         <div class="panel-focus-popup" id="focusPreview" aria-hidden="true">
-          <div class="panel-focus-popup-card">
-            <div class="panel-focus-preview-head">
-              <h3 id="focusTitle">Area</h3>
-              <button class="panel-focus-back" type="button" id="focusBack">Back</button>
-            </div>
+          <div class="panel-focus-popup-card" role="dialog" aria-modal="true" aria-labelledby="focusTitle">
             <div class="panel-focus-media">
-              <img id="focusImage" src="assets/hero.jpg" alt="" loading="lazy" />
+              <button class="panel-focus-close" type="button" id="focusBack" aria-label="Close focus preview">×</button>
+              <img id="focusImage" src="assets/hero.jpg" alt="" loading="eager" decoding="async" />
+              <div class="panel-focus-meta">
+                <h3 id="focusTitle">Area</h3>
+                <p id="focusWarp"><code>/warp area</code></p>
+              </div>
             </div>
           </div>
         </div>
@@ -247,20 +250,45 @@
       const list = document.getElementById("focusList");
       const preview = document.getElementById("focusPreview");
       const title = document.getElementById("focusTitle");
+      const warp = document.getElementById("focusWarp");
       const image = document.getElementById("focusImage");
       const back = document.getElementById("focusBack");
-      if (!list || !preview || !title || !image || !back) return;
+      if (!list || !preview || !title || !warp || !image || !back) return;
+
+      const preloadedImages = new Set();
+      const preloadFocusImages = () => {
+        list.querySelectorAll(".panel-focus-item[data-image]").forEach((item) => {
+          const src = String(item.getAttribute("data-image") || "").trim();
+          if (!src || preloadedImages.has(src)) return;
+          const img = new Image();
+          img.decoding = "async";
+          img.src = src;
+          preloadedImages.add(src);
+        });
+      };
+
+      const openPreview = (area, warpText, src) => {
+        title.textContent = area || "Focus area";
+        const warpCode = document.createElement("code");
+        warpCode.textContent = warpText || "/warp";
+        warp.replaceChildren(warpCode);
+        image.alt = area || "Focus area";
+        if (src) image.src = src;
+        preview.classList.add("is-open");
+        preview.setAttribute("aria-hidden", "false");
+      };
+
+      preloadFocusImages();
+      const listObserver = new MutationObserver(preloadFocusImages);
+      listObserver.observe(list, { childList: true, subtree: true });
 
       list.addEventListener("click", (event) => {
         const btn = event.target.closest(".panel-focus-item");
         if (!btn) return;
         const area = btn.getAttribute("data-area") || "Focus area";
+        const warpText = btn.getAttribute("data-warp") || btn.querySelector("code")?.textContent || "/warp";
         const img = btn.getAttribute("data-image") || "assets/hero.jpg";
-        title.textContent = area;
-        image.src = img;
-        image.alt = area;
-        preview.classList.add("is-open");
-        preview.setAttribute("aria-hidden", "false");
+        openPreview(area, warpText, img);
       });
 
       back.addEventListener("click", () => {
@@ -270,6 +298,12 @@
 
       preview.addEventListener("click", (event) => {
         if (event.target !== preview) return;
+        preview.classList.remove("is-open");
+        preview.setAttribute("aria-hidden", "true");
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || preview.getAttribute("aria-hidden") === "true") return;
         preview.classList.remove("is-open");
         preview.setAttribute("aria-hidden", "true");
       });
