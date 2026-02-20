@@ -865,6 +865,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initHomeHeroNavGlass();
   initHeroLearnMoreLink();
   initHeroTitleFit();
+  initServerVersionDisplays();
   initShowcaseGrid();
   initHomeRandomSectionImages();
   initStaffGrid();
@@ -882,6 +883,47 @@ document.addEventListener("DOMContentLoaded", () => {
   initStatCounters();
   initScrollReveal();
 });
+
+function initServerVersionDisplays() {
+  const homeVersionEl = document.getElementById("homeServerVersion");
+  if (!homeVersionEl) return;
+
+  const host = "btecanada.net";
+  const port = 25565;
+  const apiUrl = `https://api.mcsrvstat.us/2/${host}`;
+  const fallbackUrl = `https://api.mcstatus.io/v2/status/java/${host}:${port}`;
+
+  const setHomeVersion = (version) => {
+    homeVersionEl.textContent = version || "loading..";
+  };
+
+  fetch(apiUrl)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data && data.online) {
+        setHomeVersion(data.version || "loading..");
+        return;
+      }
+
+      return fetch(fallbackUrl)
+        .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+        .then((alt) => {
+          if (alt && alt.online) {
+            const version = alt.version?.name_clean || alt.version?.name_raw || alt.version?.name || "loading..";
+            setHomeVersion(version);
+            return;
+          }
+
+          setHomeVersion("loading..");
+        })
+        .catch(() => {
+          setHomeVersion("loading..");
+        });
+    })
+    .catch(() => {
+      setHomeVersion("loading..");
+    });
+}
 
 function initHeroLearnMoreLink() {
   const learnMoreBtn = document.querySelector(".hero-scroll--label");
