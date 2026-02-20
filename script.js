@@ -863,6 +863,8 @@ function getSupabaseClient() {
 document.addEventListener("DOMContentLoaded", () => {
   initMobileNavDrawer();
   initHomeHeroNavGlass();
+  initHeroLearnMoreLink();
+  initHeroTitleFit();
   initShowcaseGrid();
   initHomeRandomSectionImages();
   initStaffGrid();
@@ -880,6 +882,56 @@ document.addEventListener("DOMContentLoaded", () => {
   initStatCounters();
   initScrollReveal();
 });
+
+function initHeroLearnMoreLink() {
+  const learnMoreBtn = document.querySelector(".hero-scroll--label");
+  const aboutSection = document.getElementById("about");
+  if (!learnMoreBtn || !aboutSection) return;
+
+  learnMoreBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    aboutSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function initHeroTitleFit() {
+  const heroTitle = document.querySelector(".hero-title");
+  if (!heroTitle) return;
+
+  const heading = heroTitle.closest("h1");
+  if (!heading || heading.dataset.heroFitInit === "1") return;
+  heading.dataset.heroFitInit = "1";
+
+  const minFontSizePx = 14;
+  let rafId = 0;
+
+  const fitHeroTitle = () => {
+    rafId = 0;
+    heading.style.fontSize = "";
+
+    const maxFontSizePx = parseFloat(getComputedStyle(heading).fontSize) || 0;
+    const availableWidth = heading.clientWidth;
+    const titleWidth = heroTitle.scrollWidth;
+    if (!maxFontSizePx || !availableWidth || !titleWidth || titleWidth <= availableWidth) return;
+
+    const fittedSize = Math.max(minFontSizePx, Math.floor(maxFontSizePx * (availableWidth / titleWidth)));
+    heading.style.fontSize = `${fittedSize}px`;
+  };
+
+  const queueFit = () => {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(fitHeroTitle);
+  };
+
+  queueFit();
+  window.addEventListener("resize", queueFit, { passive: true });
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(queueFit);
+    observer.observe(heading);
+    observer.observe(heroTitle);
+  }
+}
 
 function initHomeHeroNavGlass() {
   const navWrap = document.querySelector(".nav-wrap");
