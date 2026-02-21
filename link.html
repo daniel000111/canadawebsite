@@ -310,6 +310,11 @@
       transform: scale(1);
     }
 
+    .verify-animation.verify-pop.is-success .verify-check {
+      animation: verifyCheckPop 0.4s cubic-bezier(0.2, 1.15, 0.25, 1) both;
+      filter: drop-shadow(0 0 10px rgba(59, 194, 109, 0.28));
+    }
+
     .verify-animation.is-success .verify-check circle {
       animation: verifyDrawCircle 0.34s ease forwards;
     }
@@ -334,6 +339,12 @@
       to {
         stroke-dashoffset: 0;
       }
+    }
+
+    @keyframes verifyCheckPop {
+      0% { transform: scale(0.88); }
+      58% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
 
     .link-login-subtitle {
@@ -432,7 +443,7 @@
 
         <div class="link-actions">
           <button id="submitCodeBtn" class="cta-btn" type="button">Verify Code</button>
-          <div id="verifyAnimation" class="verify-animation" aria-live="polite" hidden>
+          <div id="verifyAnimation" class="verify-animation verify-pop" aria-live="polite" hidden>
             <span class="verify-spinner" aria-hidden="true"></span>
             <svg class="verify-check" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="9" fill="none" stroke="#3bc26d" stroke-width="2.5"></circle>

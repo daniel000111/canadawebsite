@@ -1638,6 +1638,11 @@ body.admin-body {
   transform: scale(1);
 }
 
+.verify-animation.verify-pop.is-success .verify-check {
+  animation: verify-check-pop 0.4s cubic-bezier(0.2, 1.15, 0.25, 1) both;
+  filter: drop-shadow(0 0 10px rgba(59, 194, 109, 0.28));
+}
+
 .verify-animation.is-success .verify-check circle {
   animation: verify-draw-circle 0.34s ease forwards;
 }
@@ -1656,6 +1661,12 @@ body.admin-body {
 
 @keyframes verify-draw-check {
   to { stroke-dashoffset: 0; }
+}
+
+@keyframes verify-check-pop {
+  0% { transform: scale(0.88); }
+  58% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 @media (max-width: 900px) {
