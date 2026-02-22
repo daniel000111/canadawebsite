@@ -51,6 +51,7 @@
             <button class="cta-btn admin-action" type="button" data-modal-target="screenshotModal" data-min-role="staff">Screenshot Manager</button>
             <button class="cta-btn ghost admin-action" type="button" data-modal-target="announcementModal" data-min-role="staff">Edit Announcement</button>
             <button class="cta-btn ghost admin-action" type="button" data-modal-target="builderAreasModal" data-min-role="staff">Edit Builder Areas</button>
+            <button class="cta-btn ghost admin-action" type="button" data-modal-target="discordConfigModal" data-min-role="admin">Discord Role Config</button>
             <a class="cta-btn ghost admin-action" href="#" aria-disabled="true" data-min-role="developer">Docs Editor (coming soon)</a>
             <button class="cta-btn ghost admin-action" type="button" data-modal-target="staffManagerModal" data-min-role="admin">Staff Manager</button>
           </div>
@@ -115,7 +116,7 @@
       </section>
     </div>
   </div>
-<div class="admin-modal" id="builderAreasModal" aria-hidden="true">
+  <div class="admin-modal" id="builderAreasModal" aria-hidden="true">
     <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="builderAreasModalTitle">
       <div class="admin-modal-header">
         <h2 id="builderAreasModalTitle">Edit Builder Areas</h2>
@@ -144,6 +145,34 @@
           </div>
         </div>
         <p class="docs-note" id="builderAreasStatus"></p>
+      </section>
+    </div>
+  </div>
+<div class="admin-modal" id="discordConfigModal" aria-hidden="true">
+    <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="discordConfigModalTitle">
+      <div class="admin-modal-header">
+        <h2 id="discordConfigModalTitle">Discord Role Configuration</h2>
+        <button class="admin-modal-close" type="button" data-modal-close>Close</button>
+      </div>
+      <section class="docs-card admin-announcement-card">
+        <p class="section-text">Set the Discord guild ID and the role IDs used by the site/functions.</p>
+        <div class="docs-form admin-announcement-form">
+          <input type="text" id="discordGuildIdInput" placeholder="Guild ID" />
+          <input type="text" id="discordBuilderRoleIdInput" placeholder="Builder role ID" />
+          <input type="text" id="discordNoviceBuilderRoleIdInput" placeholder="Novice Builder role ID" />
+          <input type="text" id="discordTrialBuilderRoleIdInput" placeholder="Trial Builder role ID" />
+          <input type="text" id="discordSeniorBuilderRoleIdInput" placeholder="Senior Builder role ID" />
+          <input type="text" id="discordMasterBuilderRoleIdInput" placeholder="Master Builder role ID" />
+          <input type="text" id="discordChampionRoleIdInput" placeholder="Champion role ID" />
+          <input type="text" id="discordEngineerRoleIdInput" placeholder="Engineer role ID" />
+          <input type="text" id="discordStaffRoleIdInput" placeholder="Staff role ID" />
+          <input type="text" id="discordDeveloperRoleIdInput" placeholder="Developer role ID" />
+          <input type="text" id="discordAdminRoleIdInput" placeholder="Admin role ID" />
+          <div class="admin-announcement-actions">
+            <button class="cta-btn admin-btn" id="discordConfigSave" type="button">Save Discord Config</button>
+          </div>
+        </div>
+        <p class="docs-note" id="discordConfigStatus"></p>
       </section>
     </div>
   </div>
@@ -231,6 +260,8 @@
     const sbClient = window.APP_SUPABASE_CLIENT || window.supabase.createClient(ADMIN_SUPABASE_URL, ADMIN_SUPABASE_ANON_KEY);
     const SUPABASE_BUCKET = "screenshots";
     const BUILDER_AREAS_BUCKET = "builder-areas";
+    const DISCORD_CONFIG_TABLE = "discord_role_settings";
+    const DISCORD_CONFIG_ROW_ID = 1;
 const ALLOWED_DISCORD_IDS = [
       "617699025973542930",
       "451804972728975371",
@@ -256,6 +287,7 @@ const gate = document.getElementById("adminGate");
     const staffListEl = document.getElementById("staffList");
     const staffModal = document.getElementById("staffManagerModal");
     const builderModal = document.getElementById("builderAreasModal");
+    const discordConfigModal = document.getElementById("discordConfigModal");
     const eventAreaInput = document.getElementById("eventAreaInput");
     const eventWarpInput = document.getElementById("eventWarpInput");
     const eventImageFile = document.getElementById("eventImageFile");
@@ -263,6 +295,19 @@ const gate = document.getElementById("adminGate");
     const focusAddBtn = document.getElementById("focusAddBtn");
     const builderAreasSave = document.getElementById("builderAreasSave");
     const builderAreasStatus = document.getElementById("builderAreasStatus");
+    const discordGuildIdInput = document.getElementById("discordGuildIdInput");
+    const discordBuilderRoleIdInput = document.getElementById("discordBuilderRoleIdInput");
+    const discordNoviceBuilderRoleIdInput = document.getElementById("discordNoviceBuilderRoleIdInput");
+    const discordTrialBuilderRoleIdInput = document.getElementById("discordTrialBuilderRoleIdInput");
+    const discordSeniorBuilderRoleIdInput = document.getElementById("discordSeniorBuilderRoleIdInput");
+    const discordMasterBuilderRoleIdInput = document.getElementById("discordMasterBuilderRoleIdInput");
+    const discordChampionRoleIdInput = document.getElementById("discordChampionRoleIdInput");
+    const discordEngineerRoleIdInput = document.getElementById("discordEngineerRoleIdInput");
+    const discordStaffRoleIdInput = document.getElementById("discordStaffRoleIdInput");
+    const discordDeveloperRoleIdInput = document.getElementById("discordDeveloperRoleIdInput");
+    const discordAdminRoleIdInput = document.getElementById("discordAdminRoleIdInput");
+    const discordConfigSave = document.getElementById("discordConfigSave");
+    const discordConfigStatus = document.getElementById("discordConfigStatus");
     const cropperOverlay = document.getElementById("imageCropperOverlay");
     const cropperCanvas = document.getElementById("imageCropperCanvas");
     const cropZoomInput = document.getElementById("cropZoomInput");
@@ -306,6 +351,9 @@ openers.forEach((btn) => {
           }
           if (modal === builderModal) {
             loadBuilderAreas();
+          }
+          if (modal === discordConfigModal) {
+            loadDiscordConfig();
           }
         });
       });
@@ -464,6 +512,50 @@ function getFocusAreasFromRows() {
           return { area, warp, image };
         })
         .filter((item) => item.area || item.warp || item.image);
+    }
+function applyDiscordConfigForm(data = {}) {
+      if (discordGuildIdInput) discordGuildIdInput.value = data.guild_id || "";
+      if (discordBuilderRoleIdInput) discordBuilderRoleIdInput.value = data.builder_role_id || "";
+      if (discordNoviceBuilderRoleIdInput) discordNoviceBuilderRoleIdInput.value = data.novice_builder_role_id || "";
+      if (discordTrialBuilderRoleIdInput) discordTrialBuilderRoleIdInput.value = data.trial_builder_role_id || "";
+      if (discordSeniorBuilderRoleIdInput) discordSeniorBuilderRoleIdInput.value = data.senior_builder_role_id || "";
+      if (discordMasterBuilderRoleIdInput) discordMasterBuilderRoleIdInput.value = data.master_builder_role_id || "";
+      if (discordChampionRoleIdInput) discordChampionRoleIdInput.value = data.champion_role_id || "";
+      if (discordEngineerRoleIdInput) discordEngineerRoleIdInput.value = data.engineer_role_id || "";
+      if (discordStaffRoleIdInput) discordStaffRoleIdInput.value = data.staff_role_id || "";
+      if (discordDeveloperRoleIdInput) discordDeveloperRoleIdInput.value = data.developer_role_id || "";
+      if (discordAdminRoleIdInput) discordAdminRoleIdInput.value = data.admin_role_id || "";
+    }
+function getDiscordConfigPayload() {
+      return {
+        id: DISCORD_CONFIG_ROW_ID,
+        guild_id: discordGuildIdInput?.value.trim() || "",
+        builder_role_id: discordBuilderRoleIdInput?.value.trim() || "",
+        novice_builder_role_id: discordNoviceBuilderRoleIdInput?.value.trim() || "",
+        trial_builder_role_id: discordTrialBuilderRoleIdInput?.value.trim() || "",
+        senior_builder_role_id: discordSeniorBuilderRoleIdInput?.value.trim() || "",
+        master_builder_role_id: discordMasterBuilderRoleIdInput?.value.trim() || "",
+        champion_role_id: discordChampionRoleIdInput?.value.trim() || "",
+        engineer_role_id: discordEngineerRoleIdInput?.value.trim() || "",
+        staff_role_id: discordStaffRoleIdInput?.value.trim() || "",
+        developer_role_id: discordDeveloperRoleIdInput?.value.trim() || "",
+        admin_role_id: discordAdminRoleIdInput?.value.trim() || ""
+      };
+    }
+async function loadDiscordConfig() {
+      if (!discordConfigStatus) return;
+      discordConfigStatus.textContent = "Loading...";
+      const { data, error } = await sbClient
+        .from(DISCORD_CONFIG_TABLE)
+        .select("id,guild_id,builder_role_id,novice_builder_role_id,trial_builder_role_id,senior_builder_role_id,master_builder_role_id,champion_role_id,engineer_role_id,staff_role_id,developer_role_id,admin_role_id")
+        .eq("id", DISCORD_CONFIG_ROW_ID)
+        .maybeSingle();
+      if (error) {
+        discordConfigStatus.textContent = `Failed to load config: ${error.message}`;
+        return;
+      }
+      applyDiscordConfigForm(data || {});
+      discordConfigStatus.textContent = "Loaded.";
     }
 async function loadBuilderAreas() {
       if (!eventAreaInput || !eventWarpInput || !focusAreasList) return;
@@ -1074,6 +1166,25 @@ if (eventImageFile) {
 if (focusAddBtn) {
       focusAddBtn.addEventListener("click", () => {
         createFocusRow();
+      });
+    }
+if (discordConfigSave) {
+      discordConfigSave.addEventListener("click", async () => {
+        const payload = getDiscordConfigPayload();
+        if (!payload.guild_id) {
+          if (discordConfigStatus) discordConfigStatus.textContent = "Please enter a Guild ID.";
+          return;
+        }
+        if (discordConfigStatus) discordConfigStatus.textContent = "Saving...";
+        const { error } = await sbClient
+          .from(DISCORD_CONFIG_TABLE)
+          .upsert(payload, { onConflict: "id" });
+        if (error) {
+          const schemaHint = "Expected table: discord_role_settings (id,guild_id,builder_role_id,novice_builder_role_id,trial_builder_role_id,senior_builder_role_id,master_builder_role_id,champion_role_id,engineer_role_id,staff_role_id,developer_role_id,admin_role_id).";
+          if (discordConfigStatus) discordConfigStatus.textContent = `Save failed: ${error.message} ${schemaHint}`;
+          return;
+        }
+        if (discordConfigStatus) discordConfigStatus.textContent = "Discord config updated.";
       });
     }
 form.addEventListener("submit", async (e) => {
